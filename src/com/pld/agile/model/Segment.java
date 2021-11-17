@@ -36,7 +36,6 @@ public class Segment {
     }
 
     // GETTERS
-
     /**
      * getter for attribute length
      * @return returns the length of the Segment
@@ -70,19 +69,34 @@ public class Segment {
     }
 
     // SETTERS
-    
+    /**
+     * setter for attribute destination
+     * @param destination
+     */
     public void setDestination(Intersection destination) {
         this.destination = destination;
     }
 
+    /**
+     * setter for attribute length
+     * @param length
+     */
     public void setLength(double length) {
         this.length = length;
     }
 
+    /**
+     * setter for attribute name
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * setter for attribute origin
+     * @param origin
+     */
     public void setOrigin(Intersection origin) {
         this.origin = origin;
     }
