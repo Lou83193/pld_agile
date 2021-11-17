@@ -20,11 +20,24 @@ public class MapData {
     /*public HashMap<String, Intersection> getIntersections() {
         return intersections;
     }*/
+    
+    /**
+     * Constructor for the class MapData, initializes the attributes intersections and segments
+     */
+    public MapData(){
+        intersections = new HashMap<>();
+        segments = new ArrayList<>();
+    }
 
-    /*public void setIntersections(HashMap<String, Intersection> intersections) {
+    /**
+     * Constructor for the class MapData, initializes the attributes intersections and segments
+     * @param intersections Map of all Intersections
+     * @param segments List of all Segments
+     */
+    public MapData(HashMap intersections, List segments){
         this.intersections = intersections;
         this.segments = segments;
-    }*/
+    }
 
     // GETTERS
     /**
@@ -50,6 +63,7 @@ public class MapData {
      */
     public void setIntersections(HashMap<String, Intersection> intersections) {
         this.intersections = intersections;
+        this.segments = segments;
     }
 
     /**
