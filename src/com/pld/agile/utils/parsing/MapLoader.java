@@ -1,11 +1,16 @@
 package com.pld.agile.utils.parsing;
 
+import com.pld.agile.model.Intersection;
 import com.pld.agile.model.MapData;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Loads map model entities from an XML file.
@@ -41,11 +46,22 @@ public class MapLoader {
         try {
             generateDocument();
         } catch (DocumentException e) {
-            // todo : signal fichier XML invalide
+            // fichier XML invalide
             return false;
         }
         // le DOM est manipulable
+        Element element = mapXmlDocument.getRootElement();
+        List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
+        List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
 
+        HashMap<Integer, Intersection> intersections = new HashMap<>();
+        for (Node intersectionNode : intersectionNodes) {
+            Element intersectionElement = (Element) intersectionNode;
+            int id = Integer.parseInt(intersectionElement.attributeValue("id"));
+            float lat = Float.parseFloat(intersectionElement.attributeValue("latitude"));
+            float lon = Float.parseFloat(intersectionElement.attributeValue("longitude"));
+            intersections.put(id, new Intersection(id, lat, lon));
+        }
 
         return true;
     }
