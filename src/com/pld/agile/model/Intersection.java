@@ -30,7 +30,7 @@ public class Intersection {
 
     // GETTERS
     /**
-     * getter for attribute latitude
+     * Getter for attribute latitude
      * @return returns the latitude of the Intersection
      */
     public double getLatitude() {
@@ -38,7 +38,7 @@ public class Intersection {
     }
 
     /**
-     * getter for attribute longitude
+     * Getter for attribute longitude
      * @return returns the longitude of the Intersection
      */
     public double getLongitude() {
@@ -46,7 +46,7 @@ public class Intersection {
     }
 
     /**
-     * getter for attribute ID
+     * Getter for attribute ID
      * @return returns the ID of the Intersection
      */
     public int getId() {
@@ -55,24 +55,24 @@ public class Intersection {
 
     // SETTERS
     /**
-     * setter for attribute ID
-     * @param id
+     * Setter for attribute ID
+     * @param id ID of the Intersection
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * setter for attribute latitude
-     * @param latitude
+     * Setter for attribute latitude
+     * @param latitude latitude of the Intersection
      */
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
     /**
-     * setter for attribute longitude
-     * @param longitude
+     * Setter for attribute longitude
+     * @param longitude longitude of the Intersection
      */
     public void setLongitude(double longitude) {
         this.longitude = longitude;

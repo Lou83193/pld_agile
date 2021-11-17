@@ -37,7 +37,7 @@ public class Segment {
 
     // GETTERS
     /**
-     * getter for attribute length
+     * Getter for attribute length
      * @return returns the length of the Segment
      */
     public double getLength() {
@@ -45,7 +45,7 @@ public class Segment {
     }
 
     /**
-     * getter for attribute destination
+     * Getter for attribute destination
      * @return returns the destination of the Segment
      */
     public Intersection getDestination() {
@@ -53,7 +53,7 @@ public class Segment {
     }
 
     /**
-     * getter for attribute origin
+     * Getter for attribute origin
      * @return returns the origin of the Segment
      */
     public Intersection getOrigin() {
@@ -61,7 +61,7 @@ public class Segment {
     }
 
     /**
-     * getter for attribute name
+     * Getter for attribute name
      * @return returns the name of the Segment
      */
     public String getName() {
@@ -70,32 +70,32 @@ public class Segment {
 
     // SETTERS
     /**
-     * setter for attribute destination
-     * @param destination
+     * Setter for attribute destination
+     * @param destination Intersection at the end of the Segment
      */
     public void setDestination(Intersection destination) {
         this.destination = destination;
     }
 
     /**
-     * setter for attribute length
-     * @param length
+     * Setter for attribute length
+     * @param length length of the Segment
      */
     public void setLength(double length) {
         this.length = length;
     }
 
     /**
-     * setter for attribute name
-     * @param name
+     * Setter for attribute name
+     * @param name name of the Segment
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * setter for attribute origin
-     * @param origin
+     * Setter for attribute origin
+     * @param origin Intersection at the origin of the Segment
      */
     public void setOrigin(Intersection origin) {
         this.origin = origin;
