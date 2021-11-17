@@ -2,6 +2,8 @@ package com.pld.agile.utils.parsing;
 
 import com.pld.agile.model.Intersection;
 import com.pld.agile.model.MapData;
+import com.pld.agile.model.Segment;
+import javafx.util.Pair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -9,6 +11,7 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,22 +49,40 @@ public class MapLoader {
         try {
             generateDocument();
         } catch (DocumentException e) {
-            // fichier XML invalide
+            // invalid XML file
             return false;
         }
-        // le DOM est manipulable
+        // DOM can be handled
         Element element = mapXmlDocument.getRootElement();
         List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
         List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
 
-        HashMap<Integer, Intersection> intersections = new HashMap<>();
+        HashMap<Integer, Intersection> intersectionsById = new HashMap<>();  // used to create segments
+        HashMap<Pair<Double, Double>, Intersection> intersectionsByCoord = new HashMap<>(); // returned in the MapData map
         for (Node intersectionNode : intersectionNodes) {
             Element intersectionElement = (Element) intersectionNode;
             int id = Integer.parseInt(intersectionElement.attributeValue("id"));
-            float lat = Float.parseFloat(intersectionElement.attributeValue("latitude"));
-            float lon = Float.parseFloat(intersectionElement.attributeValue("longitude"));
-            intersections.put(id, new Intersection(id, lat, lon));
+            double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
+            double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+            Intersection i = new Intersection(id, lat, lon);
+            intersectionsById.put(id, i);
+            intersectionsByCoord.put(new Pair<>(lat, lon), i);
         }
+
+        List<Segment> segments = new ArrayList<>();
+        for (Node segmentNode : segmentNodes) {
+            Element segmentElement = (Element) segmentNode;
+            int idOrigin = Integer.parseInt(segmentElement.attributeValue("origin"));
+            int idDest = Integer.parseInt(segmentElement.attributeValue("destination"));
+            double length = Double.parseDouble(segmentElement.attributeValue("length"));
+            String name = segmentElement.attributeValue("name");
+
+            Segment s = new Segment(length, name, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
+            segments.add(s);
+        }
+
+        
+
 
         return true;
     }

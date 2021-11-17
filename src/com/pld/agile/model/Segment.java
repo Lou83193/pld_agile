@@ -21,4 +21,10 @@ public class Segment {
      */
     private Intersection destination;
 
+    public Segment(double length, String name, Intersection origin, Intersection destination) {
+        this.length = length;
+        this.name = name;
+        this.origin = origin;
+        this.destination = destination;
+    }
 }

@@ -15,4 +15,10 @@ public class Intersection {
      * Geographical longitude of the intersection.
      */
     private double longitude;
+
+    public Intersection(int id, double latitude, double longitude) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }
