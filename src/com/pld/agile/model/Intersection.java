@@ -16,9 +16,36 @@ public class Intersection {
      */
     private double longitude;
 
-    public Intersection(int id, double latitude, double longitude) {
+    // CONSTRUCTOR
+    public Intersection(int id, int latitude, int longitude) {
         this.id = id;
         this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    // GETTERS
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    // SETTERS
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 }
