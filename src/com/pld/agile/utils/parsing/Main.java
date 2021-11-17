@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         String filePath = "src/resources/fichiersXML2020/smallMap.xml";
-        MapData mapData = new MapData();
+        MapData mapData = MapData.getInstance();
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean success = mapLoader.load();
 

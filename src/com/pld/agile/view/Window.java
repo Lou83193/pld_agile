@@ -4,14 +4,14 @@ import com.pld.agile.controller.Controller;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -20,6 +20,8 @@ import java.io.IOException;
 
 public class Window extends Application {
 
+    private Controller controller = new Controller(this);
+
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
@@ -27,9 +29,8 @@ public class Window extends Application {
     @Override
     public void start(Stage s) throws IOException {
 
-        homeScene = constructHomeScene();
-        mainScene = constructMainScene();
         stage = s;
+        setHomeScene(constructHomeScene());
         switchScene(homeScene);
         stage.setTitle("AGILE Project");
         stage.show();
@@ -48,12 +49,11 @@ public class Window extends Application {
         Button button = new Button("Load Map");
         button.setPrefSize(200, 60);
         button.getStyleClass().add("button");
-        button.setOnAction(new ButtonListener(new Controller(this), "loadMap"));
+        button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         // Group
         VBox homePage = new VBox(50);
         homePage.setAlignment(Pos.CENTER);
-        homePage.getChildren().add(logo);
-        homePage.getChildren().add(button);
+        homePage.getChildren().addAll(logo, button);
 
         /* BOTTOM TEXT */
         Text bottomText = new Text("v0.1 • by Hexanom-nom");
@@ -61,7 +61,7 @@ public class Window extends Application {
         HBox bottom = new HBox();
         bottom.setPadding(new Insets(20));
         bottom.setAlignment(Pos.CENTER_RIGHT);
-        bottom.getChildren().add(bottomText);
+        bottom.getChildren().addAll(bottomText);
 
         /* LAYOUT PANEL */
         BorderPane pane = new BorderPane();
@@ -105,29 +105,25 @@ public class Window extends Application {
         Menu fileMenu = new Menu("File");
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
+        fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         fileMenu2.setDisable(true);
-        fileMenu.getItems().add(fileMenu1);
-        fileMenu.getItems().add(fileMenu2);
+        fileMenu.getItems().addAll(fileMenu1, fileMenu2);
 
         // Edit menu
         Menu editMenu = new Menu("Edit");
         MenuItem editMenu1 = new MenuItem("Undo");
         MenuItem editMenu2 = new MenuItem("Redo");
-        editMenu.getItems().add(editMenu1);
-        editMenu.getItems().add(editMenu2);
+        editMenu.getItems().addAll(editMenu1, editMenu2);
 
         // About menu
         Menu aboutMenu = new Menu("About");
         MenuItem aboutMenu1 = new MenuItem("Help");
         MenuItem aboutMenu2 = new MenuItem("Credits");
-        aboutMenu.getItems().add(aboutMenu1);
-        aboutMenu.getItems().add(aboutMenu2);
+        aboutMenu.getItems().addAll(aboutMenu1, aboutMenu2);
 
         // Menu bar
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().add(fileMenu);
-        menuBar.getMenus().add(editMenu);
-        menuBar.getMenus().add(aboutMenu);
+        menuBar.getMenus().addAll(fileMenu, editMenu, aboutMenu);
 
         return menuBar;
 

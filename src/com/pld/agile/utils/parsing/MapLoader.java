@@ -62,6 +62,7 @@ public class MapLoader {
             String id = intersectionElement.attributeValue("id");
             double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
             double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+            map.updateBounds(lat, lon);
             Intersection i = new Intersection(id, lat, lon);
             intersectionsById.put(id, i);
         }

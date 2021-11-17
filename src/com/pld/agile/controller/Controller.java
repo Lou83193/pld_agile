@@ -4,7 +4,6 @@ import com.pld.agile.model.MapData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
-
 import java.io.File;
 
 public class Controller {
@@ -20,15 +19,14 @@ public class Controller {
         // Load map
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Map File");
+        fileChooser.setInitialDirectory(new File("./src/resources"));
         File mapFile = fileChooser.showOpenDialog(window.getStage());
 
         if (mapFile != null) {
 
-            MapData mapData = new MapData();
+            MapData mapData = MapData.getInstance();
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), mapData);
             boolean success = mapLoader.load();
-            System.out.println("SUCCESS : " + success);
-            System.out.println(mapData);
 
             // Switch scenes
             if (success) {

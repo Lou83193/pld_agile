@@ -7,9 +7,9 @@ import javafx.event.EventHandler;
 public class ButtonListener implements EventHandler<ActionEvent> {
 
     private Controller controller;
-    private String buttonType; //TODO: make enum
+    private ButtonEventType buttonType;
 
-    public ButtonListener(Controller controller, String buttonType) {
+    public ButtonListener(Controller controller, ButtonEventType buttonType) {
         this.controller = controller;
         this.buttonType = buttonType;
     }
@@ -18,7 +18,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
 
         switch(buttonType) {
 
-            case "loadMap" :
+            case LOAD_MAP:
                 controller.loadMap();
                 break;
 
