@@ -77,12 +77,12 @@ public class MapLoader {
             double length = Double.parseDouble(segmentElement.attributeValue("length"));
             String name = segmentElement.attributeValue("name");
 
-            Segment s = new Segment(length, name, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
+            Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
             segments.add(s);
         }
 
-        
-
+        map.setIntersections(intersectionsByCoord);
+        map.setSegments(segments);
 
         return true;
     }

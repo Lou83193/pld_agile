@@ -17,7 +17,7 @@ public class Intersection {
     private double longitude;
 
     // CONSTRUCTOR
-    public Intersection(int id, int latitude, int longitude) {
+    public Intersection(int id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
