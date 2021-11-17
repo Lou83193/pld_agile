@@ -100,4 +100,14 @@ public class Segment {
     public void setOrigin(Intersection origin) {
         this.origin = origin;
     }
+
+    @Override
+    public String toString() {
+        return "Segment{" +
+                "length=" + length +
+                ", name='" + name + '\'' +
+                ", origin=" + origin +
+                ", destination=" + destination +
+                '}';
+    }
 }

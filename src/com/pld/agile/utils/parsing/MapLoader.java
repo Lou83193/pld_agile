@@ -50,30 +50,28 @@ public class MapLoader {
             generateDocument();
         } catch (DocumentException e) {
             // invalid XML file
+            e.printStackTrace();
             return false;
         }
         // DOM can be handled
-        Element element = mapXmlDocument.getRootElement();
         List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
-        List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
 
-        HashMap<Integer, Intersection> intersectionsById = new HashMap<>();  // used to create segments
-        HashMap<Pair<Double, Double>, Intersection> intersectionsByCoord = new HashMap<>(); // returned in the MapData map
+        HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
         for (Node intersectionNode : intersectionNodes) {
             Element intersectionElement = (Element) intersectionNode;
-            int id = Integer.parseInt(intersectionElement.attributeValue("id"));
+            String id = intersectionElement.attributeValue("id");
             double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
             double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
             Intersection i = new Intersection(id, lat, lon);
             intersectionsById.put(id, i);
-            intersectionsByCoord.put(new Pair<>(lat, lon), i);
         }
 
+        List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
         List<Segment> segments = new ArrayList<>();
         for (Node segmentNode : segmentNodes) {
             Element segmentElement = (Element) segmentNode;
-            int idOrigin = Integer.parseInt(segmentElement.attributeValue("origin"));
-            int idDest = Integer.parseInt(segmentElement.attributeValue("destination"));
+            String idOrigin = segmentElement.attributeValue("origin");
+            String idDest = segmentElement.attributeValue("destination");
             double length = Double.parseDouble(segmentElement.attributeValue("length"));
             String name = segmentElement.attributeValue("name");
 
@@ -81,7 +79,7 @@ public class MapLoader {
             segments.add(s);
         }
 
-        map.setIntersections(intersectionsByCoord);
+        map.setIntersections(intersectionsById);
         map.setSegments(segments);
 
         return true;
