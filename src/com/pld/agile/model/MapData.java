@@ -17,21 +17,21 @@ public class MapData {
      */
     private List<Segment> segments;
 
-    public HashMap<String, Intersection> getIntersections() {
+    /*public HashMap<String, Intersection> getIntersections() {
         return intersections;
-    }
+    }*/
 
-    public void setIntersections(HashMap<String, Intersection> intersections) {
+    /*public void setIntersections(HashMap<String, Intersection> intersections) {
         this.intersections = intersections;
         this.segments = segments;
-    }
+    }*/
 
     // GETTERS
     /**
      * Getter for attribute intersections
      * @return returns the map of all Intersections
      */
-    public HashMap<Pair<Double, Double>, Intersection> getIntersections() {
+    public HashMap<String, Intersection> getIntersections() {
         return intersections;
     }
 
@@ -48,7 +48,7 @@ public class MapData {
      * Setter for attribute intersections
      * @param intersections Map of all Intersections
      */
-    public void setIntersections(HashMap<Pair<Double, Double>, Intersection> intersections) {
+    public void setIntersections(HashMap<String, Intersection> intersections) {
         this.intersections = intersections;
     }
 

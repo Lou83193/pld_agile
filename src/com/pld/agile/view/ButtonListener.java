@@ -19,7 +19,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
         switch(buttonType) {
 
             case "loadMap" :
-                //controller.loadMap(path);
+                controller.loadMap();
                 break;
 
         }

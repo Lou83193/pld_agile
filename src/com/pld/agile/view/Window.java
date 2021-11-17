@@ -1,5 +1,6 @@
 package com.pld.agile.view;
 
+import com.pld.agile.controller.Controller;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,7 +30,7 @@ public class Window extends Application {
         homeScene = constructHomeScene();
         mainScene = constructMainScene();
         stage = s;
-        setScene(homeScene);
+        switchScene(homeScene);
         stage.setTitle("AGILE Project");
         stage.show();
 
@@ -47,6 +48,7 @@ public class Window extends Application {
         Button button = new Button("Load Map");
         button.setPrefSize(200, 60);
         button.getStyleClass().add("button");
+        button.setOnAction(new ButtonListener(new Controller(this), "loadMap"));
         // Group
         VBox homePage = new VBox(50);
         homePage.setAlignment(Pos.CENTER);
@@ -131,10 +133,13 @@ public class Window extends Application {
 
     }
 
-    public void setScene(Scene s) {
+    public void switchScene(Scene s) {
         stage.setScene(s);
     }
 
+    public Stage getStage() {
+        return stage;
+    }
     public Scene getHomeScene() {
         return homeScene;
     }
