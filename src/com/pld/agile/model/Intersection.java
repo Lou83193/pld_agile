@@ -22,7 +22,7 @@ public class Intersection {
      * @param latitude geographical latitude of the intersection
      * @param longitude geographical longitude of the intersection
      */
-    public Intersection(int id, int latitude, int longitude) {
+    public Intersection(int id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
