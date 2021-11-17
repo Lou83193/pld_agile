@@ -76,11 +76,10 @@ public class Window extends Application {
         pane.setTop(menuBar);
         pane.setCenter(homePage);
         pane.setBottom(bottom);
-        pane.getStyleClass().add("background");
 
         /* MAIN STAGE */
         Scene scene = new Scene(pane,1280, 720);
-        scene.getStylesheets().add("/stylesheet.css");
+        scene.getStylesheets().add("stylesheet.css");
         stage.setScene(scene);
         stage.setTitle("TEST");
         stage.show();
