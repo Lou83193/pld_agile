@@ -21,13 +21,15 @@ public class Window extends Application {
 
     private Scene homeScene;
     private Scene mainScene;
+    private Stage stage;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage s) throws IOException {
 
         homeScene = constructHomeScene();
         mainScene = constructMainScene();
-        stage.setScene(homeScene);
+        stage = s;
+        setScene(homeScene);
         stage.setTitle("AGILE Project");
         stage.show();
 
@@ -127,6 +129,23 @@ public class Window extends Application {
 
         return menuBar;
 
+    }
+
+    public void setScene(Scene s) {
+        stage.setScene(s);
+    }
+
+    public Scene getHomeScene() {
+        return homeScene;
+    }
+    public void setHomeScene(Scene homeScene) {
+        this.homeScene = homeScene;
+    }
+    public Scene getMainScene() {
+        return mainScene;
+    }
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
     }
 
     public static void main(String[] args) {
