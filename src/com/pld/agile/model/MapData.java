@@ -1,12 +1,12 @@
 package com.pld.agile.model;
 
-import javafx.util.Pair;
+import com.pld.agile.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapData {
+public class MapData extends Observable {
     /**
      * Map of all intersections, key is Pair<lat, lon>.
      */
@@ -110,7 +110,6 @@ public class MapData {
      */
     public void setIntersections(HashMap<String, Intersection> intersections) {
         this.intersections = intersections;
-        this.segments = segments;
     }
 
     /**
@@ -119,6 +118,7 @@ public class MapData {
      */
     public void setSegments(List<Segment> segments) {
         this.segments = segments;
+        notifyObservers(this);
     }
 
     /**

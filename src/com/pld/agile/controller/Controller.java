@@ -8,13 +8,20 @@ import java.io.File;
 
 public class Controller {
 
-    private Window window;
+    private static Controller singletonInstance;
 
-    public Controller(Window window) {
-        this.window = window;
+    private Controller() {}
+
+    public static Controller getInstance() {
+        if (singletonInstance == null) {
+            singletonInstance = new Controller();
+        }
+        return singletonInstance;
     }
 
     public void loadMap() {
+
+        Window window = Window.getInstance();
 
         // Load map
         FileChooser fileChooser = new FileChooser();
@@ -30,8 +37,7 @@ public class Controller {
 
             // Switch scenes
             if (success) {
-                window.setMainScene(window.constructMainScene());
-                window.switchScene(window.getMainScene());
+                window.switchSceneToMainScene();
             }
 
         }

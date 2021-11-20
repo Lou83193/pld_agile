@@ -6,15 +6,15 @@ import javafx.event.EventHandler;
 
 public class ButtonListener implements EventHandler<ActionEvent> {
 
-    private Controller controller;
     private ButtonEventType buttonType;
 
-    public ButtonListener(Controller controller, ButtonEventType buttonType) {
-        this.controller = controller;
+    public ButtonListener(ButtonEventType buttonType) {
         this.buttonType = buttonType;
     }
 
     public void handle(ActionEvent e) {
+
+        Controller controller = Controller.getInstance();
 
         switch(buttonType) {
 

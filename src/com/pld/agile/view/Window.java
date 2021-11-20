@@ -20,18 +20,28 @@ import java.io.IOException;
 
 public class Window extends Application {
 
-    private Controller controller = new Controller(this);
+    private static Window singletonInstance;
 
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
 
+    public Window() { singletonInstance = this; }
+
+    public static Window getInstance() {
+        if (singletonInstance == null) {
+            singletonInstance = new Window();
+        }
+        return singletonInstance;
+    }
+
     @Override
     public void start(Stage s) throws IOException {
 
         stage = s;
-        setHomeScene(constructHomeScene());
-        switchScene(homeScene);
+        homeScene = constructHomeScene();
+        mainScene = constructMainScene();
+        stage.setScene(homeScene);
         stage.setTitle("AGILE Project");
         stage.show();
 
@@ -49,7 +59,7 @@ public class Window extends Application {
         Button button = new Button("Load Map");
         button.setPrefSize(200, 60);
         button.getStyleClass().add("button");
-        button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
+        button.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
         // Group
         VBox homePage = new VBox(50);
         homePage.setAlignment(Pos.CENTER);
@@ -105,7 +115,7 @@ public class Window extends Application {
         Menu fileMenu = new Menu("File");
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
-        fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
+        fileMenu1.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
         fileMenu2.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2);
 
@@ -129,24 +139,12 @@ public class Window extends Application {
 
     }
 
-    public void switchScene(Scene s) {
-        stage.setScene(s);
+    public void switchSceneToMainScene() {
+        stage.setScene(mainScene);
     }
 
     public Stage getStage() {
         return stage;
-    }
-    public Scene getHomeScene() {
-        return homeScene;
-    }
-    public void setHomeScene(Scene homeScene) {
-        this.homeScene = homeScene;
-    }
-    public Scene getMainScene() {
-        return mainScene;
-    }
-    public void setMainScene(Scene mainScene) {
-        this.mainScene = mainScene;
     }
 
     public static void main(String[] args) {
