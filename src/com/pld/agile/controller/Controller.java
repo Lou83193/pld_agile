@@ -1,6 +1,6 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.MapData;
+import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;

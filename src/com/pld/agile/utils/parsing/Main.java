@@ -1,8 +1,7 @@
 package com.pld.agile.utils.parsing;
 
-import com.pld.agile.model.MapData;
-
-import java.io.File;
+import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.TourData;
 
 public class Main {
 
@@ -14,6 +13,14 @@ public class Main {
 
         System.out.println("SUCCESS : " + success);
         System.out.println(mapData);
+
+        TourData tourData = TourData.getInstance();
+        tourData.setAssociatedMap(mapData);
+        RequestsLoader requestsLoader = new RequestsLoader("src/resources/fichiersXML2020/requestsSmall1.xml", tourData);
+        success = requestsLoader.load();
+
+        System.out.println("SUCCESS : " + success);
+        System.out.println(tourData);
 
     }
 }

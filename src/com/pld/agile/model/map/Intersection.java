@@ -1,4 +1,4 @@
-package com.pld.agile.model;
+package com.pld.agile.model.map;
 
 public class Intersection {
     /**
