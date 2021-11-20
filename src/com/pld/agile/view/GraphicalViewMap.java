@@ -3,17 +3,20 @@ package com.pld.agile.view;
 import com.pld.agile.model.Intersection;
 import com.pld.agile.model.MapData;
 import com.pld.agile.model.Segment;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import java.util.List;
 
 public class GraphicalViewMap extends Canvas {
 
-    public GraphicalViewMap(double width, double height) {
-        widthProperty().setValue(width);
-        heightProperty().setValue(height);
+    public GraphicalViewMap(Scene parent) {
+        widthProperty().bind(parent.heightProperty());
+        heightProperty().bind(parent.heightProperty());
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
@@ -22,6 +25,7 @@ public class GraphicalViewMap extends Canvas {
 
         double width = getWidth();
         double height = getHeight();
+        System.out.println(width + "; " + height);
         MapData mapData = MapData.getInstance();
 
         GraphicsContext gc = getGraphicsContext2D();
@@ -30,7 +34,7 @@ public class GraphicalViewMap extends Canvas {
         gc.setFill(Color.LIGHTGREY);
         gc.fillRect(0, 0, width, height);
 
-        gc.setLineWidth(2);
+        gc.setLineWidth(height/250);
         gc.setStroke(Color.BLACK);
 
         List<Segment> segments = mapData.getSegments();
@@ -81,6 +85,7 @@ public class GraphicalViewMap extends Canvas {
         return true;
     }
 
+    /*
     @Override
     public double prefWidth(double height) {
         return getWidth();
@@ -90,5 +95,6 @@ public class GraphicalViewMap extends Canvas {
     public double prefHeight(double width) {
         return getHeight();
     }
+    */
 
 }

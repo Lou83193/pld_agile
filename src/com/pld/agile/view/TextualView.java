@@ -4,13 +4,15 @@ import com.pld.agile.Observable;
 import com.pld.agile.Observer;
 import com.pld.agile.model.MapData;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class TextualView implements Observer { //TODO: create our own Observer interface
+public class TextualView implements Observer {
 
     public VBox component;
 
-    public TextualView() {
+    public TextualView(Scene parent) {
 
         // Add observers
         MapData mapData = MapData.getInstance();

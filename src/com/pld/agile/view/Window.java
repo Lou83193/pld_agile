@@ -10,12 +10,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Window extends Application {
@@ -51,17 +54,23 @@ public class Window extends Application {
 
         MenuBar menuBar = constructMenuBar();
 
+        /* MAIN SCENE */
+        BorderPane pane = new BorderPane();
+        Scene scene = new Scene(pane,1080, 720);
+        scene.getStylesheets().add("stylesheet.css");
+
         /* CENTER ELEMENTS */
         // Logo
-        Text logo = new Text("LOGO");
-        logo.setFont(new Font(120));
+        ImageView logo = new ImageView(new Image("logo.png"));
+        logo.setPreserveRatio(true);
+        logo.setFitWidth(600);
         // Button
         Button button = new Button("Load Map");
-        button.setPrefSize(200, 60);
+        button.setPrefSize(200, 50);
         button.getStyleClass().add("button");
         button.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
         // Group
-        VBox homePage = new VBox(50);
+        VBox homePage = new VBox(15);
         homePage.setAlignment(Pos.CENTER);
         homePage.getChildren().addAll(logo, button);
 
@@ -73,15 +82,11 @@ public class Window extends Application {
         bottom.setAlignment(Pos.CENTER_RIGHT);
         bottom.getChildren().addAll(bottomText);
 
-        /* LAYOUT PANEL */
-        BorderPane pane = new BorderPane();
+        /* LAYOUT ELEMENTS */
         pane.setTop(menuBar);
         pane.setCenter(homePage);
         pane.setBottom(bottom);
 
-        /* MAIN SCENE */
-        Scene scene = new Scene(pane,1280, 720);
-        scene.getStylesheets().add("stylesheet.css");
         return scene;
 
     }
@@ -90,21 +95,19 @@ public class Window extends Application {
 
         MenuBar menuBar = constructMenuBar();
 
-        /* MAIN PANEL */
+        BorderPane pane = new BorderPane();
+        Scene scene = new Scene(pane,1080, 720);
+        scene.getStylesheets().add("stylesheet.css");
+
         HBox mainPanel = new HBox();
-        GraphicalView graphicalView = new GraphicalView();
-        TextualView textualView = new TextualView();
+        GraphicalView graphicalView = new GraphicalView(scene);
+        TextualView textualView = new TextualView(scene);
         mainPanel.getChildren().add(graphicalView.getComponent());
         mainPanel.getChildren().add(textualView.getComponent());
 
-        /* LAYOUT PANEL */
-        BorderPane pane = new BorderPane();
         pane.setTop(menuBar);
         pane.setCenter(mainPanel);
 
-        /* MAIN SCENE */
-        Scene scene = new Scene(pane,1280, 720);
-        scene.getStylesheets().add("stylesheet.css");
         return scene;
 
     }
