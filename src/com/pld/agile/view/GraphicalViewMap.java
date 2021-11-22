@@ -27,6 +27,8 @@ public class GraphicalViewMap extends Canvas {
 
         double width = getWidth();
         double height = getHeight();
+        double screenScale = height/720;
+        double mapScale = 0.0507/(mapData.getMaxLon() - mapData.getMinLon());
 
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, width, height);
@@ -34,7 +36,7 @@ public class GraphicalViewMap extends Canvas {
         gc.setFill(Color.LIGHTGREY);
         gc.fillRect(0, 0, width, height);
 
-        gc.setLineWidth(height/250);
+        gc.setLineWidth(2*screenScale*mapScale);
         gc.setStroke(Color.BLACK);
 
         List<Segment> segments = mapData.getSegments();

@@ -3,5 +3,5 @@
 /workspace.xml
 /.idea/
 agile.iml
-*.class
 /target/
+*.class

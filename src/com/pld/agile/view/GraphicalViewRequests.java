@@ -31,14 +31,17 @@ public class GraphicalViewRequests extends Group {
 
         double width = parentCanvas.getWidth();
         double height = parentCanvas.getHeight();
+        double screenScale = height/720;
+        double mapScale = 0.0507/(mapData.getMaxLon() - mapData.getMinLon());
+
         List<Request> requests = tourData.getRequestList();
 
         if (requests.size() == 0) return;
 
         this.getChildren().clear();
-        double graphicSize = width/40;
-        //double graphicSize = ViewUtilities.mapValue((mapData.getMaxLon() - mapData.getMinLon()) * 1000, );
-        System.out.println(graphicSize);
+        //double graphicSize = width/40;
+        double graphicSize = 20*screenScale*mapScale;
+        System.out.println(mapData.getMaxLon() - mapData.getMinLon());
 
         Stop warehouse = tourData.getWarehouse();
 

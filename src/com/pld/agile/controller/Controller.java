@@ -58,4 +58,10 @@ public class Controller {
 
     }
 
+    public void computeTour() {
+
+        
+
+    }
+
 }

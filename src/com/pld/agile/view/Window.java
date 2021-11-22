@@ -124,6 +124,7 @@ public class Window extends Application {
         MenuItem fileMenu3 = new MenuItem("Compute tour");
         fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
+        fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
         if (hideLoadTour) {
             fileMenu2.setDisable(true);
             fileMenu3.setDisable(true);
