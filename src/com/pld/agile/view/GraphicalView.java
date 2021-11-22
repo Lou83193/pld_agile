@@ -1,35 +1,36 @@
 package com.pld.agile.view;
 
+import com.pld.agile.Observable;
+import com.pld.agile.Observer;
+import com.pld.agile.model.map.MapData;
 import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 
-import java.util.Observable;
-import java.util.Observer;
+public class GraphicalView implements Observer {
 
-public class GraphicalView implements Observer { //TODO: create our own Observer interface
-
-    private Canvas mapCanvas;
+    private GraphicalViewMap graphicalViewMap;
     private Group component;
 
-    public GraphicalView() {
+    public GraphicalView(Scene parent) {
 
-        // Add Observers
-        //modelObj.addObserver(this);
+        // Add observers
+        MapData mapData = MapData.getInstance();
+        mapData.addObserver(this);
 
-        // Create and populate map canvas
-        mapCanvas = new Canvas();
+        graphicalViewMap = new GraphicalViewMap(parent);
 
         component = new Group();
-        component.getChildren().add(mapCanvas);
+        component.getChildren().add(graphicalViewMap);
 
     }
 
     @Override
     public void update(Observable o, Object arg) {
-
+        graphicalViewMap.draw();
     }
 
-    public Group getComponent() {
+    public Node getComponent() {
         return component;
     }
 }

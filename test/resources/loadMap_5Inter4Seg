@@ -1,0 +1,11 @@
+<map>
+    <intersection id="1" latitude="45.0" longitude="4.0"/>
+    <intersection id="2" latitude="45.0" longitude="4.00128"/>
+    <intersection id="3" latitude="45.0009" longitude="4.0"/>
+    <intersection id="4" latitude="45.0" longitude="3.99872"/>
+    <intersection id="5" latitude="44.9991" longitude="4.0"/>
+    <segment destination="2" length="100" name="Avenue Général Frère" origin="1"/>
+    <segment destination="3" length="100" name="Boulevard Général Frère" origin="1"/>
+    <segment destination="4" length="100" name="Rue de la Meuse" origin="1"/>
+    <segment destination="5" length="100" name="Rue de la Moselle" origin="1"/>
+</map>

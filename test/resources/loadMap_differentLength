@@ -1,0 +1,8 @@
+<map>
+    <intersection id="1" latitude="45.0" longitude="4.0"/>
+    <intersection id="2" latitude="45.0" longitude="4.00128"/>
+    <intersection id="3" latitude="45.0009" longitude="4.0"/>
+    <intersection id="4" latitude="45.0009" longitude="4.0064"/>
+    <segment destination="2" length="100" name="Avenue Général Frère" origin="1"/>
+    <segment destination="3" length="500" name="Boulevard Général Frère" origin="1"/>
+</map>

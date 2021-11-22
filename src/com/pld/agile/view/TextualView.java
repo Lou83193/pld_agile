@@ -1,18 +1,21 @@
 package com.pld.agile.view;
 
+import com.pld.agile.Observable;
+import com.pld.agile.Observer;
+import com.pld.agile.model.map.MapData;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class TextualView implements Observer { //TODO: create our own Observer interface
+public class TextualView implements Observer {
 
     public VBox component;
 
-    public TextualView() {
+    public TextualView(Scene parent) {
 
-        // Add Observers
-        //modelObj.addObserver(this);
+        // Add observers
+        MapData mapData = MapData.getInstance();
+        mapData.addObserver(this);
 
         // Create VBox
         component = new VBox();
@@ -24,7 +27,7 @@ public class TextualView implements Observer { //TODO: create our own Observer i
 
     }
 
-    public VBox getComponent() {
+    public Node getComponent() {
         return component;
     }
 }

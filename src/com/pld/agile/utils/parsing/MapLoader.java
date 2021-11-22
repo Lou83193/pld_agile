@@ -1,11 +1,18 @@
 package com.pld.agile.utils.parsing;
 
-import com.pld.agile.model.MapData;
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.map.Segment;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Loads map model entities from an XML file.
@@ -41,11 +48,39 @@ public class MapLoader {
         try {
             generateDocument();
         } catch (DocumentException e) {
-            // todo : signal fichier XML invalide
+            // invalid XML file
+            e.printStackTrace();
             return false;
         }
-        // le DOM est manipulable
+        // DOM can be handled
+        List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
 
+        HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
+        for (Node intersectionNode : intersectionNodes) {
+            Element intersectionElement = (Element) intersectionNode;
+            String id = intersectionElement.attributeValue("id");
+            double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
+            double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+            map.updateBounds(lat, lon);
+            Intersection i = new Intersection(id, lat, lon);
+            intersectionsById.put(id, i);
+        }
+
+        List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
+        List<Segment> segments = new ArrayList<>();
+        for (Node segmentNode : segmentNodes) {
+            Element segmentElement = (Element) segmentNode;
+            String idOrigin = segmentElement.attributeValue("origin");
+            String idDest = segmentElement.attributeValue("destination");
+            double length = Double.parseDouble(segmentElement.attributeValue("length"));
+            String name = segmentElement.attributeValue("name");
+
+            Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
+            segments.add(s);
+        }
+
+        map.setIntersections(intersectionsById);
+        map.setSegments(segments);
 
         return true;
     }
