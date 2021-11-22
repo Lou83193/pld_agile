@@ -52,7 +52,7 @@ public class Window extends Application {
 
     public Scene constructHomeScene() {
 
-        MenuBar menuBar = constructMenuBar();
+        MenuBar menuBar = constructMenuBar(true);
 
         /* MAIN SCENE */
         BorderPane pane = new BorderPane();
@@ -93,7 +93,7 @@ public class Window extends Application {
 
     public Scene constructMainScene() {
 
-        MenuBar menuBar = constructMenuBar();
+        MenuBar menuBar = constructMenuBar(false);
 
         BorderPane pane = new BorderPane();
         Scene scene = new Scene(pane,1080, 720);
@@ -112,14 +112,14 @@ public class Window extends Application {
 
     }
 
-    public MenuBar constructMenuBar() {
+    public MenuBar constructMenuBar(boolean hideLoadTour) {
 
         // File menu
         Menu fileMenu = new Menu("File");
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
         fileMenu1.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
-        fileMenu2.setDisable(true);
+        if (hideLoadTour) fileMenu2.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2);
 
         // Edit menu
