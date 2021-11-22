@@ -10,7 +10,7 @@ public class Intersection {
     /**
      * ID of the intersection.
      */
-    private long id;
+    private int id;
 
     /**
      * Geographical latitude of the intersection.
@@ -33,7 +33,7 @@ public class Intersection {
      * @param latitude geographical latitude of the intersection
      * @param longitude geographical longitude of the intersection
      */
-    public Intersection(long id, double latitude, double longitude) {
+    public Intersection(int id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -61,7 +61,7 @@ public class Intersection {
      * Getter for attribute ID
      * @return returns the ID of the Intersection
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -70,7 +70,7 @@ public class Intersection {
      * Setter for attribute ID
      * @param id ID of the Intersection
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
