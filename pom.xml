@@ -13,7 +13,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.1</junit.version>
         <src.dir>src</src.dir>
+        <test.dir>test</test.dir>
         <resrc.dir>src/resources</resrc.dir>
+        <test_resrc.dir>test/resources</test_resrc.dir>
     </properties>
 
     <dependencies>
@@ -68,6 +70,11 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
+            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
@@ -77,10 +84,16 @@
             </plugin>
         </plugins>
         <sourceDirectory>${src.dir}</sourceDirectory>
+        <testSourceDirectory>${test.dir}</testSourceDirectory>
         <resources>
             <resource>
                 <directory>${resrc.dir}</directory>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>${test_resrc.dir}</directory>
+            </testResource>
+        </testResources>
     </build>
 </project>
