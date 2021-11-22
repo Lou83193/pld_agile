@@ -7,3 +7,23 @@
 .button:hover {
      -fx-background-color: #6194FF;
 }
+
+.white-background {
+    -fx-background-color: white;
+}
+
+#home-pane {
+    -fx-background-image: url("subtleBackground.jpg");
+    -fx-background-repeat: none;
+    -fx-background-position: center center;
+}
+
+.stopTextualLabel {
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+}
+
+.requestTextualPanel {
+    -fx-background-color: #DEDEDE;
+    -fx-background-radius: 10;
+}
