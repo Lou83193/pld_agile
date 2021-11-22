@@ -77,6 +77,7 @@ public class MapLoader {
 
             Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
             segments.add(s);
+            intersectionsById.get(idOrigin).getOriginOf().add(s);
         }
 
         map.setIntersections(intersectionsById);

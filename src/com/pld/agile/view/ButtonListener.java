@@ -22,6 +22,10 @@ public class ButtonListener implements EventHandler<ActionEvent> {
                 controller.loadMap();
                 break;
 
+            case LOAD_TOUR:
+                controller.loadTour();
+                break;
+
         }
 
         e.consume();

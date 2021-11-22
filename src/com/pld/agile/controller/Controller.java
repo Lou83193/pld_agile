@@ -1,7 +1,9 @@
 package com.pld.agile.controller;
 
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
+import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
 import java.io.File;
@@ -23,7 +25,7 @@ public class Controller {
 
         Window window = Window.getInstance();
 
-        // Load map
+        // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Map File");
         fileChooser.setInitialDirectory(new File("./src/resources"));
@@ -31,6 +33,7 @@ public class Controller {
 
         if (mapFile != null) {
 
+            // Load map
             MapData mapData = new MapData();
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), mapData);
             boolean success = mapLoader.load();
@@ -39,6 +42,27 @@ public class Controller {
             if (success) {
                 window.switchSceneToMainScene();
             }
+
+        }
+
+    }
+
+    public void loadTour() {
+
+        Window window = Window.getInstance();
+
+        // Fetch file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Tour File");
+        fileChooser.setInitialDirectory(new File("./src/resources"));
+        File requestsFile = fileChooser.showOpenDialog(window.getStage());
+
+        if (requestsFile != null) {
+
+            // Load tour
+            TourData tourData = new TourData();
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), tourData);
+            boolean success = requestsLoader.load();
 
         }
 

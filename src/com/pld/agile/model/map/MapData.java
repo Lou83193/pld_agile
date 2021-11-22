@@ -41,27 +41,15 @@ public class MapData extends Observable {
      */
     private double minLon = Integer.MAX_VALUE;
 
-    /**
-     * A hashmap that converts an intersection id to the index it has in the adjacency matrix.
-     */
-    private Map<String, Integer> intersectionIdToAdjMatrixIndex;
-
-    /**
-     * The adjacency matrix between intersections.
-     */
-    private int[][] adjacencyMatrix;
-
 
     /**
      * Constructor for the class MapData, initializes the attributes intersections and segments
      * @param intersections Map of all Intersections
      * @param segments List of all Segments
      */
-    public MapData(HashMap intersections, List segments, Map<String, Integer> intersectionIdToAdjMatrixIndex, int[][] adjacencyMatrix){
+    public MapData(HashMap intersections, List segments){
         this.intersections = intersections;
         this.segments = segments;
-        this.intersectionIdToAdjMatrixIndex = intersectionIdToAdjMatrixIndex;
-        this.adjacencyMatrix = adjacencyMatrix;
     }
 
     /**
@@ -70,8 +58,6 @@ public class MapData extends Observable {
     public MapData() {
         intersections = new HashMap<>();
         segments = new ArrayList<>();
-        intersectionIdToAdjMatrixIndex = new HashMap<>();
-        adjacencyMatrix = null;
     }
 
 
