@@ -119,6 +119,7 @@ public class Window extends Application {
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
         fileMenu1.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
+        fileMenu2.setOnAction(new ButtonListener(ButtonEventType.LOAD_TOUR));
         if (hideLoadTour) fileMenu2.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2);
 
