@@ -31,8 +31,8 @@ public class GraphicalViewRequests extends Group {
 
         double width = parentCanvas.getWidth();
         double height = parentCanvas.getHeight();
-        double screenScale = height/720;
-        double mapScale = 0.0507/(mapData.getMaxLon() - mapData.getMinLon());
+        double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
+        double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         List<Request> requests = tourData.getRequestList();
 

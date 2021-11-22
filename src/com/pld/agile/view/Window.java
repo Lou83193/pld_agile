@@ -30,9 +30,10 @@ public class Window extends Application {
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
-    private Controller controller;
-    private MapData mapData;
-    private TourData tourData;
+
+    private final Controller controller;
+    private final MapData mapData;
+    private final TourData tourData;
 
     public Window() {
         this.mapData = new MapData();

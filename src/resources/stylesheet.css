@@ -7,3 +7,8 @@
 .button:hover {
      -fx-background-color: #6194FF;
 }
+
+.stopTextualLabel {
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
