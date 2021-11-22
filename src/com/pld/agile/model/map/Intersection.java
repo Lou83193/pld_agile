@@ -3,6 +3,9 @@ package com.pld.agile.model.map;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an intersection on the map.
+ */
 public class Intersection {
     /**
      * ID of the intersection.
@@ -87,10 +90,18 @@ public class Intersection {
         this.longitude = longitude;
     }
 
+    /**
+     * Getter for attribute originOf
+     * @return the attribute originOf
+     */
     public List<Segment> getOriginOf() {
         return originOf;
     }
 
+    /**
+     * Setter for attribute originOf
+     * @param originOf attribute value
+     */
     public void setOriginOf(List<Segment> originOf) {
         this.originOf = originOf;
     }
