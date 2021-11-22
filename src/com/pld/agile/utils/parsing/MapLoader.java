@@ -1,9 +1,8 @@
 package com.pld.agile.utils.parsing;
 
-import com.pld.agile.model.Intersection;
-import com.pld.agile.model.MapData;
-import com.pld.agile.model.Segment;
-import javafx.util.Pair;
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.map.Segment;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

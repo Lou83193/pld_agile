@@ -1,4 +1,4 @@
-package com.pld.agile.model;
+package com.pld.agile.model.map;
 
 import com.pld.agile.Observable;
 
@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Stores the data of a loaded map.
+ */
 public class MapData extends Observable {
     /**
      * Map of all intersections, key is Pair<lat, lon>.

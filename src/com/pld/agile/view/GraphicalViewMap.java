@@ -1,13 +1,11 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.Intersection;
-import com.pld.agile.model.MapData;
-import com.pld.agile.model.Segment;
-import javafx.scene.Node;
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.map.Segment;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import java.util.List;

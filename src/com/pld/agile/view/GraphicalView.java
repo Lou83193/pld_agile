@@ -2,11 +2,10 @@ package com.pld.agile.view;
 
 import com.pld.agile.Observable;
 import com.pld.agile.Observer;
-import com.pld.agile.model.MapData;
+import com.pld.agile.model.map.MapData;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 
 public class GraphicalView implements Observer {
 
