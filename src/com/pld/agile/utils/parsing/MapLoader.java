@@ -83,6 +83,7 @@ public class MapLoader {
         // DOM can be handled
         List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
 
+        map.resetBounds();
         HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
         List<Intersection> intersections = new ArrayList<>();
         int currId = 0;

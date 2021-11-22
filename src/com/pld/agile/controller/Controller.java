@@ -21,7 +21,7 @@ public class Controller {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Map File");
-        fileChooser.setInitialDirectory(new File("./src/resources"));
+        fileChooser.setInitialDirectory(new File("./src/resources/xml/maps"));
         File mapFile = fileChooser.showOpenDialog(window.getStage());
 
         if (mapFile != null) {
@@ -44,7 +44,7 @@ public class Controller {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Tour File");
-        fileChooser.setInitialDirectory(new File("./src/resources"));
+        fileChooser.setInitialDirectory(new File("./src/resources/xml/requests"));
         File requestsFile = fileChooser.showOpenDialog(window.getStage());
 
         if (requestsFile != null) {

@@ -78,6 +78,17 @@ public class MapData extends Observable {
         notifyObservers(this);
     }
 
+    /**
+     * Reset the bounds of map to infinitely big / small values (minimum / maximum latitude / longitude)
+     */
+    public void resetBounds() {
+        maxLat = Integer.MIN_VALUE;
+        maxLon = Integer.MIN_VALUE;
+        minLat = Integer.MAX_VALUE;
+        minLon = Integer.MAX_VALUE;
+        notifyObservers(this);
+    }
+
     // GETTERS
     /**
      * Getter for attribute intersections

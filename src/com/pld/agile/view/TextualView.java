@@ -52,6 +52,52 @@ public class TextualView implements Observer {
 
         if (requests.size() == 0) return;
 
+        // Warehouse panel --------------------------------------------------------------------------------------------
+        double warehouseLat = tourData.getWarehouse().getAddress().getLatitude();
+        double warehouseLon = tourData.getWarehouse().getAddress().getLongitude();
+
+        VBox warehousePanel = new VBox(10);
+        VBox warehouseStopPanel = new VBox(8);
+        HBox warehouseStopLabelPanel = new HBox(8);
+        GridPane warehouseStopInfoPane = new GridPane();
+        warehouseStopInfoPane.setVgap(4);
+
+        // Label
+        Rectangle warehouseGraphic = new Rectangle(14, 14);
+        warehouseGraphic.setRotate(45);
+        warehouseGraphic.setFill(Color.BLACK);
+        Text warehouseStopLabelText = new Text("Warehouse");
+        warehouseStopLabelText.getStyleClass().add("stopTextualLabel");
+        warehouseStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
+        warehouseStopLabelPanel.getChildren().addAll(warehouseGraphic, warehouseStopLabelText);
+
+        // Latitude
+        Text warehouseStopLatText = new Text("Latitude: ");
+        TextField warehouseStopLatInput = new TextField(warehouseLat + "");
+        warehouseStopLatInput.setEditable(false);
+        warehouseStopLatInput.setMouseTransparent(true);
+        warehouseStopLatInput.setFocusTraversable(false);
+        warehouseStopInfoPane.add(warehouseStopLatText, 0, 0);
+        warehouseStopInfoPane.add(warehouseStopLatInput, 1, 0);
+
+        // Longitude
+        Text warehouseSStopLonText = new Text("Longitude: ");
+        TextField warehouseSStopLonInput = new TextField(warehouseLon + "");
+        warehouseSStopLonInput.setEditable(false);
+        warehouseSStopLonInput.setMouseTransparent(true);
+        warehouseSStopLonInput.setFocusTraversable(false);
+        warehouseStopInfoPane.add(warehouseSStopLonText, 0, 1);
+        warehouseStopInfoPane.add(warehouseSStopLonInput, 1, 1);
+
+        // Add it all together
+        warehouseStopPanel.getChildren().addAll(warehouseStopLabelPanel, warehouseStopInfoPane);
+
+        warehousePanel.setPadding(new Insets(10));
+        warehousePanel.getChildren().add(warehouseStopPanel);
+        warehousePanel.getStyleClass().add("requestTextualPanel");
+        requestListContainer.getChildren().add(warehousePanel);
+
+        // Other stops ------------------------------------------------------------------------------------------------
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
