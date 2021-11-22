@@ -67,9 +67,9 @@ public class RequestLoader {
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
             // todo : pickup & delivery
-            Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("pickupAddress"));
+            Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("pickupAddress"));
             double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
-            Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("deliveryAddress"));
+            Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("deliveryAddress"));
             double deliveryDuration = Double.parseDouble(requestElement.attributeValue("deliveryDuration"));
             Stop pickup = new Stop(pickupLocation, pickupDuration, null); // todo : later see if handle neihgbouringstops;
             Stop delivery = new Stop(deliveryLocation, deliveryDuration, null); // todo : later see if handle neihgbouringstops;

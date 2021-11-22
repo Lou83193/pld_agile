@@ -1,6 +1,8 @@
 package com.pld.agile.view;
 
 import com.pld.agile.controller.Controller;
+import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,15 +30,16 @@ public class Window extends Application {
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
+    private Controller controller;
+    private MapData mapData;
+    private TourData tourData;
 
-    public Window() { singletonInstance = this; }
-
-    public static Window getInstance() {
-        if (singletonInstance == null) {
-            singletonInstance = new Window();
-        }
-        return singletonInstance;
+    public Window() {
+        this.mapData = new MapData();
+        this.tourData = new TourData();
+        this.controller = new Controller(this);
     }
+
 
     @Override
     public void start(Stage s) throws IOException {
@@ -68,7 +71,7 @@ public class Window extends Application {
         Button button = new Button("Load Map");
         button.setPrefSize(200, 50);
         button.getStyleClass().add("button");
-        button.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
+        button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         // Group
         VBox homePage = new VBox(15);
         homePage.setAlignment(Pos.CENTER);
@@ -100,8 +103,8 @@ public class Window extends Application {
         scene.getStylesheets().add("stylesheet.css");
 
         HBox mainPanel = new HBox();
-        GraphicalView graphicalView = new GraphicalView(scene);
-        TextualView textualView = new TextualView(scene);
+        GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
+        TextualView textualView = new TextualView(tourData, scene);
         mainPanel.getChildren().add(graphicalView.getComponent());
         mainPanel.getChildren().add(textualView.getComponent());
 
@@ -118,8 +121,8 @@ public class Window extends Application {
         Menu fileMenu = new Menu("File");
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
-        fileMenu1.setOnAction(new ButtonListener(ButtonEventType.LOAD_MAP));
-        fileMenu2.setOnAction(new ButtonListener(ButtonEventType.LOAD_TOUR));
+        fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
+        fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
         if (hideLoadTour) fileMenu2.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2);
 
@@ -149,6 +152,15 @@ public class Window extends Application {
 
     public Stage getStage() {
         return stage;
+    }
+    public Controller getController() {
+        return controller;
+    }
+    public MapData getMapData() {
+        return mapData;
+    }
+    public TourData getTourData() {
+        return tourData;
     }
 
     public static void main(String[] args) {

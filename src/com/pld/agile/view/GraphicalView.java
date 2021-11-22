@@ -18,12 +18,10 @@ public class GraphicalView implements Observer {
     private MapData mapData;
     private TourData tourData;
 
-    public GraphicalView(Scene parent) {
+    public GraphicalView(MapData mapData, TourData tourData, Scene parent) {
 
         // Add observers
-        this.mapData = new MapData();
         mapData.addObserver(this);
-        this.tourData = new TourData();
         tourData.addObserver(this);
 
         graphicalViewMap = new GraphicalViewMap(mapData, parent);

@@ -10,20 +10,13 @@ import java.io.File;
 
 public class Controller {
 
-    private static Controller singletonInstance;
+    private Window window;
 
-    private Controller() {}
-
-    public static Controller getInstance() {
-        if (singletonInstance == null) {
-            singletonInstance = new Controller();
-        }
-        return singletonInstance;
+    public Controller (Window window) {
+        this.window = window;
     }
 
     public void loadMap() {
-
-        Window window = Window.getInstance();
 
         // Fetch file
         FileChooser fileChooser = new FileChooser();
@@ -34,12 +27,12 @@ public class Controller {
         if (mapFile != null) {
 
             // Load map
-            MapData mapData = new MapData();
-            MapLoader mapLoader = new MapLoader(mapFile.getPath(), mapData);
+            MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
             boolean success = mapLoader.load();
 
             // Switch scenes
             if (success) {
+                window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchSceneToMainScene();
             }
 
@@ -48,8 +41,6 @@ public class Controller {
     }
 
     public void loadTour() {
-
-        Window window = Window.getInstance();
 
         // Fetch file
         FileChooser fileChooser = new FileChooser();
@@ -60,8 +51,7 @@ public class Controller {
         if (requestsFile != null) {
 
             // Load tour
-            TourData tourData = new TourData();
-            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), tourData);
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
             boolean success = requestsLoader.load();
 
         }
