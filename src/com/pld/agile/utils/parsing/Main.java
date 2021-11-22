@@ -16,7 +16,7 @@ public class Main {
 
         TourData tourData = new TourData();
         tourData.setAssociatedMap(mapData);
-        TourLoader requestsLoader = new TourLoader("src/resources/fichiersXML2020/requestsSmall1.xml", tourData);
+        RequestLoader requestsLoader = new RequestLoader("src/resources/fichiersXML2020/requestsSmall1.xml", tourData);
         success = requestsLoader.load();
 
         System.out.println("SUCCESS : " + success);

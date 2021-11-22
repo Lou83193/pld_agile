@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class MapData extends Observable {
     /**
-     * Map of all intersections, key is Pair<lat, lon>.
+     * Map of all intersections.
      */
     HashMap <String, Intersection> intersections;
 
