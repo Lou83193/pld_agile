@@ -41,6 +41,34 @@ public class MapLoader {
     }
 
     /**
+     * Adds a segment to the application model : Used to guarantee that there is only one segment of same origin & destination - makes up keep the shortest one in that case.
+     * @param segments
+     * @param s
+     */
+    private void addSegmentIfNotRedundant(List<Segment> segments, Segment s) {
+        // TODO : enlever segment de l'intersection aussi
+        boolean shouldAdd = true;
+        Segment toBeRemoved = null;
+        for (Segment presentSegment : s.getOrigin().getOriginOf()) { // iterate over all segments with the same origin
+            if (presentSegment.getDestination().getId() == s.getDestination().getId() && presentSegment.getLength() <= s.getLength()) {
+                shouldAdd = false;
+            } else if (presentSegment.getDestination().getId() == s.getDestination().getId()) { // we delete the old segment of same origin & destination since the new one is better and we will add it
+                toBeRemoved = presentSegment;
+            }
+        }
+
+        if (toBeRemoved != null) {
+            segments.remove(toBeRemoved);
+            toBeRemoved.getOrigin().getOriginOf().remove(toBeRemoved);
+        }
+
+        if (shouldAdd) {
+            segments.add(s);
+            s.getOrigin().getOriginOf().add(s);
+        }
+    }
+
+    /**
      * Coordinates the entire parsing process - only method to call to fill the provided map.
      * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
      */
@@ -76,8 +104,7 @@ public class MapLoader {
             String name = segmentElement.attributeValue("name");
 
             Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
-            segments.add(s);
-            intersectionsById.get(idOrigin).getOriginOf().add(s);
+            addSegmentIfNotRedundant(segments, s);
         }
 
         map.setIntersections(intersectionsById);

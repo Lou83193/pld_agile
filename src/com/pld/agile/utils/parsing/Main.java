@@ -12,7 +12,7 @@ public class Main {
         boolean success = mapLoader.load();
 
         //System.out.println("SUCCESS : " + success);
-        //System.out.println(mapData);
+        //System.out.println(mapData.getIntersections().get((long)21510475).getOriginOf().size());
 
         TourData tourData = new TourData();
         tourData.setAssociatedMap(mapData);
