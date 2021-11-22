@@ -1,5 +1,8 @@
 package com.pld.agile.model.map;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Intersection {
     /**
      * ID of the intersection.
@@ -17,6 +20,11 @@ public class Intersection {
     private double longitude;
 
     /**
+     * List of segments with this intersection as an origin.
+     */
+    private List<Segment> originOf;
+
+    /**
      * Constructor of the class Intersection, initialises the attributes
      * @param id ID of the intersection
      * @param latitude geographical latitude of the intersection
@@ -26,6 +34,7 @@ public class Intersection {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
+        originOf = new ArrayList<>();
     }
 
     // GETTERS
@@ -78,12 +87,21 @@ public class Intersection {
         this.longitude = longitude;
     }
 
+    public List<Segment> getOriginOf() {
+        return originOf;
+    }
+
+    public void setOriginOf(List<Segment> originOf) {
+        this.originOf = originOf;
+    }
+
     @Override
     public String toString() {
         return "Intersection{" +
                 "id='" + id + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                //", originOf=" + originOf +
                 '}';
     }
 }

@@ -11,16 +11,16 @@ public class Main {
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean success = mapLoader.load();
 
-        System.out.println("SUCCESS : " + success);
-        System.out.println(mapData);
+        //System.out.println("SUCCESS : " + success);
+        //System.out.println(mapData);
 
         TourData tourData = new TourData();
         tourData.setAssociatedMap(mapData);
         RequestLoader requestsLoader = new RequestLoader("src/resources/fichiersXML2020/requestsMedium5.xml", tourData);
         success = requestsLoader.load();
 
-        System.out.println("SUCCESS : " + success);
-        System.out.println(tourData);
+        //System.out.println("SUCCESS : " + success);
+        //System.out.println(tourData);
 
     }
 }
