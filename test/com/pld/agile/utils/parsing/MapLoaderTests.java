@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MapLoaderTests {
 
     @Test
-    public void testLoadFileNoMapNode() {
+    //Test n°1.4
+    public void testNoMapNode() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         //redirect the System-output (normally the console) to a variable
         System.setErr(new PrintStream(outContent));
