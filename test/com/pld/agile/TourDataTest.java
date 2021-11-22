@@ -11,21 +11,23 @@ class TourDataTest {
     private MapData mapData = new MapData ();
     private MapLoader mapLoader = new MapLoader(filePath, mapData);
     private boolean success = mapLoader.load();
+    private TourData tourDataOriginal = new TourData();
+    private RequestLoader requestLoader = new RequestLoader("test/resources/loadRequests_3Requests", tourDataOriginal);
     private TourData tourData = new TourData();
-    private RequestLoader requestLoader = new RequestLoader("test/resources/loadRequests_3Requests", tourData);
-
 
     @Test
     //Test n°3.1
     public void testComputeTour_3Requests (){
-        tourData.setAssociatedMap(mapData);
+        tourDataOriginal.setAssociatedMap(mapData);
+        tourData = tourDataOriginal;
         success = requestLoader.load();
     }
 
     @Test
     //Test n°3.2
     public void testComputeTour_redundancy (){
-        tourData.setAssociatedMap(mapData);
+        tourDataOriginal.setAssociatedMap(mapData);
+        tourData = tourDataOriginal;
         success = requestLoader.load();
     }
 

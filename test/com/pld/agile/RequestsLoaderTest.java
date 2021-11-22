@@ -60,7 +60,7 @@ class RequestsLoaderTest {
 
         if(success) {
             for (int i = 0; i < tourData.getRequestList().size();i++) {
-                if (tourData.getRequestList().get(i).getPickup().getAddress() != null && tourData.getRequestList().get(i).getDelivery().getAddress() != null){
+                if (tourData.getWarehouse().getAddress() !=null && tourData.getRequestList().get(i).getPickup().getAddress() != null && tourData.getRequestList().get(i).getDelivery().getAddress() != null){
                     System.out.println("SUCCESS : " + success);
                 }else {
                     System.out.println("FAIL");
