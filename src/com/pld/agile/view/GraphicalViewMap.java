@@ -3,7 +3,7 @@ package com.pld.agile.view;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
-import com.pld.agile.utils.view.ProjectionUtils;
+import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,7 +42,7 @@ public class GraphicalViewMap extends Canvas {
         for (Segment s : segments) {
 
             Intersection origin = s.getOrigin();
-            double[] originPos = ProjectionUtils.projectLatLon(
+            double[] originPos = ViewUtilities.projectLatLon(
                     origin.getLatitude(),
                     origin.getLongitude(),
                     mapData.getMinLat(),
@@ -54,7 +54,7 @@ public class GraphicalViewMap extends Canvas {
             );
 
             Intersection destination = s.getDestination();
-            double[] destinationPos = ProjectionUtils.projectLatLon(
+            double[] destinationPos = ViewUtilities.projectLatLon(
                     destination.getLatitude(),
                     destination.getLongitude(),
                     mapData.getMinLat(),

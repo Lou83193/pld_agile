@@ -55,7 +55,7 @@ public class RequestLoader {
         }
         // DOM can be handled
         List<Node> requestNodes = tourXmlDocument.selectNodes("/planningRequest/request");
-        Node warehouseNode = tourXmlDocument.selectNodes("planningRequest/depot").get(0);
+        Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
 
         Element warehouseElement = (Element) warehouseNode;
         String departureTime = warehouseElement.attributeValue("departureTime");

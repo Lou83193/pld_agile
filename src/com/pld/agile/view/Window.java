@@ -121,10 +121,14 @@ public class Window extends Application {
         Menu fileMenu = new Menu("File");
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load tour");
+        MenuItem fileMenu3 = new MenuItem("Compute tour");
         fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
-        if (hideLoadTour) fileMenu2.setDisable(true);
-        fileMenu.getItems().addAll(fileMenu1, fileMenu2);
+        if (hideLoadTour) {
+            fileMenu2.setDisable(true);
+            fileMenu3.setDisable(true);
+        }
+        fileMenu.getItems().addAll(fileMenu1, fileMenu2, fileMenu3);
 
         // Edit menu
         Menu editMenu = new Menu("Edit");
