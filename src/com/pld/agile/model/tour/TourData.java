@@ -4,9 +4,9 @@ import com.pld.agile.Observable;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
+
+import com.pld.agile.model.map.Segment;
 import javafx.util.Pair;
 
 /**
@@ -30,11 +30,11 @@ public class TourData extends Observable {
      */
     private String departureTime;
 
-    private int [][] stopsGraph;
+    private int [][] stopsGraph; // to do
 
-    private Intersection[][] predecessors;
+    private HashMap<Long, HashMap<Long, Long>> predecessors;
 
-    private long[] stops;
+    private List<Long> stops;
 
     private List<Stop> computedPath;
 
@@ -119,19 +119,60 @@ public class TourData extends Observable {
 
 
     private void setStops(){
-        stops[0]=warehouse.getAddress().getId();
-        for(int i=1; i<requestList.size(); i=i+2){
-            stops[i]=requestList.get(i).getPickup().getAddress().getId();//add pickup
-            stops[i+1]=requestList.get(i).getDelivery().getAddress().getId();//add delivery
-
+        stops.add(warehouse.getAddress().getId());
+        for(int i=1; i<requestList.size(); i++) {
+            stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup
+            stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery
         }
     }
 
-    public void dijkstra(){
+    public void dijkstra() {
+        int nbIntersections = associatedMap.getIntersections().size();
+        predecessors = new HashMap<>();
 
-        for(int i=0; i< stops.length;i++){
-            PriorityQueue<Pair<Intersection, Integer>> distances = new PriorityQueue<Pair<Intersection, Integer>>();
+        for(Long currStop : stops) {
+            // Current Stop Variables
+            HashMap<Long, Double> dist = new HashMap<Long, Double>();
+            HashMap<Long, Long> pi = new HashMap<>();
+            Set<Long> settled = new HashSet<Long>();
+            PriorityQueue<Pair<Long, Double>> pq = new PriorityQueue<Pair<Long, Double>>(Comparator.comparing(Pair::getValue));
 
+            // Distance to the source is 0
+            dist.put(currStop, 0.);
+
+            pq.add(new Pair<>(currStop, 0.));
+
+            while(settled.size() != nbIntersections) {
+
+                if(pq.isEmpty())
+                    return;
+
+                // Sommet gris avec distance minimale
+                Long node = pq.remove().getKey();
+
+                for(Segment road : associatedMap.getIntersections().get(node).getOriginOf()) {
+                    Long nextNode = road.getDestination().getId();
+
+                    if(!settled.contains(nextNode)) {
+                        // Relachement
+                        double distance = Double.MAX_VALUE;
+                        if(dist.containsKey(nextNode))
+                        {
+                            distance = dist.get(nextNode);
+                        }
+                        if(distance > dist.get(node) + road.getLength()) {
+                            distance = dist.get(node) + road.getLength();
+                            pq.put(nextNode, node);
+                        }
+                        dist.put(nextNode, distance);
+
+                        pq.add(new Pair<>(nextNode, distance));
+                    }
+                }
+
+                settled.add(node);
+            }
+            predecessors.put(currStop, pi);
         }
     }
 
