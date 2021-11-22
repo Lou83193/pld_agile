@@ -60,7 +60,8 @@ public class Controller {
 
     public void computeTour() {
 
-
+        window.getTourData().setStops();
+        window.getTourData().dijkstra();
 
     }
 

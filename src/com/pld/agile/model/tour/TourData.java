@@ -33,9 +33,9 @@ public class TourData extends Observable {
     private double [][] stopsGraph; // to do
 
     //private HashMap<Long, HashMap<Long, Long>> predecessors;
-    private Long [][] predecessors;
+    private int [][] predecessors;
 
-    private List<Long> stops;
+    private List<Integer> stops;
 
     private List<Stop> computedPath;
 
@@ -119,56 +119,61 @@ public class TourData extends Observable {
     }
 
 
-    private void setStops(){
+    public void setStops(){
+        stops=new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
-        for(int i=1; i<requestList.size(); i++) {
+        for(int i=0; i<requestList.size(); i++) {
             stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup
-            System.out.println("id="+requestList.get(i).getPickup().getAddress().getId());
             stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery
         }
+        System.out.println("stops="+stops);
     }
 
     public void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
-        predecessors = new Long [nbIntersections-1][nbIntersections-1];
+        predecessors = new int [nbIntersections][nbIntersections];
+        stopsGraph=new double [stops.size()][stops.size()];
+        int stopIndex =0; // need index of currStop to fill predecessors
+        for(int currStop : stops) {
 
-        for(Long currStop : stops) {
-            int stopIndex =0; // need index of currStop to fill predecessors
             // Current Stop Variables
             //HashMap<Long, Double> dist = new HashMap<Long, Double>();
             //HashMap<Long, Long> pi = new HashMap<>();
 
-            double [] dist = new double[nbIntersections-1]; //index = intersection id in map data
-            Long [] pi = new Long [nbIntersections-1]; //index = intersection id in map data
+            double [] dist = new double[nbIntersections]; //index = intersection id in map data
+            int [] pi = new int [nbIntersections]; //index = intersection id in map data
 
-            Set<Long> settled = new HashSet<Long>();
+            Set<Integer> settled = new HashSet<Integer>();
 
-            PriorityQueue<Pair<Long, Double>> pq = new PriorityQueue<Pair<Long, Double>>(Comparator.comparing(Pair::getValue));
+            PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<Pair<Integer, Double>>(Comparator.comparing(Pair::getValue));
 
             // Distance to the source is 0
             for(int i=0;i<nbIntersections;i++){
                 dist[i]=Double.MAX_VALUE;
             }
-            dist [Math.toIntExact(currStop)]=0;
-            pi[Math.toIntExact(currStop)]=(long)-1;//null, starting stop won't have predecessors
+            System.out.println("nombre d'intersections : "+ nbIntersections);
+            dist [currStop]=0;
+            pi[currStop]=-1;//null, starting stop won't have predecessors
             //dist.put(currStop, 0.);
+            pq.add(new Pair<>(currStop, 0.0));
 
-            pq.add(new Pair<>(currStop, 0.));
+            //while(settled.size() != nbIntersections) {
+            boolean contains =false;
+            while(!contains) {
+                    if(pq.isEmpty())
+                        return;
 
-            while(settled.size() != nbIntersections) {
 
-                if(pq.isEmpty())
-                    return;
+                    System.out.println(" pq= "+pq);
+                    // Sommet gris avec distance minimale
+                    int node = pq.remove().getKey();
 
-                // Sommet gris avec distance minimale
-                Long node = pq.remove().getKey();
+                    for(Segment road : associatedMap.getIntersections().get(Math.toIntExact(node)).getOriginOf()) {
+                        int nextNode = road.getDestination().getId();
 
-                for(Segment road : associatedMap.getIntersections().get(Math.toIntExact(node)).getOriginOf()) {
-                    Long nextNode = road.getDestination().getId();
-
-                    if(!settled.contains(nextNode)) {
-                        // Relachement
-                        //double distance = Double.MAX_VALUE;
+                        if(!settled.contains(nextNode)) {
+                            // Relachement
+                            //double distance = Double.MAX_VALUE;
                         /*
                         //if(dist.containsKey(nextNode))
                         {
@@ -180,17 +185,27 @@ public class TourData extends Observable {
                             pq.put(nextNode, node);
                         }
                         dist.put(nextNode, distance);*/
-                        double distance=dist[Math.toIntExact(nextNode)];
-                        if(distance > dist[Math.toIntExact(node)] + road.getLength()) {
-                            distance = dist[Math.toIntExact(node)] + road.getLength();
-                            pi[Math.toIntExact(nextNode)]=node;
+
+                            double distance=dist[nextNode];
+                            if(distance > dist[node] + road.getLength()) {
+                                distance = dist[node] + road.getLength();
+                                pi[nextNode]=node;
+                            }
+
+                            pq.add(new Pair<>(nextNode, distance));
+
                         }
-
-                        pq.add(new Pair<>(nextNode, distance));
                     }
-                }
 
-                settled.add(node);
+                    settled.add(node);
+                    System.out.println("nombre de noeuds noirs : "+settled.size());
+                    contains=true;
+                    for(int s: stops){
+                        if(!settled.contains(s)){
+                            contains=false;
+                            break;
+                        }
+                    }
             }
 
             //Check
@@ -204,6 +219,22 @@ public class TourData extends Observable {
             stopIndex++;
             //predecessors.put(currStop, pi);
 
+
+        }
+        //TESTS :
+        System.out.println("results of dijkstra : predecessors ");
+        for(int i=0; i<nbIntersections-1; i++){
+            for(int j=0; j<nbIntersections-1; j++){
+               System.out.print(predecessors [i][j]+" ");
+            }
+            System.out.println();
+        }
+        System.out.println("stops graph : ");
+        for(int i=0; i< stops.size(); i++){
+            for(int j=0; j< stops.size(); j++){
+                System.out.print(stopsGraph [i][j]+" ");
+            }
+            System.out.println();
         }
     }
 
