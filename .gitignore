@@ -1,7 +1,8 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/.idea/
-agile.iml
+/.idea/modules.xml
+/.idea/libraries/
+*.iml
 /target/
 *.class

@@ -4,7 +4,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.parsing.RequestLoader;
 import org.junit.jupiter.api.Test;
 
-class TourDataTests {
+public class TourDataTests {
     private final MapData mapData = new MapData ();
     private boolean success;
     private final TourData tourDataOriginal = new TourData();
