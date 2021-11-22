@@ -5,16 +5,20 @@ import com.pld.agile.Observable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Stores the data of a loaded map.
  */
 public class MapData extends Observable {
     /**
-     * Map of all intersections.
+     * List of intersections, their index should be their ID.
      */
-    HashMap<Long, Intersection> intersections;
+    private List<Intersection> intersections;
+
+    /**
+     * Map of all intersections by their XML-ID (to be able to link them to XML-loaded requests). Only used in loading.
+     */
+    private HashMap<Long, Intersection> intersectionsByOldID;
 
     /**
      * List of all segments
@@ -44,10 +48,10 @@ public class MapData extends Observable {
 
     /**
      * Constructor for the class MapData, initializes the attributes intersections and segments
-     * @param intersections Map of all Intersections
+     * @param intersections List of all Intersections
      * @param segments List of all Segments
      */
-    public MapData(HashMap intersections, List segments){
+    public MapData(List intersections, List segments){
         this.intersections = intersections;
         this.segments = segments;
     }
@@ -56,7 +60,7 @@ public class MapData extends Observable {
      * Constructor for the class MapData, initializes the attributes intersections and segments
      */
     public MapData() {
-        intersections = new HashMap<Long, Intersection>();
+        intersectionsByOldID = new HashMap<Long, Intersection>();
         segments = new ArrayList<>();
     }
 
@@ -79,8 +83,8 @@ public class MapData extends Observable {
      * Getter for attribute intersections
      * @return returns the map of all Intersections
      */
-    public HashMap<Long, Intersection> getIntersections() {
-        return intersections;
+    public HashMap<Long, Intersection> getIntersectionsByOldID() {
+        return intersectionsByOldID;
     }
 
     /**
@@ -91,13 +95,29 @@ public class MapData extends Observable {
         return segments;
     }
 
+    /**
+     * Getter for intersections.
+     * @return intersections
+     */
+    public List<Intersection> getIntersections() {
+        return intersections;
+    }
+
+    /**
+     * Setter for intersections.
+     * @param intersections list of intersections
+     */
+    public void setIntersections(List<Intersection> intersections) {
+        this.intersections = intersections;
+    }
+
     // SETTERS
     /**
      * Setter for attribute intersections
-     * @param intersections Map of all Intersections
+     * @param intersectionsByOldID Map of all Intersections
      */
-    public void setIntersections(HashMap<Long, Intersection> intersections) {
-        this.intersections = intersections;
+    public void setIntersectionsByOldID(HashMap<Long, Intersection> intersectionsByOldID) {
+        this.intersectionsByOldID = intersectionsByOldID;
         notifyObservers(this);
     }
 
@@ -181,7 +201,7 @@ public class MapData extends Observable {
     @Override
     public String toString() {
         return "MapData{" +
-                "intersections=" + intersections +
+                "intersections=" + intersectionsByOldID +
                 ", segments=" + segments +
                 '}';
     }

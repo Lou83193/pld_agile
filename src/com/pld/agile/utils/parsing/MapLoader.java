@@ -84,14 +84,18 @@ public class MapLoader {
         List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
 
         HashMap<Long, Intersection> intersectionsById = new HashMap<>();  // used to create segments
+        List<Intersection> intersections = new ArrayList<>();
+        int currId = 0;
         for (Node intersectionNode : intersectionNodes) {
             Element intersectionElement = (Element) intersectionNode;
             long id = Long.parseLong(intersectionElement.attributeValue("id"));
             double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
             double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
             map.updateBounds(lat, lon);
-            Intersection i = new Intersection(id, lat, lon);
+            Intersection i = new Intersection(currId, lat, lon); // override id
             intersectionsById.put(id, i);
+            intersections.add(i);
+            currId++;
         }
 
         List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
@@ -107,7 +111,8 @@ public class MapLoader {
             addSegmentIfNotRedundant(segments, s);
         }
 
-        map.setIntersections(intersectionsById);
+        map.setIntersectionsByOldID(intersectionsById);
+        map.setIntersections(intersections);
         map.setSegments(segments);
 
         return true;

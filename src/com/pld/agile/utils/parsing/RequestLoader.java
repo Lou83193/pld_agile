@@ -59,16 +59,16 @@ public class RequestLoader {
 
         Element warehouseElement = (Element) warehouseNode;
         String departureTime = warehouseElement.attributeValue("departureTime");
-        Intersection warehouseLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("address"));
+        Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
         tour.setDepartureTime(departureTime);
         tour.setWarehouse(new Stop(warehouseLocation, 0));
 
         List<Request> requestList = new ArrayList<>();
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
-            Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("pickupAddress"));
+            Intersection pickupLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("pickupAddress"));
             double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
-            Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("deliveryAddress"));
+            Intersection deliveryLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("deliveryAddress"));
             double deliveryDuration = Double.parseDouble(requestElement.attributeValue("deliveryDuration"));
             Stop pickup = new Stop(pickupLocation, pickupDuration);
             Stop delivery = new Stop(deliveryLocation, deliveryDuration);
