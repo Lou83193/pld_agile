@@ -6,7 +6,7 @@ import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.parsing.RequestLoader;
 import org.junit.jupiter.api.Test;
 
-/*
+
 class RequestsLoaderTest {
     private String filePath= "test/resources/loadMap_loadRequestsBase";
     private MapData mapData = new MapData();
@@ -90,5 +90,3 @@ class RequestsLoaderTest {
 
 
 }
-}
-*/
