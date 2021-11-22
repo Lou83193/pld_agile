@@ -5,6 +5,7 @@ import com.pld.agile.Observable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Stores the data of a loaded map.
@@ -41,29 +42,38 @@ public class MapData extends Observable {
     private double minLon = Integer.MAX_VALUE;
 
     /**
-     * Singleton instance
+     * A hashmap that converts an intersection id to the index it has in the adjacency matrix.
      */
-    private static MapData singletonInstance;
+    private Map<String, Integer> intersectionIdToAdjMatrixIndex;
 
     /**
-     * Constructor for the class MapData, initializes the attributes intersections and segments
+     * The adjacency matrix between intersections.
      */
-    private MapData(){
-        intersections = new HashMap<>();
-        segments = new ArrayList<>();
-    }
+    private int[][] adjacencyMatrix;
+
 
     /**
      * Constructor for the class MapData, initializes the attributes intersections and segments
      * @param intersections Map of all Intersections
      * @param segments List of all Segments
      */
-    /*
-    public MapData(HashMap intersections, List segments){
+    public MapData(HashMap intersections, List segments, Map<String, Integer> intersectionIdToAdjMatrixIndex, int[][] adjacencyMatrix){
         this.intersections = intersections;
         this.segments = segments;
+        this.intersectionIdToAdjMatrixIndex = intersectionIdToAdjMatrixIndex;
+        this.adjacencyMatrix = adjacencyMatrix;
     }
-    */
+
+    /**
+     * Constructor for the class MapData, initializes the attributes intersections and segments
+     */
+    public MapData() {
+        intersections = new HashMap<>();
+        segments = new ArrayList<>();
+        intersectionIdToAdjMatrixIndex = new HashMap<>();
+        adjacencyMatrix = null;
+    }
+
 
     /**
      * Update bounds of map (minimum / maximum latitude / longitude)
@@ -75,21 +85,10 @@ public class MapData extends Observable {
         maxLon = Math.max(maxLon, lon);
         minLat = Math.min(minLat, lat);
         minLon = Math.min(minLon, lon);
+        notifyObservers(this);
     }
 
     // GETTERS
-
-    /**
-     * Getter for the singleton instance
-     * @return the singleton instance of MapData
-     */
-    public static MapData getInstance() {
-        if (singletonInstance == null) {
-            singletonInstance = new MapData();
-        }
-        return singletonInstance;
-    }
-
     /**
      * Getter for attribute intersections
      * @return returns the map of all Intersections
@@ -113,6 +112,7 @@ public class MapData extends Observable {
      */
     public void setIntersections(HashMap<String, Intersection> intersections) {
         this.intersections = intersections;
+        notifyObservers(this);
     }
 
     /**
@@ -138,6 +138,7 @@ public class MapData extends Observable {
      */
     public void setMaxLat(double maxLat) {
         this.maxLat = maxLat;
+        notifyObservers(this);
     }
 
     /**
@@ -154,6 +155,7 @@ public class MapData extends Observable {
      */
     public void setMinLat(double minLat) {
         this.minLat = minLat;
+        notifyObservers(this);
     }
 
     /**
@@ -170,6 +172,7 @@ public class MapData extends Observable {
      */
     public void setMaxLon(double maxLon) {
         this.maxLon = maxLon;
+        notifyObservers(this);
     }
 
     /**
@@ -186,6 +189,7 @@ public class MapData extends Observable {
      */
     public void setMinLon(double minLon) {
         this.minLon = minLon;
+        notifyObservers(this);
     }
 
     @Override

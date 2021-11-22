@@ -15,7 +15,7 @@ public class GraphicalView implements Observer {
     public GraphicalView(Scene parent) {
 
         // Add observers
-        MapData mapData = MapData.getInstance();
+        MapData mapData = new MapData();
         mapData.addObserver(this);
 
         graphicalViewMap = new GraphicalViewMap(parent);

@@ -31,7 +31,7 @@ public class Controller {
 
         if (mapFile != null) {
 
-            MapData mapData = MapData.getInstance();
+            MapData mapData = new MapData();
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), mapData);
             boolean success = mapLoader.load();
 

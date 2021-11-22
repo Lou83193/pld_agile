@@ -24,7 +24,7 @@ public class GraphicalViewMap extends Canvas {
         double width = getWidth();
         double height = getHeight();
         System.out.println(width + "; " + height);
-        MapData mapData = MapData.getInstance();
+        MapData mapData = new MapData();
 
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, width, height);

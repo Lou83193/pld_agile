@@ -7,16 +7,16 @@ public class Main {
 
     public static void main(String[] args) {
         String filePath = "src/resources/fichiersXML2020/smallMap.xml";
-        MapData mapData = MapData.getInstance();
+        MapData mapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean success = mapLoader.load();
 
         System.out.println("SUCCESS : " + success);
         System.out.println(mapData);
 
-        TourData tourData = TourData.getInstance();
+        TourData tourData = new TourData();
         tourData.setAssociatedMap(mapData);
-        RequestsLoader requestsLoader = new RequestsLoader("src/resources/fichiersXML2020/requestsSmall1.xml", tourData);
+        TourLoader requestsLoader = new TourLoader("src/resources/fichiersXML2020/requestsSmall1.xml", tourData);
         success = requestsLoader.load();
 
         System.out.println("SUCCESS : " + success);
