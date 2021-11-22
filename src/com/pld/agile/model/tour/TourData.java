@@ -34,7 +34,7 @@ public class TourData extends Observable {
 
     private Intersection[][] predecessors;
 
-    private String [] stops;
+    private long[] stops;
 
     private List<Stop> computedPath;
 

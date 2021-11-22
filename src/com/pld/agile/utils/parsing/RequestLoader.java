@@ -66,7 +66,6 @@ public class RequestLoader {
         List<Request> requestList = new ArrayList<>();
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
-            // todo : pickup & delivery
             Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("pickupAddress"));
             double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
             Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("deliveryAddress"));
