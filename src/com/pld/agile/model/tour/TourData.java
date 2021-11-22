@@ -34,12 +34,12 @@ public class TourData extends Observable {
 
     private Intersection[][] predecessors;
 
-    private String [] stops;
+    private long[] stops;
 
     private List<Stop> computedPath;
 
     /**
-     * TourData constructor
+     * TourData constructor.
      */
     public TourData() {
         super();
@@ -49,38 +49,69 @@ public class TourData extends Observable {
         warehouse = null;
     }
 
-
+    /**
+     * Getter for attribute requestList.
+     * @return requestList
+     */
     public List<Request> getRequestList() {
         return requestList;
     }
 
+    /**
+     * Setter for attribute requestList.
+     * @param requestList List of requests composing the tour
+     */
     public void setRequestList(List<Request> requestList) {
         this.requestList = requestList;
         notifyObservers(this);
     }
 
+    /**
+     * Getter for attribute associatedMap
+     * @return associatedMap
+     */
     public MapData getAssociatedMap() {
         return associatedMap;
     }
 
+    /**
+     * Setter for attribute associatedMap
+     * @param associatedMap the map on which the tour takes place
+     */
     public void setAssociatedMap(MapData associatedMap) {
         this.associatedMap = associatedMap;
         notifyObservers(this);
     }
 
+    /**
+     * Getter for attribute warehouse
+     * @return warehouse
+     */
     public Stop getWarehouse() {
         return warehouse;
     }
 
+    /**
+     * Setter for attribute warehouse
+     * @param warehouse the warehouse (start & end) Stop
+     */
     public void setWarehouse(Stop warehouse) {
         this.warehouse = warehouse;
         notifyObservers(this);
     }
 
+    /**
+     * Getter for attribute departureTime
+     * @return departureTime
+     */
     public String getDepartureTime() {
         return departureTime;
     }
 
+    /**
+     * Setter for attribute departureTime
+     * @param departureTime the departure time from the warehouse
+     */
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
         notifyObservers(this);
@@ -104,6 +135,10 @@ public class TourData extends Observable {
         }
     }
 
+    /**
+     * Generates a String which describes the object
+     * @return type String
+     */
     @Override
     public String toString() {
         return "TourData{" +

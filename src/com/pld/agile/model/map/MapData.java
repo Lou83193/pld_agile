@@ -14,7 +14,7 @@ public class MapData extends Observable {
     /**
      * Map of all intersections.
      */
-    HashMap <String, Intersection> intersections;
+    HashMap<Long, Intersection> intersections;
 
     /**
      * List of all segments
@@ -56,7 +56,7 @@ public class MapData extends Observable {
      * Constructor for the class MapData, initializes the attributes intersections and segments
      */
     public MapData() {
-        intersections = new HashMap<>();
+        intersections = new HashMap<Long, Intersection>();
         segments = new ArrayList<>();
     }
 
@@ -79,7 +79,7 @@ public class MapData extends Observable {
      * Getter for attribute intersections
      * @return returns the map of all Intersections
      */
-    public HashMap<String, Intersection> getIntersections() {
+    public HashMap<Long, Intersection> getIntersections() {
         return intersections;
     }
 
@@ -96,7 +96,7 @@ public class MapData extends Observable {
      * Setter for attribute intersections
      * @param intersections Map of all Intersections
      */
-    public void setIntersections(HashMap<String, Intersection> intersections) {
+    public void setIntersections(HashMap<Long, Intersection> intersections) {
         this.intersections = intersections;
         notifyObservers(this);
     }

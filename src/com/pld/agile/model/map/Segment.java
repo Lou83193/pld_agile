@@ -1,5 +1,8 @@
 package com.pld.agile.model.map;
 
+/**
+ * Represents a segment from one Intersection to another.
+ */
 public class Segment {
     /**
      * Length of the Segment, distance between the origin and destination
