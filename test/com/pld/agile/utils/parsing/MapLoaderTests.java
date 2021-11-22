@@ -19,7 +19,7 @@ public class MapLoaderTests {
         //redirect the System-output (normally the console) to a variable
         System.setErr(new PrintStream(outContent));
 
-        String filePath = "test/resources/loadMap_noMapNode";
+        String filePath = "test/resources/loadMap_noMapNode.xml";
         MapData mapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean res = mapLoader.load();

@@ -8,7 +8,7 @@ class TourDataTest {
     private final MapData mapData = new MapData ();
     private boolean success;
     private final TourData tourDataOriginal = new TourData();
-    private final RequestLoader requestLoader = new RequestLoader("test/resources/loadRequests_3Requests", tourDataOriginal);
+    private final RequestLoader requestLoader = new RequestLoader("test/resources/loadRequests_3Requests.xml", tourDataOriginal);
     private TourData tourData;
 
     @Test
