@@ -26,14 +26,13 @@ public class Controller {
 
         if (mapFile != null) {
 
-            // Load map
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
             boolean success = mapLoader.load();
 
-            // Switch scenes
             if (success) {
                 window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchSceneToMainScene();
+                window.toggleFileMenuItem(2, true);
             }
 
         }
@@ -50,9 +49,12 @@ public class Controller {
 
         if (requestsFile != null) {
 
-            // Load tour
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
             boolean success = requestsLoader.load();
+
+            if (success) {
+                window.toggleFileMenuItem(3, true);
+            }
 
         }
 

@@ -33,11 +33,11 @@ public class GraphicalViewMap extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, width, height);
 
-        gc.setFill(Color.LIGHTGREY);
+        gc.setFill(Color.web("#DEDEDE"));
         gc.fillRect(0, 0, width, height);
 
         gc.setLineWidth(2*screenScale*mapScale);
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(Color.web("#454545"));
 
         List<Segment> segments = mapData.getSegments();
 

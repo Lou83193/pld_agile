@@ -8,6 +8,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,6 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.util.List;
@@ -26,7 +29,7 @@ public class TextualView implements Observer {
     private ScrollPane component;
     private TourData tourData;
 
-    public TextualView(TourData tourData, Scene parent) {
+    public TextualView(TourData tourData) {
 
         this.tourData = tourData;
 
@@ -35,12 +38,16 @@ public class TextualView implements Observer {
 
         // Create ScrollPane
         component = new ScrollPane();
+        component.setPadding(new Insets(20));
+        component.setFitToWidth(true);
+        component.setMaxWidth(Double.MAX_VALUE);
+        component.getStyleClass().add("white-background");
 
     }
 
     public void populateTextualView() {
 
-        VBox requestListContainer = new VBox(40);
+        VBox requestListContainer = new VBox(20);
         List<Request> requests = tourData.getRequestList();
 
         if (requests.size() == 0) return;
@@ -64,14 +71,17 @@ public class TextualView implements Observer {
 
             // Pickup panel -------------------------------------------------------------------------------------------
             VBox pickupStopPanel = new VBox(8);
-            HBox pickupStopLabelPanel = new HBox();
+            HBox pickupStopLabelPanel = new HBox(8);
             GridPane pickupStopInfoPane = new GridPane();
             pickupStopInfoPane.setVgap(4);
 
             // Label
+            Circle pickupGraphic = new Circle(8);
+            pickupGraphic.setFill(colour);
             Text pickupStopLabelText = new Text("Pickup Stop");
             pickupStopLabelText.getStyleClass().add("stopTextualLabel");
-            pickupStopLabelPanel.getChildren().addAll(pickupStopLabelText);
+            pickupStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
+            pickupStopLabelPanel.getChildren().addAll(pickupGraphic, pickupStopLabelText);
 
             // Latitude
             Text pickupStopLatText = new Text("Latitude: ");
@@ -102,18 +112,20 @@ public class TextualView implements Observer {
 
             // Add it all together
             pickupStopPanel.getChildren().addAll(pickupStopLabelPanel, pickupStopInfoPane);
-            pickupStopPanel.setMaxWidth(Double.MAX_VALUE);
 
             // Delivery panel -----------------------------------------------------------------------------------------
             VBox deliveryStopPanel = new VBox(8);
-            HBox deliveryStopLabelPanel = new HBox();
+            HBox deliveryStopLabelPanel = new HBox(8);
             GridPane deliveryStopInfoPane = new GridPane();
             deliveryStopInfoPane.setVgap(4);
 
             // Label
+            Rectangle deliveryGraphic = new Rectangle(16, 16);
+            deliveryGraphic.setFill(colour);
             Text deliveryStopLabelText = new Text("Delivery Stop");
             deliveryStopLabelText.getStyleClass().add("stopTextualLabel");
-            deliveryStopLabelPanel.getChildren().addAll(deliveryStopLabelText);
+            deliveryStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
+            deliveryStopLabelPanel.getChildren().addAll(deliveryGraphic, deliveryStopLabelText);
 
             // Latitude
             Text deliveryStopLatText = new Text("Latitude: ");
@@ -144,18 +156,17 @@ public class TextualView implements Observer {
 
             // Add it all together
             deliveryStopPanel.getChildren().addAll(deliveryStopLabelPanel, deliveryStopInfoPane);
-            deliveryStopPanel.setMaxWidth(Double.MAX_VALUE);
 
             requestPanel.setPadding(new Insets(10));
             requestPanel.getChildren().addAll(pickupStopPanel, deliveryStopPanel);
-            requestPanel.setMaxWidth(Double.MAX_VALUE);
+            requestPanel.getStyleClass().add("requestTextualPanel");
 
             requestListContainer.getChildren().add(requestPanel);
 
         }
 
+        requestListContainer.getStyleClass().add("white-background");
         component.setContent(requestListContainer);
-        component.setFitToWidth(true);
 
     }
 

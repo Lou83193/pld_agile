@@ -39,9 +39,8 @@ public class GraphicalViewRequests extends Group {
         if (requests.size() == 0) return;
 
         this.getChildren().clear();
-        //double graphicSize = width/40;
         double graphicSize = 20*screenScale*mapScale;
-        System.out.println(mapData.getMaxLon() - mapData.getMinLon());
+        double outlineSize = 2*screenScale*mapScale;
 
         Stop warehouse = tourData.getWarehouse();
 
@@ -58,7 +57,8 @@ public class GraphicalViewRequests extends Group {
 
         Rectangle warehouseGraphic = new Rectangle(graphicSize, graphicSize);
         warehouseGraphic.setFill(Color.BLACK);
-        warehouseGraphic.setStroke(Color.RED);
+        warehouseGraphic.setStroke(Color.WHITE);
+        warehouseGraphic.setStrokeWidth(outlineSize);
         warehouseGraphic.setRotate(45);
         warehouseGraphic.relocate(warehousePos[0] - graphicSize/2, warehousePos[1] - graphicSize/2);
         this.getChildren().add(warehouseGraphic);
@@ -94,11 +94,15 @@ public class GraphicalViewRequests extends Group {
 
             Circle pickupGraphic = new Circle(graphicSize/2);
             pickupGraphic.setFill(colour);
+            pickupGraphic.setStroke(Color.BLACK);
+            pickupGraphic.setStrokeWidth(outlineSize);
             pickupGraphic.relocate(pickupPos[0] - graphicSize/2, pickupPos[1] - graphicSize/2);
             this.getChildren().add(pickupGraphic);
 
             Rectangle deliveryGraphic = new Rectangle(graphicSize, graphicSize);
             deliveryGraphic.setFill(colour);
+            deliveryGraphic.setStroke(Color.BLACK);
+            deliveryGraphic.setStrokeWidth(outlineSize);
             deliveryGraphic.relocate(deliveryPos[0] - graphicSize/2, deliveryPos[1] - graphicSize/2);
             this.getChildren().add(deliveryGraphic);
 

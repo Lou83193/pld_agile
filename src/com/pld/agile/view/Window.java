@@ -27,6 +27,9 @@ public class Window extends Application {
 
     private static Window singletonInstance;
 
+    private MenuItem fileMenu1;
+    private MenuItem fileMenu2;
+    private MenuItem fileMenu3;
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
@@ -46,22 +49,17 @@ public class Window extends Application {
     public void start(Stage s) throws IOException {
 
         stage = s;
-        homeScene = constructHomeScene();
-        mainScene = constructMainScene();
+        constructHomeScene();
+        constructMainScene();
         stage.setScene(homeScene);
-        stage.setTitle("AGILE Project");
+        stage.setTitle("COLIFFIMO - Route Planner");
         stage.show();
 
     }
 
-    public Scene constructHomeScene() {
+    public void constructHomeScene() {
 
-        MenuBar menuBar = constructMenuBar(true);
-
-        /* MAIN SCENE */
-        BorderPane pane = new BorderPane();
-        Scene scene = new Scene(pane,1080, 720);
-        scene.getStylesheets().add("stylesheet.css");
+        MenuBar menuBar = constructMenuBar();
 
         /* CENTER ELEMENTS */
         // Logo
@@ -70,7 +68,7 @@ public class Window extends Application {
         logo.setFitWidth(600);
         // Button
         Button button = new Button("Load Map");
-        button.setPrefSize(200, 50);
+        //button.setPrefSize(200, 50);
         button.getStyleClass().add("button");
         button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         // Group
@@ -87,49 +85,55 @@ public class Window extends Application {
         bottom.getChildren().addAll(bottomText);
 
         /* LAYOUT ELEMENTS */
+        BorderPane pane = new BorderPane();
         pane.setTop(menuBar);
         pane.setCenter(homePage);
         pane.setBottom(bottom);
+        pane.setId("home-pane");
 
-        return scene;
-
-    }
-
-    public Scene constructMainScene() {
-
-        MenuBar menuBar = constructMenuBar(false);
-
-        BorderPane pane = new BorderPane();
-        Scene scene = new Scene(pane,1080, 720);
+        /* MAIN SCENE */
+        Scene scene = new Scene(pane,990, 720);
         scene.getStylesheets().add("stylesheet.css");
 
-        HBox mainPanel = new HBox();
-        GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
-        TextualView textualView = new TextualView(tourData, scene);
-        mainPanel.getChildren().add(graphicalView.getComponent());
-        mainPanel.getChildren().add(textualView.getComponent());
-
-        pane.setTop(menuBar);
-        pane.setCenter(mainPanel);
-
-        return scene;
+        homeScene = scene;
 
     }
 
-    public MenuBar constructMenuBar(boolean hideLoadTour) {
+    public void constructMainScene() {
+
+        MenuBar menuBar = constructMenuBar();
+
+        BorderPane pane = new BorderPane();
+        Scene scene = new Scene(pane,990, 720);
+        scene.getStylesheets().add("stylesheet.css");
+
+        GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
+
+        VBox sidePanel = new VBox();
+        TextualView textualView = new TextualView(tourData);
+        sidePanel.getChildren().add(textualView.getComponent());
+
+        pane.setTop(menuBar);
+        pane.setCenter(graphicalView.getComponent());
+        pane.setRight(sidePanel);
+        pane.getStyleClass().add("white-background");
+
+        mainScene = scene;
+
+    }
+
+    public MenuBar constructMenuBar() {
 
         // File menu
         Menu fileMenu = new Menu("File");
-        MenuItem fileMenu1 = new MenuItem("Load map");
-        MenuItem fileMenu2 = new MenuItem("Load tour");
-        MenuItem fileMenu3 = new MenuItem("Compute tour");
+        fileMenu1 = new MenuItem("Load map");
+        fileMenu2 = new MenuItem("Load tour");
+        fileMenu3 = new MenuItem("Compute tour");
         fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
         fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
-        if (hideLoadTour) {
-            fileMenu2.setDisable(true);
-            fileMenu3.setDisable(true);
-        }
+        fileMenu2.setDisable(true);
+        fileMenu3.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2, fileMenu3);
 
         // Edit menu
@@ -154,6 +158,13 @@ public class Window extends Application {
 
     public void switchSceneToMainScene() {
         stage.setScene(mainScene);
+    }
+    public void toggleFileMenuItem(int num, boolean enabled) {
+        switch (num) {
+            case 1 -> fileMenu1.setDisable(!enabled);
+            case 2 -> fileMenu2.setDisable(!enabled);
+            case 3 -> fileMenu3.setDisable(!enabled);
+        }
     }
 
     public Stage getStage() {
