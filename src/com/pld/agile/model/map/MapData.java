@@ -18,7 +18,7 @@ public class MapData extends Observable {
     /**
      * Map of all intersections by their XML-ID (to be able to link them to XML-loaded requests). Only used in loading.
      */
-    private HashMap<Long, Intersection> intersectionsByOldID;
+    private HashMap<String, Intersection> intersectionsByOldID;
 
     /**
      * List of all segments
@@ -60,7 +60,7 @@ public class MapData extends Observable {
      * Constructor for the class MapData, initializes the attributes intersections and segments
      */
     public MapData() {
-        intersectionsByOldID = new HashMap<Long, Intersection>();
+        intersectionsByOldID = new HashMap<String, Intersection>();
         segments = new ArrayList<>();
     }
 
@@ -83,7 +83,7 @@ public class MapData extends Observable {
      * Getter for attribute intersections
      * @return returns the map of all Intersections
      */
-    public HashMap<Long, Intersection> getIntersectionsByOldID() {
+    public HashMap<String, Intersection> getIntersectionsByOldID() {
         return intersectionsByOldID;
     }
 
@@ -116,7 +116,7 @@ public class MapData extends Observable {
      * Setter for attribute intersections
      * @param intersectionsByOldID Map of all Intersections
      */
-    public void setIntersectionsByOldID(HashMap<Long, Intersection> intersectionsByOldID) {
+    public void setIntersectionsByOldID(HashMap<String, Intersection> intersectionsByOldID) {
         this.intersectionsByOldID = intersectionsByOldID;
         notifyObservers(this);
     }
