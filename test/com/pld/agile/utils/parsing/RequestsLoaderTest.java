@@ -1,18 +1,14 @@
-package com.pld.agile;
+package com.pld.agile.utils.parsing;
 
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.parsing.MapLoader;
-import com.pld.agile.utils.parsing.RequestLoader;
 import org.junit.jupiter.api.Test;
 
 
-class RequestsLoaderTest {
-    private String filePath= "test/resources/loadMap_loadRequestsBase";
-    private MapData mapData = new MapData();
-    private MapLoader mapLoader = new MapLoader(filePath, mapData);
-    private boolean success = mapLoader.load();
-    private TourData tourData = new TourData();
+public class RequestsLoaderTest {
+    private final MapData mapData = new MapData();
+    private boolean success;
+    private final TourData tourData = new TourData();
     private RequestLoader requestsLoader = null;
 
     @Test

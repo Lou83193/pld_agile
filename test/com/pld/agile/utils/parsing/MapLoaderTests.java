@@ -16,11 +16,11 @@ public class MapLoaderTests {
     @Test
     public void testLoadFileNoMapNode() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        //redirect the System-output (normaly the console) to a variable
+        //redirect the System-output (normally the console) to a variable
         System.setErr(new PrintStream(outContent));
 
         String filePath = "test/resources/loadMap_noMapNode";
-        MapData mapData = MapData.getInstance();
+        MapData mapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean res = mapLoader.load();
         assertFalse(res);
