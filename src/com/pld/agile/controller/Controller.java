@@ -3,7 +3,7 @@ package com.pld.agile.controller;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
-import com.pld.agile.utils.parsing.RequestsLoader;
+import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
 import java.io.File;
@@ -34,7 +34,7 @@ public class Controller {
         if (mapFile != null) {
 
             // Load map
-            MapData mapData = MapData.getInstance();
+            MapData mapData = new MapData();
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), mapData);
             boolean success = mapLoader.load();
 
@@ -60,8 +60,8 @@ public class Controller {
         if (requestsFile != null) {
 
             // Load tour
-            TourData tourData = TourData.getInstance();
-            RequestsLoader requestsLoader = new RequestsLoader(requestsFile.getPath(), tourData);
+            TourData tourData = new TourData();
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), tourData);
             boolean success = requestsLoader.load();
 
         }

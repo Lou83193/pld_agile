@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Loads requests model entities from an XML file.
  */
-public class RequestsLoader {
+public class RequestLoader {
     /**
      * Path to the XML file.
      */
@@ -36,7 +36,7 @@ public class RequestsLoader {
      * @param requestsFilePath the path to the xml file
      * @param tour the TourData object to fill
      */
-    public RequestsLoader(String requestsFilePath, TourData tour) {
+    public RequestLoader(String requestsFilePath, TourData tour) {
         this.requestsFilePath = requestsFilePath;
         this.tour = tour;
     }

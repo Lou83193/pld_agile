@@ -26,15 +26,11 @@ public class TourData extends Observable {
      * The departure time from the warehouse.
      */
     private String departureTime;
-    /**
-     * Singleton instance.
-     */
-    private static TourData singletonInstance;
 
     /**
-     * TourData constructor, private for the singleton design pattern.
+     * TourData constructor
      */
-    private TourData() {
+    public TourData() {
         super();
         requestList = new ArrayList<>();
         associatedMap = null;
@@ -42,16 +38,6 @@ public class TourData extends Observable {
         warehouse = null;
     }
 
-    /**
-     * Getter for the singleton instance
-     * @return the singleton instance of MapData
-     */
-    public static TourData getInstance() {
-        if (singletonInstance == null) {
-            singletonInstance = new TourData();
-        }
-        return singletonInstance;
-    }
 
     public List<Request> getRequestList() {
         return requestList;
@@ -59,6 +45,7 @@ public class TourData extends Observable {
 
     public void setRequestList(List<Request> requestList) {
         this.requestList = requestList;
+        notifyObservers(this);
     }
 
     public MapData getAssociatedMap() {
@@ -67,6 +54,7 @@ public class TourData extends Observable {
 
     public void setAssociatedMap(MapData associatedMap) {
         this.associatedMap = associatedMap;
+        notifyObservers(this);
     }
 
     public Stop getWarehouse() {
@@ -75,6 +63,7 @@ public class TourData extends Observable {
 
     public void setWarehouse(Stop warehouse) {
         this.warehouse = warehouse;
+        notifyObservers(this);
     }
 
     public String getDepartureTime() {
@@ -83,6 +72,7 @@ public class TourData extends Observable {
 
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
+        notifyObservers(this);
     }
 
     @Override

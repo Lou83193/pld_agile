@@ -14,7 +14,7 @@ public class TextualView implements Observer {
     public TextualView(Scene parent) {
 
         // Add observers
-        MapData mapData = MapData.getInstance();
+        MapData mapData = new MapData();
         mapData.addObserver(this);
 
         // Create VBox
