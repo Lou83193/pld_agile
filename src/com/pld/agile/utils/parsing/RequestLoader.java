@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Loads requests model entities from an XML file.
  */
-public class RequestsLoader {
+public class RequestLoader {
     /**
      * Path to the XML file.
      */
@@ -36,7 +36,7 @@ public class RequestsLoader {
      * @param requestsFilePath the path to the xml file
      * @param tour the TourData object to fill
      */
-    public RequestsLoader(String requestsFilePath, TourData tour) {
+    public RequestLoader(String requestsFilePath, TourData tour) {
         this.requestsFilePath = requestsFilePath;
         this.tour = tour;
     }
@@ -61,18 +61,17 @@ public class RequestsLoader {
         String departureTime = warehouseElement.attributeValue("departureTime");
         Intersection warehouseLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("address"));
         tour.setDepartureTime(departureTime);
-        tour.setWarehouse(new Stop(warehouseLocation, 0, null)); // todo : later see if handle neihgbouringstops
+        tour.setWarehouse(new Stop(warehouseLocation, 0));
 
         List<Request> requestList = new ArrayList<>();
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
-            // todo : pickup & delivery
-            Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("pickupAddress"));
+            Intersection pickupLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("pickupAddress"));
             double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
-            Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(warehouseElement.attributeValue("deliveryAddress"));
+            Intersection deliveryLocation = tour.getAssociatedMap().getIntersections().get(requestElement.attributeValue("deliveryAddress"));
             double deliveryDuration = Double.parseDouble(requestElement.attributeValue("deliveryDuration"));
-            Stop pickup = new Stop(pickupLocation, pickupDuration, null); // todo : later see if handle neihgbouringstops;
-            Stop delivery = new Stop(deliveryLocation, deliveryDuration, null); // todo : later see if handle neihgbouringstops;
+            Stop pickup = new Stop(pickupLocation, pickupDuration);
+            Stop delivery = new Stop(deliveryLocation, deliveryDuration);
             requestList.add(new Request(pickup, delivery));
         }
 

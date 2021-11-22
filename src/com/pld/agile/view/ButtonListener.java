@@ -7,19 +7,23 @@ import javafx.event.EventHandler;
 public class ButtonListener implements EventHandler<ActionEvent> {
 
     private ButtonEventType buttonType;
+    private Controller controller;
 
-    public ButtonListener(ButtonEventType buttonType) {
+    public ButtonListener(Controller controller, ButtonEventType buttonType) {
+        this.controller = controller;
         this.buttonType = buttonType;
     }
 
     public void handle(ActionEvent e) {
 
-        Controller controller = Controller.getInstance();
-
         switch(buttonType) {
 
             case LOAD_MAP:
                 controller.loadMap();
+                break;
+
+            case LOAD_TOUR:
+                controller.loadTour();
                 break;
 
         }

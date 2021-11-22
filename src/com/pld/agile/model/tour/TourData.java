@@ -1,10 +1,13 @@
 package com.pld.agile.model.tour;
 
 import com.pld.agile.Observable;
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
+import javafx.util.Pair;
 
 /**
  * Stores the data of a loaded requests list.
@@ -26,15 +29,19 @@ public class TourData extends Observable {
      * The departure time from the warehouse.
      */
     private String departureTime;
-    /**
-     * Singleton instance.
-     */
-    private static TourData singletonInstance;
+
+    private int [][] stopsGraph;
+
+    private Intersection[][] predecessors;
+
+    private long[] stops;
+
+    private List<Stop> computedPath;
 
     /**
-     * TourData constructor, private for the singleton design pattern.
+     * TourData constructor
      */
-    private TourData() {
+    public TourData() {
         super();
         requestList = new ArrayList<>();
         associatedMap = null;
@@ -42,16 +49,6 @@ public class TourData extends Observable {
         warehouse = null;
     }
 
-    /**
-     * Getter for the singleton instance
-     * @return the singleton instance of MapData
-     */
-    public static TourData getInstance() {
-        if (singletonInstance == null) {
-            singletonInstance = new TourData();
-        }
-        return singletonInstance;
-    }
 
     public List<Request> getRequestList() {
         return requestList;
@@ -59,6 +56,7 @@ public class TourData extends Observable {
 
     public void setRequestList(List<Request> requestList) {
         this.requestList = requestList;
+        notifyObservers(this);
     }
 
     public MapData getAssociatedMap() {
@@ -67,6 +65,7 @@ public class TourData extends Observable {
 
     public void setAssociatedMap(MapData associatedMap) {
         this.associatedMap = associatedMap;
+        notifyObservers(this);
     }
 
     public Stop getWarehouse() {
@@ -75,6 +74,7 @@ public class TourData extends Observable {
 
     public void setWarehouse(Stop warehouse) {
         this.warehouse = warehouse;
+        notifyObservers(this);
     }
 
     public String getDepartureTime() {
@@ -83,6 +83,25 @@ public class TourData extends Observable {
 
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
+        notifyObservers(this);
+    }
+
+
+    private void setStops(){
+        stops[0]=warehouse.getAddress().getId();
+        for(int i=1; i<requestList.size(); i=i+2){
+            stops[i]=requestList.get(i).getPickup().getAddress().getId();//add pickup
+            stops[i+1]=requestList.get(i).getDelivery().getAddress().getId();//add delivery
+
+        }
+    }
+
+    public void dijkstra(){
+
+        for(int i=0; i< stops.length;i++){
+            PriorityQueue<Pair<Intersection, Integer>> distances = new PriorityQueue<Pair<Intersection, Integer>>();
+
+        }
     }
 
     @Override
