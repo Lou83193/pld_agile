@@ -5,7 +5,7 @@ import com.pld.agile.model.tour.TourData;
 import org.junit.jupiter.api.Test;
 
 
-public class RequestsLoaderTest {
+public class RequestsLoaderTests {
     private final MapData mapData = new MapData();
     private boolean success;
     private final TourData tourData = new TourData();
@@ -13,7 +13,7 @@ public class RequestsLoaderTest {
 
     @Test
     //Test n°2.1
-    public void testLoadRequests_3Requests() {
+    public void test3Requests() {
         tourData.setAssociatedMap(mapData);
         requestsLoader= new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
         success = requestsLoader.load();
@@ -32,7 +32,7 @@ public class RequestsLoaderTest {
 
     @Test
     //Test n°2.2
-    public void testLoadRequests_redundancy() {
+    public void testRedundancy() {
         requestsLoader = new RequestLoader("test/resources/loadRequests_redundancy.xml", tourData);
         success = requestsLoader.load();
 
@@ -50,7 +50,7 @@ public class RequestsLoaderTest {
 
     @Test
     //Test n°2.3
-    public void testLoadRequests_depotAddressMissing() {
+    public void testDepotAddressMissing() {
         requestsLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
         success = requestsLoader.load();
 
@@ -68,7 +68,7 @@ public class RequestsLoaderTest {
 
     @Test
     //Test n°2.4
-    public void testLoadRequests_pickupMissing() {
+    public void testPickupMissing() {
         requestsLoader = new RequestLoader("test/resources/loadRequests_pickupMissing.xml", tourData);
         success = requestsLoader.load();
 

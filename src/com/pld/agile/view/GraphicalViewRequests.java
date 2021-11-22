@@ -4,16 +4,14 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.view.ProjectionUtils;
+import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import java.util.List;
-import java.util.Random;
 
 public class GraphicalViewRequests extends Group {
 
@@ -35,12 +33,39 @@ public class GraphicalViewRequests extends Group {
         double height = parentCanvas.getHeight();
         List<Request> requests = tourData.getRequestList();
 
+        if (requests.size() == 0) return;
+
+        this.getChildren().clear();
+        double graphicSize = width/40;
+        //double graphicSize = ViewUtilities.mapValue((mapData.getMaxLon() - mapData.getMinLon()) * 1000, );
+        System.out.println(graphicSize);
+
+        Stop warehouse = tourData.getWarehouse();
+
+        double[] warehousePos = ViewUtilities.projectLatLon(
+                warehouse.getAddress().getLatitude(),
+                warehouse.getAddress().getLongitude(),
+                mapData.getMinLat(),
+                mapData.getMinLon(),
+                mapData.getMaxLat(),
+                mapData.getMaxLon(),
+                width,
+                height
+        );
+
+        Rectangle warehouseGraphic = new Rectangle(graphicSize, graphicSize);
+        warehouseGraphic.setFill(Color.BLACK);
+        warehouseGraphic.setStroke(Color.RED);
+        warehouseGraphic.setRotate(45);
+        warehouseGraphic.relocate(warehousePos[0] - graphicSize/2, warehousePos[1] - graphicSize/2);
+        this.getChildren().add(warehouseGraphic);
+
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
             Stop delivery = request.getDelivery();
 
-            double[] pickupPos = ProjectionUtils.projectLatLon(
+            double[] pickupPos = ViewUtilities.projectLatLon(
                     pickup.getAddress().getLatitude(),
                     pickup.getAddress().getLongitude(),
                     mapData.getMinLat(),
@@ -51,7 +76,7 @@ public class GraphicalViewRequests extends Group {
                     height
             );
 
-            double[] deliveryPos = ProjectionUtils.projectLatLon(
+            double[] deliveryPos = ViewUtilities.projectLatLon(
                     delivery.getAddress().getLatitude(),
                     delivery.getAddress().getLongitude(),
                     mapData.getMinLat(),
@@ -62,19 +87,17 @@ public class GraphicalViewRequests extends Group {
                     height
             );
 
-            Random rand = new Random();
-            float r = rand.nextFloat();
-            float g = rand.nextFloat();
-            float b = rand.nextFloat();
-            Color randomColor = new Color(r, g, b, 1.0);
+            Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
 
-            Circle pickupGraphic = new Circle(20);
-            pickupGraphic.setFill(randomColor);
-            pickupGraphic.relocate(pickupPos[0], pickupPos[1]);
+            Circle pickupGraphic = new Circle(graphicSize/2);
+            pickupGraphic.setFill(colour);
+            pickupGraphic.relocate(pickupPos[0] - graphicSize/2, pickupPos[1] - graphicSize/2);
+            this.getChildren().add(pickupGraphic);
 
-            Rectangle deliveryGraphic = new Rectangle(20, 20);
-            deliveryGraphic.setFill(randomColor);
-            deliveryGraphic.relocate(deliveryPos[0], deliveryPos[1]);
+            Rectangle deliveryGraphic = new Rectangle(graphicSize, graphicSize);
+            deliveryGraphic.setFill(colour);
+            deliveryGraphic.relocate(deliveryPos[0] - graphicSize/2, deliveryPos[1] - graphicSize/2);
+            this.getChildren().add(deliveryGraphic);
 
         }
 

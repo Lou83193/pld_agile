@@ -23,22 +23,42 @@ public class Request {
         this.delivery = delivery;
     }
 
+    /**
+     * Getter for attribute pickup
+     * @return pickup
+     */
     public Stop getPickup() {
         return pickup;
     }
 
+    /**
+     * Setter for attribute pickup
+     * @param pickup Pickup stop
+     */
     public void setPickup(Stop pickup) {
         this.pickup = pickup;
     }
 
+    /**
+     * Getter for attribute delivery
+     * @return delivery
+     */
     public Stop getDelivery() {
         return delivery;
     }
 
+    /**
+     * Setter for attribute delivery
+     * @param delivery Delivery stop
+     */
     public void setDelivery(Stop delivery) {
         this.delivery = delivery;
     }
 
+    /**
+     * Generates a String which describes the object
+     * @return type String
+     */
     @Override
     public String toString() {
         return "Request{" +

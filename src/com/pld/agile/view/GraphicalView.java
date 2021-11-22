@@ -15,9 +15,6 @@ public class GraphicalView implements Observer {
     private GraphicalViewRequests graphicalViewRequests;
     private Pane component;
 
-    private MapData mapData;
-    private TourData tourData;
-
     public GraphicalView(MapData mapData, TourData tourData, Scene parent) {
 
         // Add observers
