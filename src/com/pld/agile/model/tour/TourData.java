@@ -212,6 +212,12 @@ public class TourData extends Observable {
         }*/
     } // ---- END of dijkstra
 
+    public void TSP() {
+
+    } // ---- END of TSP
+
+
+
     /**
      * Generates a String which describes the object
      * @return type String
