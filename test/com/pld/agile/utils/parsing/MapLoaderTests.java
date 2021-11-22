@@ -1,15 +1,13 @@
 package com.pld.agile.utils.parsing;
 
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.utils.parsing.MapLoader;
-
-import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MapLoaderTests {
 
