@@ -22,35 +22,13 @@ enum ItemType {
 
 public class TextualViewItem extends VBox {
 
-    public TextualViewItem(Stop pickup, Stop delivery) {
+    public TextualViewItem(Stop stop, ItemType type, Color colour) {
 
-        double pickupLat = pickup.getAddress().getLatitude();
-        double pickupLon = pickup.getAddress().getLongitude();
-        double pickupDuration = pickup.getDuration();
+        double lat = stop.getAddress().getLatitude();
+        double lon = stop.getAddress().getLongitude();
 
-        double deliveryLat = delivery.getAddress().getLatitude();
-        double deliveryLon = delivery.getAddress().getLongitude();
-        double deliveryDuration = delivery.getDuration();
-
-        Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
-
-        VBox pickupPanel = constructItemSection(ItemType.PICKUP, pickupLat, pickupLon, pickupDuration, colour);
-        VBox deliveryPanel = constructItemSection(ItemType.DELIVERY, deliveryLat, deliveryLon, deliveryDuration, colour);
-        this.getChildren().addAll(pickupPanel, deliveryPanel);
-
-        this.setPadding(new Insets(10));
-        this.setSpacing(10);
-        this.getStyleClass().add("requestTextualPanel");
-
-    }
-
-    public TextualViewItem(Stop warehouse) {
-
-        double lat = warehouse.getAddress().getLatitude();
-        double lon = warehouse.getAddress().getLongitude();
-
-        VBox warehousePanel = constructItemSection(ItemType.WAREHOUSE, lat, lon, 0, Color.BLACK);
-        this.getChildren().add(warehousePanel);
+        VBox panel = constructItemSection(type, lat, lon, 0, colour);
+        this.getChildren().add(panel);
 
         this.setPadding(new Insets(10));
         this.setSpacing(10);

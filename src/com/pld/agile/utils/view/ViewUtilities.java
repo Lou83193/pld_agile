@@ -4,13 +4,15 @@ import javafx.scene.paint.Color;
 
 public class ViewUtilities {
 
+    private static double padding = 0.02;
+
     public static double mapValue(double x, double min1, double max1, double min2, double max2) {
         return min2 + (x-min1)/(max1-min1) * (max2-min2);
     }
 
     public static double[] projectLatLon(double lat, double lon, double minLat, double minLon, double maxLat, double maxLon, double width, double height) {
-        double x = ViewUtilities.mapValue(lon, minLon, maxLon, 0, width);
-        double y = ViewUtilities.mapValue(lat, minLat, maxLat, height, 0);
+        double x = ViewUtilities.mapValue(lon, minLon, maxLon, width*(padding), width*(1-padding));
+        double y = ViewUtilities.mapValue(lat, minLat, maxLat, height*(1-padding), height*(padding));
         return new double[] {x, y};
     }
 

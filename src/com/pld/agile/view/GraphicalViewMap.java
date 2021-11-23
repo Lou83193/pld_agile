@@ -5,10 +5,16 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 import java.util.List;
 
@@ -20,13 +26,21 @@ public class GraphicalViewMap extends Canvas {
     public GraphicalViewMap(MapData mapData, TourData tourData, Scene parent) {
         this.mapData = mapData;
         this.tourData = tourData;
-        widthProperty().bind(parent.heightProperty());
-        heightProperty().bind(parent.heightProperty());
+        //BorderPane root = (BorderPane)parent.getRoot(); MenuBar menuBar = (MenuBar)root.getTop();
+        widthProperty().bind(parent.heightProperty().subtract(25));
+        heightProperty().bind(parent.heightProperty().subtract(25));
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
 
     public void draw() {
+        drawMap();
+        drawTour();
+    }
+
+    public void drawMap() {
+
+        System.out.println("CANVAS RESET?");
 
         double width = getWidth();
         double height = getHeight();
@@ -56,8 +70,6 @@ public class GraphicalViewMap extends Canvas {
 
         }
 
-        drawTour();
-
     }
 
     public void drawTour() {
@@ -82,13 +94,14 @@ public class GraphicalViewMap extends Canvas {
             Integer currStopId = computedPath.get(i);
             Integer nextStopId = computedPath.get((i+1)%pathLength);
 
+            Intersection nextStop = mapData.getIntersections().get(stops.get(nextStopId));
+            double[] nextStopPos = projectLatLon(nextStop);
+
             // Trace first line
             int predecessor = predecessors[currStopId][stops.get(nextStopId)];
-            Intersection lastIntersection = mapData.getIntersections().get(stops.get(nextStopId));
-            double[] lastIntersectionPos = projectLatLon(lastIntersection);
             Intersection currIntersection = mapData.getIntersections().get(predecessor);
             double[] currIntersectionPos = projectLatLon(currIntersection);
-            gc.strokeLine(lastIntersectionPos[0], lastIntersectionPos[1], currIntersectionPos[0], currIntersectionPos[1]);
+            gc.strokeLine(nextStopPos[0], nextStopPos[1], currIntersectionPos[0], currIntersectionPos[1]);
 
             // Get intermediary intersections, trace lines
             while (predecessor != stops.get(currStopId)) {
@@ -100,7 +113,6 @@ public class GraphicalViewMap extends Canvas {
             }
 
         }
-
 
     }
 

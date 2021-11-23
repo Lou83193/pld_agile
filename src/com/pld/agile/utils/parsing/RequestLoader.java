@@ -62,6 +62,7 @@ public class RequestLoader {
         Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
         tour.setDepartureTime(departureTime);
         tour.setWarehouse(new Stop(warehouseLocation, 0));
+        tour.resetComputedTour();
         
         List<Request> requestList = new ArrayList<>();
         for (Node requestNode : requestNodes) {

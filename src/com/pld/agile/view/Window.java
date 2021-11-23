@@ -92,7 +92,7 @@ public class Window extends Application {
         pane.setId("home-pane");
 
         /* MAIN SCENE */
-        Scene scene = new Scene(pane,990, 720);
+        Scene scene = new Scene(pane,964, 720);
         scene.getStylesheets().add("stylesheet.css");
 
         homeScene = scene;
@@ -101,21 +101,21 @@ public class Window extends Application {
 
     public void constructMainScene() {
 
-        MenuBar menuBar = constructMenuBar();
-
         BorderPane pane = new BorderPane();
-        Scene scene = new Scene(pane,990, 720);
+        Scene scene = new Scene(pane,964, 720);
         scene.getStylesheets().add("stylesheet.css");
 
+        MenuBar menuBar = constructMenuBar();
+        pane.setTop(menuBar);
+
         GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
+        pane.setCenter(graphicalView.getComponent());
 
         VBox sidePanel = new VBox();
         TextualView textualView = new TextualView(tourData);
         sidePanel.getChildren().add(textualView.getComponent());
-
-        pane.setTop(menuBar);
-        pane.setCenter(graphicalView.getComponent());
         pane.setRight(sidePanel);
+
         pane.getStyleClass().add("white-background");
 
         mainScene = scene;

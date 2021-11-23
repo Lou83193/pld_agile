@@ -31,7 +31,8 @@ public class GraphicalView implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        graphicalViewMap.draw();
+        graphicalViewMap.drawMap();
+        graphicalViewMap.drawTour();
         graphicalViewRequests.draw();
     }
 
