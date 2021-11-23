@@ -18,7 +18,10 @@ public abstract class TemplateTSP implements TSP {
 		this.g = g;
 		bestSol = new Integer[g.getNbVertices()];
 		Collection<Integer> unvisited = new ArrayList<Integer>(g.getNbVertices()-1);
-		for (int i=1; i<g.getNbVertices(); i++) unvisited.add(i);
+		for (int i = 1; i < g.getNbVertices(); i++) {
+			// We can only access pickup which are odd.
+			if(i%2 == 1) unvisited.add(i);
+		}
 		Collection<Integer> visited = new ArrayList<Integer>(g.getNbVertices());
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Integer.MAX_VALUE;
@@ -78,10 +81,18 @@ public abstract class TemplateTSP implements TSP {
 	        	Integer nextVertex = it.next();
 	        	visited.add(nextVertex);
 	            unvisited.remove(nextVertex);
+				if(nextVertex%2 == 1) // Pickup detected, we can add the delivery point
+				{
+					unvisited.add(nextVertex+1);
+				}
 	            branchAndBound(nextVertex, unvisited, visited, 
 	            		currentCost+g.getCost(currentVertex, nextVertex));
 	            visited.remove(nextVertex);
 	            unvisited.add(nextVertex);
+				if(nextVertex%2 == 1)
+				{
+					unvisited.remove(nextVertex+1);
+				}
 	        }	    
 	    }
 	}

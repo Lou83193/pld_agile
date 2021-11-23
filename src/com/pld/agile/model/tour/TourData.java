@@ -41,7 +41,7 @@ public class TourData extends Observable {
 
     private List<Integer> computedPath;
     // Index: Nth stop visited
-    // Value : App index
+    // Value : Algorithm index
 
     /**
      * TourData constructor.
@@ -138,8 +138,8 @@ public class TourData extends Observable {
         stops=new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
         for(int i=0; i<requestList.size(); i++) {
-            stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup
-            stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery
+            stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup (odd index)
+            stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery (even index)
         }
         System.out.println("stops="+stops);
     }
@@ -237,7 +237,7 @@ public class TourData extends Observable {
         computedPath = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices(); i++)
         {
-            computedPath.add(stops.get(tsp.getSolution(i)));
+            computedPath.add(tsp.getSolution(i));
         }
         System.out.println(computedPath);
         notifyObservers(this);
