@@ -15,7 +15,7 @@ public class RequestsLoaderTests {
     //Test n°2.1
     public void test3Requests() {
         tourData.setAssociatedMap(mapData);
-        requestsLoader= new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
+        requestsLoader= new RequestLoader("src/resources/fichiersXML2020/smallMap.xml", tourData);
         success = requestsLoader.load();
 
         if(success) {

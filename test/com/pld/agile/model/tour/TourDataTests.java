@@ -49,6 +49,8 @@ public class TourDataTests {
         tourDataOriginal.setAssociatedMap(mapData);
         tourData = tourDataOriginal;
         success = requestLoader.load();
+
+
     }
 
 
