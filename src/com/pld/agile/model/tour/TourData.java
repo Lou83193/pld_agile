@@ -122,6 +122,17 @@ public class TourData extends Observable {
         notifyObservers(this);
     }
 
+    public int[][] getPredecessors() {
+        return predecessors;
+    }
+
+    public List<Integer> getStops() {
+        return stops;
+    }
+
+    public List<Integer> getComputedPath() {
+        return computedPath;
+    }
 
     public void setStops(){
         stops=new ArrayList<Integer>();
@@ -229,7 +240,7 @@ public class TourData extends Observable {
             computedPath.add(stops.get(tsp.getSolution(i)));
         }
         System.out.println(computedPath);
-
+        notifyObservers(this);
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)

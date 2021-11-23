@@ -21,7 +21,7 @@ public class GraphicalView implements Observer {
         mapData.addObserver(this);
         tourData.addObserver(this);
 
-        graphicalViewMap = new GraphicalViewMap(mapData, parent);
+        graphicalViewMap = new GraphicalViewMap(mapData, tourData, parent);
         graphicalViewRequests = new GraphicalViewRequests(mapData, tourData, graphicalViewMap);
 
         component = new Pane();

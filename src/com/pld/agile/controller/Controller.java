@@ -62,6 +62,7 @@ public class Controller {
 
     public void computeTour() {
 
+        // Compute TSP
         window.getTourData().setStops();
         window.getTourData().dijkstra();
         window.getTourData().tsp();
