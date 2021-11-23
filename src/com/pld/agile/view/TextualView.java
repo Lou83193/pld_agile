@@ -50,16 +50,18 @@ public class TextualView implements Observer {
 
         if (requests.size() == 0) return;
 
-        VBox warehousePanel = new TextualViewItem(tourData.getWarehouse());
+        VBox warehousePanel = new TextualViewItem(tourData.getWarehouse(), ItemType.WAREHOUSE, Color.BLACK);
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
             Stop delivery = request.getDelivery();
+            Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
 
-            VBox requestPanel = new TextualViewItem(pickup, delivery);
-            requestListContainer.getChildren().add(requestPanel);
+            VBox requestPanel1 = new TextualViewItem(pickup, ItemType.PICKUP, colour);
+            VBox requestPanel2 = new TextualViewItem(delivery, ItemType.DELIVERY, colour);
+            requestListContainer.getChildren().addAll(requestPanel1, requestPanel2);
 
         }
 

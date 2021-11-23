@@ -1,5 +1,6 @@
 package com.pld.agile.view;
 
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
@@ -44,17 +45,7 @@ public class GraphicalViewRequests extends Group {
 
         Stop warehouse = tourData.getWarehouse();
 
-        double[] warehousePos = ViewUtilities.projectLatLon(
-                warehouse.getAddress().getLatitude(),
-                warehouse.getAddress().getLongitude(),
-                mapData.getMinLat(),
-                mapData.getMinLon(),
-                mapData.getMaxLat(),
-                mapData.getMaxLon(),
-                width,
-                height
-        );
-
+        double[] warehousePos = projectLatLon(warehouse.getAddress());
         Rectangle warehouseGraphic = new Rectangle(graphicSize, graphicSize);
         warehouseGraphic.setFill(Color.BLACK);
         warehouseGraphic.setStroke(Color.WHITE);
@@ -68,27 +59,8 @@ public class GraphicalViewRequests extends Group {
             Stop pickup = request.getPickup();
             Stop delivery = request.getDelivery();
 
-            double[] pickupPos = ViewUtilities.projectLatLon(
-                    pickup.getAddress().getLatitude(),
-                    pickup.getAddress().getLongitude(),
-                    mapData.getMinLat(),
-                    mapData.getMinLon(),
-                    mapData.getMaxLat(),
-                    mapData.getMaxLon(),
-                    width,
-                    height
-            );
-
-            double[] deliveryPos = ViewUtilities.projectLatLon(
-                    delivery.getAddress().getLatitude(),
-                    delivery.getAddress().getLongitude(),
-                    mapData.getMinLat(),
-                    mapData.getMinLon(),
-                    mapData.getMaxLat(),
-                    mapData.getMaxLon(),
-                    width,
-                    height
-            );
+            double[] pickupPos = projectLatLon(pickup.getAddress());
+            double[] deliveryPos = projectLatLon(delivery.getAddress());
 
             Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
 
@@ -109,6 +81,19 @@ public class GraphicalViewRequests extends Group {
         }
 
 
+    }
+
+    private double[] projectLatLon(Intersection intersection) {
+        return ViewUtilities.projectLatLon(
+                intersection.getLatitude(),
+                intersection.getLongitude(),
+                mapData.getMinLat(),
+                mapData.getMinLon(),
+                mapData.getMaxLat(),
+                mapData.getMaxLon(),
+                parentCanvas.getWidth(),
+                parentCanvas.getHeight()
+        );
     }
 
 }

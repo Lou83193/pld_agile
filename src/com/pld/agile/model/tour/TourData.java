@@ -253,8 +253,11 @@ public class TourData extends Observable {
 
     // Limited Discrepancy Search -> recall 3IF
 
-
-
+    public void resetComputedTour() {
+        predecessors = null;
+        stops = null;
+        computedPath = null;
+    }
 
     /**
      * Generates a String which describes the object
