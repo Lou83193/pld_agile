@@ -3,6 +3,7 @@ package com.pld.agile.model.tour;
 import com.pld.agile.Observable;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.utils.tsp.*;
 
 import java.util.*;
 
@@ -201,7 +202,6 @@ public class TourData extends Observable {
             stopIndex++;
 
         }
-
         //TESTS :
 /*        System.out.println("stops graph : ");
         for(int i=0; i< stops.size(); i++){
@@ -212,9 +212,18 @@ public class TourData extends Observable {
         }*/
     } // ---- END of dijkstra
 
-    public void TSP() {
-
+    public void tsp() {
+        TSP tsp = new TSP1();
     } // ---- END of TSP
+
+    // Branch&Bound (notes for myself)
+    /* H1 = (nbUnvisited+1)*dMin
+    /* H2 = l + sum of li
+    /* H3 = Sort unvisited by shortest cost to last visited vertex
+    */
+
+    // Limited Discrepancy Search -> recall 3IF
+
 
 
 

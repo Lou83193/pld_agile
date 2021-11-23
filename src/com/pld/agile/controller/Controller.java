@@ -64,6 +64,7 @@ public class Controller {
 
         window.getTourData().setStops();
         window.getTourData().dijkstra();
+        window.getTourData().tsp();
 
     }
 
