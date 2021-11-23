@@ -31,13 +31,17 @@ public class TourData extends Observable {
      */
     private String departureTime;
 
-    private double [][] stopsGraph;
+    private Graph stopsGraph;
 
     private int [][] predecessors;
+    // First index is algorithm index
+    // Second index is app index
 
     private List<Integer> stops;
 
-    private List<Stop> computedPath;
+    private List<Integer> computedPath;
+    // Index: Nth stop visited
+    // Value : App index
 
     /**
      * TourData constructor.
@@ -126,13 +130,13 @@ public class TourData extends Observable {
             stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup
             stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery
         }
-        //System.out.println("stops="+stops);
+        System.out.println("stops="+stops);
     }
 
     public void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
         predecessors = new int [stops.size()][nbIntersections];
-        stopsGraph=new double [stops.size()][stops.size()];
+        stopsGraph = new CompleteGraph(stops.size());
 
         int stopIndex = 0; // need index of currStop in the list stops to fill predecessors
 
@@ -197,7 +201,7 @@ public class TourData extends Observable {
                 predecessors[stopIndex][i] = pi[i];
             }
             for(int i=0; i < stops.size(); i++) {
-                stopsGraph[stopIndex][i] = dist[stops.get(i)];
+                stopsGraph.setCost(stopIndex,i,dist[stops.get(i)]);
             }
             stopIndex++;
 
@@ -206,14 +210,26 @@ public class TourData extends Observable {
 /*        System.out.println("stops graph : ");
         for(int i=0; i< stops.size(); i++){
             for(int j=0; j< stops.size(); j++){
-                System.out.print(stopsGraph [i][j]+" ");
+                System.out.print(stopsGraph.getCost(i,j) +" ");
             }
             System.out.println();
         }*/
     } // ---- END of dijkstra
 
     public void tsp() {
-        TSP tsp = new TSP1();
+        System.out.println("TSP INIT...");
+        TSP tsp = new TSP1(); // No Heuristic
+        long startTime = System.currentTimeMillis();
+        System.out.println("TSP START");
+        tsp.searchSolution(20000, stopsGraph);
+        System.out.println("Solution of cost "+ tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+        computedPath = new ArrayList<>();
+        for(int i = 0; i < stopsGraph.getNbVertices(); i++)
+        {
+            computedPath.add(stops.get(tsp.getSolution(i)));
+        }
+        System.out.println(computedPath);
+
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)

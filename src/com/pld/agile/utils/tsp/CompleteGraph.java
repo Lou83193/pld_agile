@@ -1,10 +1,8 @@
 package com.pld.agile.utils.tsp;
 
 public class CompleteGraph implements Graph {
-	private static final int MAX_COST = 40;
-	private static final int MIN_COST = 10;
 	int nbVertices;
-	int[][] cost;
+	double[][] cost;
 	
 	/**
 	 * Create a complete directed graph such that each edge has a weight within [MIN_COST,MAX_COST]
@@ -12,17 +10,10 @@ public class CompleteGraph implements Graph {
 	 */
 	public CompleteGraph(int nbVertices){
 		this.nbVertices = nbVertices;
-		int iseed = 1;
-		cost = new int[nbVertices][nbVertices];
+		cost = new double[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
 		    for (int j=0; j<nbVertices; j++){
-		        if (i == j) cost[i][j] = -1;
-		        else {
-		            int it = 16807 * (iseed % 127773) - 2836 * (iseed / 127773);
-		            if (it > 0)	iseed = it;
-		            else iseed = 2147483647 + it;
-		            cost[i][j] = MIN_COST + iseed % (MAX_COST-MIN_COST+1);
-		        }
+				cost[i][j] = Double.MAX_VALUE;
 		    }
 		}
 	}
@@ -33,7 +24,7 @@ public class CompleteGraph implements Graph {
 	}
 
 	@Override
-	public int getCost(int i, int j) {
+	public double getCost(int i, int j) {
 		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
 			return -1;
 		return cost[i][j];
@@ -44,6 +35,13 @@ public class CompleteGraph implements Graph {
 		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
 			return false;
 		return i != j;
+	}
+
+	@Override
+	public void setCost(int i, int j, double value) {
+		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
+			return;
+		cost[i][j] = value;
 	}
 
 }
