@@ -140,8 +140,9 @@ public class TourData extends Observable {
 
         int stopIndex = 0; // need index of currStop in the list stops to fill predecessors
 
+        System.out.println("Dijkstra START");
         for(int currStop : stops) {
-
+            System.out.println("On Stop : " + stops.get(stopIndex));
             // Current Stop Variables
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
             int [] pi = new int [nbIntersections]; //index = intersection id in map data
@@ -214,6 +215,7 @@ public class TourData extends Observable {
             }
             System.out.println();
         }*/
+        System.out.println("END Dijkstra");
     } // ---- END of dijkstra
 
     public void tsp() {
