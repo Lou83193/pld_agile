@@ -127,7 +127,7 @@ public class Window extends Application {
         // File menu
         Menu fileMenu = new Menu("File");
         fileMenu1 = new MenuItem("Load map");
-        fileMenu2 = new MenuItem("Load tour");
+        fileMenu2 = new MenuItem("Load requests");
         fileMenu3 = new MenuItem("Compute tour");
         fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
