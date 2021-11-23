@@ -32,8 +32,6 @@ public class TextualView implements Observer {
     public TextualView(TourData tourData) {
 
         this.tourData = tourData;
-
-        // Add observers
         tourData.addObserver(this);
 
         // Create ScrollPane
@@ -52,161 +50,15 @@ public class TextualView implements Observer {
 
         if (requests.size() == 0) return;
 
-        // Warehouse panel --------------------------------------------------------------------------------------------
-        double warehouseLat = tourData.getWarehouse().getAddress().getLatitude();
-        double warehouseLon = tourData.getWarehouse().getAddress().getLongitude();
-
-        VBox warehousePanel = new VBox(10);
-        VBox warehouseStopPanel = new VBox(8);
-        HBox warehouseStopLabelPanel = new HBox(8);
-        GridPane warehouseStopInfoPane = new GridPane();
-        warehouseStopInfoPane.setVgap(4);
-
-        // Label
-        Rectangle warehouseGraphic = new Rectangle(14, 14);
-        warehouseGraphic.setRotate(45);
-        warehouseGraphic.setFill(Color.BLACK);
-        Text warehouseStopLabelText = new Text("Warehouse");
-        warehouseStopLabelText.getStyleClass().add("stopTextualLabel");
-        warehouseStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
-        warehouseStopLabelPanel.getChildren().addAll(warehouseGraphic, warehouseStopLabelText);
-
-        // Latitude
-        Text warehouseStopLatText = new Text("Latitude: ");
-        TextField warehouseStopLatInput = new TextField(warehouseLat + "");
-        warehouseStopLatInput.setEditable(false);
-        warehouseStopLatInput.setMouseTransparent(true);
-        warehouseStopLatInput.setFocusTraversable(false);
-        warehouseStopInfoPane.add(warehouseStopLatText, 0, 0);
-        warehouseStopInfoPane.add(warehouseStopLatInput, 1, 0);
-
-        // Longitude
-        Text warehouseSStopLonText = new Text("Longitude: ");
-        TextField warehouseSStopLonInput = new TextField(warehouseLon + "");
-        warehouseSStopLonInput.setEditable(false);
-        warehouseSStopLonInput.setMouseTransparent(true);
-        warehouseSStopLonInput.setFocusTraversable(false);
-        warehouseStopInfoPane.add(warehouseSStopLonText, 0, 1);
-        warehouseStopInfoPane.add(warehouseSStopLonInput, 1, 1);
-
-        // Add it all together
-        warehouseStopPanel.getChildren().addAll(warehouseStopLabelPanel, warehouseStopInfoPane);
-
-        warehousePanel.setPadding(new Insets(10));
-        warehousePanel.getChildren().add(warehouseStopPanel);
-        warehousePanel.getStyleClass().add("requestTextualPanel");
+        VBox warehousePanel = new TextualViewItem(tourData.getWarehouse());
         requestListContainer.getChildren().add(warehousePanel);
 
-        // Other stops ------------------------------------------------------------------------------------------------
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
             Stop delivery = request.getDelivery();
 
-            double pickupLat = pickup.getAddress().getLatitude();
-            double pickupLon = pickup.getAddress().getLongitude();
-            double pickupDuration = pickup.getDuration();
-
-            double deliveryLat = delivery.getAddress().getLatitude();
-            double deliveryLon = delivery.getAddress().getLongitude();
-            double deliveryDuration = delivery.getDuration();
-
-            Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
-
-            VBox requestPanel = new VBox(10);
-
-            // Pickup panel -------------------------------------------------------------------------------------------
-            VBox pickupStopPanel = new VBox(8);
-            HBox pickupStopLabelPanel = new HBox(8);
-            GridPane pickupStopInfoPane = new GridPane();
-            pickupStopInfoPane.setVgap(4);
-
-            // Label
-            Circle pickupGraphic = new Circle(8);
-            pickupGraphic.setFill(colour);
-            Text pickupStopLabelText = new Text("Pickup Stop");
-            pickupStopLabelText.getStyleClass().add("stopTextualLabel");
-            pickupStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
-            pickupStopLabelPanel.getChildren().addAll(pickupGraphic, pickupStopLabelText);
-
-            // Latitude
-            Text pickupStopLatText = new Text("Latitude: ");
-            TextField pickupStopLatInput = new TextField(pickupLat + "");
-            pickupStopLatInput.setEditable(false);
-            pickupStopLatInput.setMouseTransparent(true);
-            pickupStopLatInput.setFocusTraversable(false);
-            pickupStopInfoPane.add(pickupStopLatText, 0, 0);
-            pickupStopInfoPane.add(pickupStopLatInput, 1, 0);
-
-            // Longitude
-            Text pickupStopLonText = new Text("Longitude: ");
-            TextField pickupStopLonInput = new TextField(pickupLon + "");
-            pickupStopLonInput.setEditable(false);
-            pickupStopLonInput.setMouseTransparent(true);
-            pickupStopLonInput.setFocusTraversable(false);
-            pickupStopInfoPane.add(pickupStopLonText, 0, 1);
-            pickupStopInfoPane.add(pickupStopLonInput, 1, 1);
-
-            // Duration
-            Text pickupStopDurationText = new Text("Duration: ");
-            TextField pickupStopDurationInput = new TextField(pickupDuration + "");
-            pickupStopDurationInput.setEditable(false);
-            pickupStopDurationInput.setMouseTransparent(true);
-            pickupStopDurationInput.setFocusTraversable(false);
-            pickupStopInfoPane.add(pickupStopDurationText, 0, 2);
-            pickupStopInfoPane.add(pickupStopDurationInput, 1, 2);
-
-            // Add it all together
-            pickupStopPanel.getChildren().addAll(pickupStopLabelPanel, pickupStopInfoPane);
-
-            // Delivery panel -----------------------------------------------------------------------------------------
-            VBox deliveryStopPanel = new VBox(8);
-            HBox deliveryStopLabelPanel = new HBox(8);
-            GridPane deliveryStopInfoPane = new GridPane();
-            deliveryStopInfoPane.setVgap(4);
-
-            // Label
-            Rectangle deliveryGraphic = new Rectangle(16, 16);
-            deliveryGraphic.setFill(colour);
-            Text deliveryStopLabelText = new Text("Delivery Stop");
-            deliveryStopLabelText.getStyleClass().add("stopTextualLabel");
-            deliveryStopLabelPanel.setAlignment(Pos.CENTER_LEFT);
-            deliveryStopLabelPanel.getChildren().addAll(deliveryGraphic, deliveryStopLabelText);
-
-            // Latitude
-            Text deliveryStopLatText = new Text("Latitude: ");
-            TextField deliveryStopLatInput = new TextField(deliveryLat + "");
-            deliveryStopLatInput.setEditable(false);
-            deliveryStopLatInput.setMouseTransparent(true);
-            deliveryStopLatInput.setFocusTraversable(false);
-            deliveryStopInfoPane.add(deliveryStopLatText, 0, 0);
-            deliveryStopInfoPane.add(deliveryStopLatInput, 1, 0);
-
-            // Longitude
-            Text deliveryStopLonText = new Text("Longitude: ");
-            TextField deliveryStopLonInput = new TextField(deliveryLon + "");
-            deliveryStopLonInput.setEditable(false);
-            deliveryStopLonInput.setMouseTransparent(true);
-            deliveryStopLonInput.setFocusTraversable(false);
-            deliveryStopInfoPane.add(deliveryStopLonText, 0, 1);
-            deliveryStopInfoPane.add(deliveryStopLonInput, 1, 1);
-
-            // Duration
-            Text deliveryStopDurationText = new Text("Duration: ");
-            TextField deliveryStopDurationInput = new TextField(deliveryDuration + "");
-            deliveryStopDurationInput.setEditable(false);
-            deliveryStopDurationInput.setMouseTransparent(true);
-            deliveryStopDurationInput.setFocusTraversable(false);
-            deliveryStopInfoPane.add(deliveryStopDurationText, 0, 2);
-            deliveryStopInfoPane.add(deliveryStopDurationInput, 1, 2);
-
-            // Add it all together
-            deliveryStopPanel.getChildren().addAll(deliveryStopLabelPanel, deliveryStopInfoPane);
-
-            requestPanel.setPadding(new Insets(10));
-            requestPanel.getChildren().addAll(pickupStopPanel, deliveryStopPanel);
-            requestPanel.getStyleClass().add("requestTextualPanel");
-
+            VBox requestPanel = new TextualViewItem(pickup, delivery);
             requestListContainer.getChildren().add(requestPanel);
 
         }
