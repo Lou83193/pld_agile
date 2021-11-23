@@ -47,28 +47,10 @@ public class GraphicalViewMap extends Canvas {
         for (Segment s : segments) {
 
             Intersection origin = s.getOrigin();
-            double[] originPos = ViewUtilities.projectLatLon(
-                    origin.getLatitude(),
-                    origin.getLongitude(),
-                    mapData.getMinLat(),
-                    mapData.getMinLon(),
-                    mapData.getMaxLat(),
-                    mapData.getMaxLon(),
-                    width,
-                    height
-            );
+            double[] originPos = projectLatLon(origin);
 
             Intersection destination = s.getDestination();
-            double[] destinationPos = ViewUtilities.projectLatLon(
-                    destination.getLatitude(),
-                    destination.getLongitude(),
-                    mapData.getMinLat(),
-                    mapData.getMinLon(),
-                    mapData.getMaxLat(),
-                    mapData.getMaxLon(),
-                    width,
-                    height
-            );
+            double[] destinationPos = projectLatLon(destination);
 
             gc.strokeLine(originPos[0], originPos[1], destinationPos[0], destinationPos[1]);
 
@@ -80,9 +62,7 @@ public class GraphicalViewMap extends Canvas {
 
     public void drawTour() {
 
-        double width = getWidth();
-        double height = getHeight();
-        double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
+        double screenScale = ViewUtilities.mapValue(getHeight(), 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         GraphicsContext gc = getGraphicsContext2D();
@@ -102,51 +82,39 @@ public class GraphicalViewMap extends Canvas {
             Integer currStopId = computedPath.get(i);
             Integer nextStopId = computedPath.get((i+1)%pathLength);
 
-            // Get algoId of current stop
-            Integer currStopAlgoId = 0;
-            for (int k = 0; k < stops.size(); k++) {
-                if (stops.get(k).equals(currStopId)) {
-                    currStopAlgoId = k;
-                }
-            }
-
-            // Get intermediary intersections, trace line
-            int predecessor = predecessors[currStopAlgoId][nextStopId];
+            // Trace first line
+            int predecessor = predecessors[currStopId][stops.get(nextStopId)];
+            Intersection lastIntersection = mapData.getIntersections().get(stops.get(nextStopId));
+            double[] lastIntersectionPos = projectLatLon(lastIntersection);
             Intersection currIntersection = mapData.getIntersections().get(predecessor);
-            double[] currIntersectionPos = ViewUtilities.projectLatLon(
-                    currIntersection.getLatitude(),
-                    currIntersection.getLongitude(),
-                    mapData.getMinLat(),
-                    mapData.getMinLon(),
-                    mapData.getMaxLat(),
-                    mapData.getMaxLon(),
-                    width,
-                    height
-            );
+            double[] currIntersectionPos = projectLatLon(currIntersection);
+            gc.strokeLine(lastIntersectionPos[0], lastIntersectionPos[1], currIntersectionPos[0], currIntersectionPos[1]);
 
-            while (predecessor != currStopId) {
-                predecessor = predecessors[currStopAlgoId][predecessor];
+            // Get intermediary intersections, trace lines
+            while (predecessor != stops.get(currStopId)) {
+                predecessor = predecessors[currStopId][predecessor];
                 Intersection nextIntersection = mapData.getIntersections().get(predecessor);
-                double[] nextIntersectionPos = ViewUtilities.projectLatLon(
-                        nextIntersection.getLatitude(),
-                        nextIntersection.getLongitude(),
-                        mapData.getMinLat(),
-                        mapData.getMinLon(),
-                        mapData.getMaxLat(),
-                        mapData.getMaxLon(),
-                        width,
-                        height
-                );
-
-                // Trace line
+                double[] nextIntersectionPos = projectLatLon(nextIntersection);
                 gc.strokeLine(currIntersectionPos[0], currIntersectionPos[1], nextIntersectionPos[0], nextIntersectionPos[1]);
-
+                currIntersectionPos = nextIntersectionPos;
             }
-
 
         }
 
 
+    }
+
+    private double[] projectLatLon(Intersection intersection) {
+        return ViewUtilities.projectLatLon(
+            intersection.getLatitude(),
+            intersection.getLongitude(),
+            mapData.getMinLat(),
+            mapData.getMinLon(),
+            mapData.getMaxLat(),
+            mapData.getMaxLon(),
+            getWidth(),
+            getHeight()
+        );
     }
 
     @Override
