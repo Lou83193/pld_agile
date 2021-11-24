@@ -8,12 +8,6 @@ package com.pld.agile.utils.view;
 
 import javafx.scene.paint.Color;
 
-enum UpdateType {
-    MAP,
-    REQUESTS,
-    TOUR
-}
-
 public class ViewUtilities {
 
     private static double padding = 0.02;

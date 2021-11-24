@@ -9,6 +9,7 @@ package com.pld.agile.model.tour;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.tsp.*;
 
 import java.util.*;
@@ -74,7 +75,8 @@ public class TourData extends Observable {
      */
     public void setRequestList(List<Request> requestList) {
         this.requestList = requestList;
-        notifyObservers(this);
+        notifyObservers(UpdateType.MAP);
+        notifyObservers(UpdateType.REQUESTS);
     }
 
     /**
@@ -91,7 +93,6 @@ public class TourData extends Observable {
      */
     public void setAssociatedMap(MapData associatedMap) {
         this.associatedMap = associatedMap;
-        notifyObservers(this);
     }
 
     /**
@@ -108,7 +109,6 @@ public class TourData extends Observable {
      */
     public void setWarehouse(Stop warehouse) {
         this.warehouse = warehouse;
-        notifyObservers(this);
     }
 
     /**
@@ -125,7 +125,6 @@ public class TourData extends Observable {
      */
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
-        notifyObservers(this);
     }
 
     public int[][] getPredecessors() {
@@ -248,7 +247,7 @@ public class TourData extends Observable {
             computedPath.add(tsp.getSolution(i));
         }
         System.out.println(computedPath);
-        notifyObservers(this);
+        notifyObservers(UpdateType.TOUR);
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)
@@ -258,12 +257,6 @@ public class TourData extends Observable {
     */
 
     // Limited Discrepancy Search -> recall 3IF
-
-    public void resetComputedTour() {
-        predecessors = null;
-        stops = null;
-        computedPath = null;
-    }
 
     /**
      * Generates a String which describes the object

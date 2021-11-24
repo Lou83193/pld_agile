@@ -7,6 +7,7 @@
 package com.pld.agile.model.map;
 
 import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.UpdateType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +82,6 @@ public class MapData extends Observable {
         maxLon = Math.max(maxLon, lon);
         minLat = Math.min(minLat, lat);
         minLon = Math.min(minLon, lon);
-        notifyObservers(this);
     }
 
     /**
@@ -92,7 +92,6 @@ public class MapData extends Observable {
         maxLon = Integer.MIN_VALUE;
         minLat = Integer.MAX_VALUE;
         minLon = Integer.MAX_VALUE;
-        notifyObservers(this);
     }
 
     // GETTERS
@@ -135,7 +134,7 @@ public class MapData extends Observable {
      */
     public void setIntersectionsByOldID(HashMap<String, Intersection> intersectionsByOldID) {
         this.intersectionsByOldID = intersectionsByOldID;
-        notifyObservers(this);
+        notifyObservers(UpdateType.MAP);
     }
 
     /**
@@ -144,7 +143,7 @@ public class MapData extends Observable {
      */
     public void setSegments(List<Segment> segments) {
         this.segments = segments;
-        notifyObservers(this);
+        notifyObservers(UpdateType.MAP);
     }
 
     /**
@@ -161,7 +160,6 @@ public class MapData extends Observable {
      */
     public void setMaxLat(double maxLat) {
         this.maxLat = maxLat;
-        notifyObservers(this);
     }
 
     /**
@@ -178,7 +176,6 @@ public class MapData extends Observable {
      */
     public void setMinLat(double minLat) {
         this.minLat = minLat;
-        notifyObservers(this);
     }
 
     /**
@@ -195,7 +192,6 @@ public class MapData extends Observable {
      */
     public void setMaxLon(double maxLon) {
         this.maxLon = maxLon;
-        notifyObservers(this);
     }
 
     /**
@@ -212,7 +208,6 @@ public class MapData extends Observable {
      */
     public void setMinLon(double minLon) {
         this.minLon = minLon;
-        notifyObservers(this);
     }
 
     @Override
