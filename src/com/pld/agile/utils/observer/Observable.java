@@ -21,9 +21,9 @@ public class Observable {
         if (!obs.contains(o)) obs.add(o);
     }
 
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(UpdateType updateType) {
         for (Observer o : obs) {
-            o.update(this, arg);
+            o.update(this, updateType);
         }
     }
 

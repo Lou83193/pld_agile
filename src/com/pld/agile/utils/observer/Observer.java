@@ -8,6 +8,6 @@ package com.pld.agile.utils.observer;
 
 public interface Observer {
 
-    public void update(Observable observed, Object args);
+    public void update(Observable observed, UpdateType updateType);
 
 }
