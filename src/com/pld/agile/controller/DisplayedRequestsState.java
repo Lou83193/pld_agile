@@ -6,6 +6,10 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
+/**
+ * State when the map and a list of requests are loaded.
+ * User can load another map, load another list of requests or ask the app to compute the tour.
+ */
 public class DisplayedRequestsState implements State {
 
     @Override

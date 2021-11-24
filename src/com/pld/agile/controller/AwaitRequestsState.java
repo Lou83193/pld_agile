@@ -6,6 +6,10 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
+/**
+ * State when the map is loaded.
+ * User can load another map, or load a request xml file.
+ */
 public class AwaitRequestsState implements State {
 
     @Override
