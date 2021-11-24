@@ -1,3 +1,9 @@
+/*
+ * Stop
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.model.tour;
 
 import com.pld.agile.model.map.Intersection;

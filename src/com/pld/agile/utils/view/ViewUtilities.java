@@ -1,3 +1,9 @@
+/*
+ * ViewUtilities
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.utils.view;
 
 import javafx.scene.paint.Color;

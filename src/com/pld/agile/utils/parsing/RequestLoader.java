@@ -1,3 +1,9 @@
+/*
+ * RequestLoader
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.utils.parsing;
 
 import com.pld.agile.model.map.Intersection;

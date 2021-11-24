@@ -1,3 +1,9 @@
+/*
+ * Intersection
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.model.map;
 
 import java.util.ArrayList;

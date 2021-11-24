@@ -1,3 +1,9 @@
+/*
+ * CompleteGraph
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.utils.tsp;
 
 public class CompleteGraph implements Graph {

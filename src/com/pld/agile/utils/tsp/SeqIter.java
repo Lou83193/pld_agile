@@ -1,3 +1,9 @@
+/*
+ * SeqIter
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.utils.tsp;
 
 import java.util.Collection;

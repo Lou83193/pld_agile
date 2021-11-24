@@ -12,6 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class MapLoaderTests {
 
     @Test
+    // Test n°1.1
+    public void test5Intersections4Segments() {
+
+    }
+
+    @Test
     //Test n°1.4
     public void testNoMapNode() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -23,7 +29,7 @@ public class MapLoaderTests {
         MapLoader mapLoader = new MapLoader(filePath, mapData);
         boolean res = mapLoader.load();
         assertFalse(res);
-        //check if your error message is in the output variable
+        //check if the beginning of the error message is the one expected
         assertEquals("org.dom4j.DocumentException: Error on line 3 of document", outContent.toString().substring(0, 56));
     }
 

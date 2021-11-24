@@ -1,3 +1,9 @@
+/*
+ * Controller
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.controller;
 
 import com.pld.agile.model.map.MapData;

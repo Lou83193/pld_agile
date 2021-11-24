@@ -1,3 +1,9 @@
+/*
+ * MapData
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile.model.map;
 
 import com.pld.agile.Observable;

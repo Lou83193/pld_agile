@@ -1,3 +1,9 @@
+/*
+ * Observable
+ *
+ * Copyright (c) 2021. Hexanomnom
+ */
+
 package com.pld.agile;
 
 import java.util.ArrayList;
