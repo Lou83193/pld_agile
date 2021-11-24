@@ -51,7 +51,7 @@ public class MapData extends Observable {
      * @param intersections List of all Intersections
      * @param segments List of all Segments
      */
-    public MapData(List intersections, List segments){
+    public MapData(List<Intersection> intersections, List<Segment> segments){
         this.intersections = intersections;
         this.segments = segments;
     }

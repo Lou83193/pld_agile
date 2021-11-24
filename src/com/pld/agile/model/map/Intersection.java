@@ -37,7 +37,7 @@ public class Intersection {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        originOf = new ArrayList<>();
+        this.originOf = new ArrayList<>();
     }
 
     // GETTERS

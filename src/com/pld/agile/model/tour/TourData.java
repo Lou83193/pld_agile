@@ -135,13 +135,13 @@ public class TourData extends Observable {
     }
 
     public void setStops(){
-        stops=new ArrayList<Integer>();
+        stops = new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
-        for(int i=0; i<requestList.size(); i++) {
-            stops.add(requestList.get(i).getPickup().getAddress().getId());//add pickup (odd index)
-            stops.add(requestList.get(i).getDelivery().getAddress().getId());//add delivery (even index)
+        for (Request request : requestList) {
+            stops.add(request.getPickup().getAddress().getId());//add pickup (odd index)
+            stops.add(request.getDelivery().getAddress().getId());//add delivery (even index)
         }
-        System.out.println("stops="+stops);
+        System.out.println("stops=" + stops);
     }
 
     public void dijkstra() {
@@ -187,7 +187,7 @@ public class TourData extends Observable {
                             if(distance > dist[node] + road.getLength()) {
                                 distance = dist[node] + road.getLength();
                                 dist[nextNode] = distance;
-                                pi[nextNode]=node;
+                                pi[nextNode] = node;
                             }
 
                             pq.add(new Pair<>(nextNode, distance));
@@ -201,7 +201,7 @@ public class TourData extends Observable {
                     contains = true;
                     for(int s : stops){
                         if(!settled.contains(s)) {
-                            contains=false;
+                            contains = false;
                             break;
                         }
                     }
@@ -209,11 +209,11 @@ public class TourData extends Observable {
             }
 
             // Save computed data
-            for(int i=0; i < nbIntersections; i++){
+            for(int i=0; i < nbIntersections; i++) {
                 predecessors[stopIndex][i] = pi[i];
             }
             for(int i=0; i < stops.size(); i++) {
-                stopsGraph.setCost(stopIndex,i,dist[stops.get(i)]);
+                stopsGraph.setCost(stopIndex, i, dist[stops.get(i)]);
             }
             stopIndex++;
 

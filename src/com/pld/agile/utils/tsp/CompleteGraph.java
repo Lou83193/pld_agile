@@ -8,7 +8,7 @@ public class CompleteGraph implements Graph {
 	 * Create a complete directed graph such that each edge has a weight within [MIN_COST,MAX_COST]
 	 * @param nbVertices
 	 */
-	public CompleteGraph(int nbVertices){
+	public CompleteGraph(int nbVertices) {
 		this.nbVertices = nbVertices;
 		cost = new double[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
