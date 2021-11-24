@@ -8,6 +8,7 @@ import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -36,46 +37,32 @@ public class GraphicalViewRequests extends Group {
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         List<Request> requests = tourData.getRequestList();
-
-        if (requests.size() == 0) return;
-
         this.getChildren().clear();
-        double graphicSize = 20*screenScale*mapScale;
-        double outlineSize = 2*screenScale*mapScale;
+
+        if (requests.size() == 0) {
+            return;
+        }
+
+        double graphicSize = 20 * screenScale * mapScale;
 
         Stop warehouse = tourData.getWarehouse();
-
+        VBox warehouseGraphic = new GraphicalViewStop(warehouse, graphicSize);
         double[] warehousePos = projectLatLon(warehouse.getAddress());
-        Rectangle warehouseGraphic = new Rectangle(graphicSize, graphicSize);
-        warehouseGraphic.setFill(Color.BLACK);
-        warehouseGraphic.setStroke(Color.WHITE);
-        warehouseGraphic.setStrokeWidth(outlineSize);
-        warehouseGraphic.setRotate(45);
-        warehouseGraphic.relocate(warehousePos[0] - graphicSize/2, warehousePos[1] - graphicSize/2);
+        warehouseGraphic.relocate(warehousePos[0] - graphicSize / 2, warehousePos[1] - graphicSize / 2);
         this.getChildren().add(warehouseGraphic);
 
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
-            Stop delivery = request.getDelivery();
-
+            VBox pickupGraphic = new GraphicalViewStop(pickup, graphicSize);
             double[] pickupPos = projectLatLon(pickup.getAddress());
-            double[] deliveryPos = projectLatLon(delivery.getAddress());
-
-            Color colour = ViewUtilities.stringToColour(pickup.getAddress().toString());
-
-            Circle pickupGraphic = new Circle(graphicSize/2);
-            pickupGraphic.setFill(colour);
-            pickupGraphic.setStroke(Color.BLACK);
-            pickupGraphic.setStrokeWidth(outlineSize);
-            pickupGraphic.relocate(pickupPos[0] - graphicSize/2, pickupPos[1] - graphicSize/2);
+            pickupGraphic.relocate(pickupPos[0] - graphicSize / 2, pickupPos[1] - graphicSize / 2);
             this.getChildren().add(pickupGraphic);
 
-            Rectangle deliveryGraphic = new Rectangle(graphicSize, graphicSize);
-            deliveryGraphic.setFill(colour);
-            deliveryGraphic.setStroke(Color.BLACK);
-            deliveryGraphic.setStrokeWidth(outlineSize);
-            deliveryGraphic.relocate(deliveryPos[0] - graphicSize/2, deliveryPos[1] - graphicSize/2);
+            Stop delivery = request.getDelivery();
+            VBox deliveryGraphic = new GraphicalViewStop(delivery, graphicSize);
+            double[] deliveryPos = projectLatLon(delivery.getAddress());
+            deliveryGraphic.relocate(deliveryPos[0] - graphicSize / 2, deliveryPos[1] - graphicSize / 2);
             this.getChildren().add(deliveryGraphic);
 
         }
@@ -83,7 +70,7 @@ public class GraphicalViewRequests extends Group {
 
     }
 
-    private double[] projectLatLon(Intersection intersection) {
+    private double[] projectLatLon(final Intersection intersection) {
         return ViewUtilities.projectLatLon(
                 intersection.getLatitude(),
                 intersection.getLongitude(),

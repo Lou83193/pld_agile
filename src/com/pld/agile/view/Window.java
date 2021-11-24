@@ -6,7 +6,7 @@ import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -15,12 +15,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Window extends Application {
@@ -28,6 +26,8 @@ public class Window extends Application {
     private MenuItem fileMenu1;
     private MenuItem fileMenu2;
     private MenuItem fileMenu3;
+    private Button mainSceneButton;
+    private BorderPane sidePanel;
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
@@ -35,6 +35,9 @@ public class Window extends Application {
     private final Controller controller;
     private final MapData mapData;
     private final TourData tourData;
+
+    private final int initialW = 1060;
+    private final int initialH = 720;
 
     public Window() {
         this.mapData = new MapData();
@@ -44,7 +47,7 @@ public class Window extends Application {
 
 
     @Override
-    public void start(Stage s) throws IOException {
+    public void start(final Stage s) throws IOException {
 
         stage = s;
         constructHomeScene();
@@ -89,7 +92,7 @@ public class Window extends Application {
         pane.setId("home-pane");
 
         /* MAIN SCENE */
-        Scene scene = new Scene(pane,1060, 720);
+        Scene scene = new Scene(pane,initialW, initialH);
         scene.getStylesheets().add("stylesheet.css");
 
         homeScene = scene;
@@ -99,7 +102,7 @@ public class Window extends Application {
     public void constructMainScene() {
 
         BorderPane pane = new BorderPane();
-        Scene scene = new Scene(pane,1060, 720);
+        Scene scene = new Scene(pane,initialW, initialH);
         scene.getStylesheets().add("stylesheet.css");
 
         MenuBar menuBar = constructMenuBar();
@@ -108,16 +111,16 @@ public class Window extends Application {
         GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
         pane.setCenter(graphicalView.getComponent());
 
-        BorderPane sidePanel = new BorderPane();
+        sidePanel = new BorderPane();
         sidePanel.prefWidthProperty().bind(scene.widthProperty().subtract(graphicalView.getGraphicalViewMap().widthProperty()));
-        sidePanel.setPadding(new Insets(0, 0, 20, 0));
         TextualView textualView = new TextualView(tourData);
         HBox buttonWrapper = new HBox();
         buttonWrapper.setAlignment(Pos.CENTER);
-        Button button = new Button("Compute Tour");
-        button.getStyleClass().add("button");
-        button.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
-        buttonWrapper.getChildren().add(button);
+        buttonWrapper.setPadding(new Insets(0, 20, 20, 20));
+        mainSceneButton = new Button("Compute Tour");
+        mainSceneButton.getStyleClass().add("button");
+        mainSceneButton.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
+        buttonWrapper.getChildren().add(mainSceneButton);
         sidePanel.setCenter(textualView.getComponent());
         sidePanel.setBottom(buttonWrapper);
         pane.setRight(sidePanel);
@@ -136,7 +139,7 @@ public class Window extends Application {
         fileMenu2 = new MenuItem("Load requests");
         fileMenu3 = new MenuItem("Compute tour");
         fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
-        fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_TOUR));
+        fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_REQUESTS));
         fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
         fileMenu2.setDisable(true);
         fileMenu3.setDisable(true);
@@ -165,11 +168,32 @@ public class Window extends Application {
     public void switchSceneToMainScene() {
         stage.setScene(mainScene);
     }
-    public void toggleFileMenuItem(int num, boolean enabled) {
+    public void toggleFileMenuItem(final int num, final boolean enabled) {
         switch (num) {
             case 1 -> fileMenu1.setDisable(!enabled);
             case 2 -> fileMenu2.setDisable(!enabled);
             case 3 -> fileMenu3.setDisable(!enabled);
+        }
+    }
+    public void setMainSceneButton(final String label, final ButtonListener listener) {
+        mainSceneButton.setText(label);
+        mainSceneButton.setOnAction(listener);
+    }
+    public void placeMainSceneButton(final boolean top) {
+        if (top) {
+            HBox bottomNode = (HBox) sidePanel.getBottom();
+            if (bottomNode != null) {
+                sidePanel.setBottom(null);
+                sidePanel.setTop(bottomNode);
+                bottomNode.setPadding(new Insets(20, 20, 0, 20));
+            }
+        } else {
+            HBox topNode = (HBox) sidePanel.getTop();
+            if (topNode != null) {
+                sidePanel.setTop(null);
+                sidePanel.setBottom(topNode);
+                topNode.setPadding(new Insets(0, 20, 20, 20));
+            }
         }
     }
 

@@ -15,20 +15,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
-public class TextualViewItem extends VBox {
+public class TextualViewStop extends VBox {
 
-    public TextualViewItem(Stop stop) {
-
-        VBox panel = constructItemSection(stop);
-        this.getChildren().add(panel);
-
-        this.setPadding(new Insets(10));
-        this.setSpacing(10);
-        this.getStyleClass().add("requestTextualPanel");
-
-    }
-
-    private VBox constructItemSection(Stop stop) {
+    public TextualViewStop(Stop stop) {
 
         double lat = stop.getAddress().getLatitude();
         double lon = stop.getAddress().getLongitude();
@@ -47,26 +36,15 @@ public class TextualViewItem extends VBox {
         infoPane.setVgap(4);
 
         // Label
-        Shape labelGraphic = new Circle(8);
-        String labelTextString = "Stop";
+        VBox labelGraphic = new GraphicalViewStop(stop, 16);
+        String labelTextString = "";
         switch (type) {
-            case PICKUP:
-                labelGraphic = new Circle(8);
-                labelTextString = "Pickup Stop";
-                break;
-            case DELIVERY:
-                labelGraphic = new Rectangle(16, 16);
-                labelTextString = "Delivery Stop";
-                break;
-            case WAREHOUSE:
-                labelGraphic = new Rectangle(14, 14);
-                labelGraphic.setRotate(45);
-                labelTextString = "Warehouse";
-                break;
+            case PICKUP -> labelTextString = "Pickup Stop";
+            case DELIVERY -> labelTextString = "Delivery Stop";
+            case WAREHOUSE -> labelTextString = "Warehouse";
         }
-        labelGraphic.setFill(colour);
         Text labelText = new Text(labelTextString);
-        labelText.getStyleClass().add("stopTextualLabel");
+        labelText.getStyleClass().add("textual-view-stop-panel-label");
         labelPanel.setAlignment(Pos.CENTER_LEFT);
         labelPanel.getChildren().addAll(labelGraphic, labelText);
 
@@ -114,7 +92,11 @@ public class TextualViewItem extends VBox {
 
         // Add it all together
         panel.getChildren().addAll(labelPanel, infoPane);
-        return panel;
+        this.getChildren().add(panel);
+
+        this.setPadding(new Insets(10));
+        this.setSpacing(10);
+        this.getStyleClass().add("textual-view-stop-panel");
 
     }
 

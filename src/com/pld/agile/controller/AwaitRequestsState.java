@@ -1,6 +1,8 @@
 package com.pld.agile.controller;
 
 import com.pld.agile.utils.parsing.RequestLoader;
+import com.pld.agile.view.ButtonEventType;
+import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
 
@@ -13,7 +15,7 @@ import java.io.File;
 public class AwaitRequestsState implements State {
 
     @Override
-    public boolean doLoadRequests(Controller c, Window window) {
+    public boolean doLoadRequests(final Controller c, final Window window) {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Tour File");
@@ -27,6 +29,8 @@ public class AwaitRequestsState implements State {
 
             if (success) {
                 window.toggleFileMenuItem(3, true);
+                window.setMainSceneButton("Compute tour", new ButtonListener(c, ButtonEventType.COMPUTE_TOUR));
+                window.placeMainSceneButton(false);
                 c.setCurrState(c.displayedRequestsState);
             }
             return success;

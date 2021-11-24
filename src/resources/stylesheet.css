@@ -18,12 +18,12 @@
     -fx-background-position: center center;
 }
 
-.stopTextualLabel {
+.textual-view-stop-panel-label {
     -fx-font-size: 11pt;
     -fx-font-weight: bold;
 }
 
-.requestTextualPanel {
+.textual-view-stop-panel {
     -fx-background-color: #DEDEDE;
     -fx-background-radius: 10;
 }

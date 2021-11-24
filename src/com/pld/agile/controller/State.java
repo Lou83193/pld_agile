@@ -1,11 +1,13 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.controller.Controller;
 import com.pld.agile.utils.parsing.MapLoader;
+import com.pld.agile.view.ButtonEventType;
+import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * State design pattern interface.
@@ -32,9 +34,13 @@ public interface State {
             boolean success = mapLoader.load();
 
             if (success) {
+                window.getTourData().setRequestList(new ArrayList<>());
                 window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchSceneToMainScene();
                 window.toggleFileMenuItem(2, true);
+                window.toggleFileMenuItem(3, false);
+                window.setMainSceneButton("Load requests", new ButtonListener(c, ButtonEventType.LOAD_REQUESTS));
+                window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
                 c.setCurrState(c.awaitRequestsState);
             }

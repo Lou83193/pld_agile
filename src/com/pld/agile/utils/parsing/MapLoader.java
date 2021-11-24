@@ -122,6 +122,8 @@ public class MapLoader {
         map.setIntersections(intersections);
         map.setSegments(segments);
 
+
+
         return true;
     }
 

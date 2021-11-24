@@ -22,7 +22,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
                 controller.loadMap();
                 break;
 
-            case LOAD_TOUR:
+            case LOAD_REQUESTS:
                 controller.loadTour();
                 break;
 

@@ -1,18 +1,16 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.tour.StopType;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+
 import java.util.List;
 
 public class TextualView implements Observer {
@@ -39,14 +37,17 @@ public class TextualView implements Observer {
         VBox requestListContainer = new VBox(20);
         List<Request> requests = tourData.getRequestList();
 
-        if (requests.size() == 0) return;
+        if (requests.size() == 0) {
+            component.setContent(requestListContainer);
+            return;
+        }
 
-        VBox warehousePanel = new TextualViewItem(tourData.getWarehouse());
+        VBox warehousePanel = new TextualViewStop(tourData.getWarehouse());
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
-            VBox requestPanel1 = new TextualViewItem(request.getPickup());
-            VBox requestPanel2 = new TextualViewItem(request.getDelivery());
+            VBox requestPanel1 = new TextualViewStop(request.getPickup());
+            VBox requestPanel2 = new TextualViewStop(request.getDelivery());
             requestListContainer.getChildren().addAll(requestPanel1, requestPanel2);
         }
 
@@ -61,12 +62,15 @@ public class TextualView implements Observer {
         List<Request> requests = tourData.getRequestList();
         List<Integer> tourOrder = tourData.getComputedPath();
 
-        if (requests.size() == 0) return;
+        if (requests.size() == 0) {
+            component.setContent(requestListContainer);
+            return;
+        }
 
         for (Integer i : tourOrder) {
             Integer stopId = tourData.getStops().get(i);
             Stop stop = tourData.getStopMap().get(stopId);
-            VBox requestPanel = new TextualViewItem(stop);
+            VBox requestPanel = new TextualViewStop(stop);
             requestListContainer.getChildren().add(requestPanel);
         }
 

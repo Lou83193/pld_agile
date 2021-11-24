@@ -53,7 +53,7 @@ public class GraphicalViewMap extends Canvas {
         gc.setFill(Color.web("#DEDEDE"));
         gc.fillRect(0, 0, width, height);
 
-        gc.setLineWidth(2*screenScale*mapScale);
+        gc.setLineWidth(2 * screenScale * mapScale);
         gc.setStroke(Color.web("#454545"));
 
         List<Segment> segments = mapData.getSegments();
@@ -78,7 +78,7 @@ public class GraphicalViewMap extends Canvas {
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         GraphicsContext gc = getGraphicsContext2D();
-        gc.setLineWidth(4*screenScale*mapScale);
+        gc.setLineWidth(4 * screenScale * mapScale);
         gc.setStroke(Color.web("#ED6A08"));
 
         List<Integer> stops = tourData.getStops();
@@ -86,14 +86,16 @@ public class GraphicalViewMap extends Canvas {
         int[][] predecessors = tourData.getPredecessors();
         Graph graph = tourData.getStopsGraph();
 
-        if (computedPath == null) return;
+        if (computedPath == null) {
+            return;
+        }
 
         int pathLength = computedPath.size();
         for (int i = 0; i < pathLength; i++) {
 
             // Get current and next stop
             Integer currStopId = computedPath.get(i);
-            Integer nextStopId = computedPath.get((i+1)%pathLength);
+            Integer nextStopId = computedPath.get((i + 1) % pathLength);
 
             Intersection nextStop = mapData.getIntersections().get(stops.get(nextStopId));
             double[] nextStopPos = projectLatLon(nextStop);

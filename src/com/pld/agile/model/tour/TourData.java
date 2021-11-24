@@ -164,7 +164,7 @@ public class TourData extends Observable {
         return stopsGraph;
     }
 
-    public void setStops(){
+    public void setStops() {
         stops = new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
         for (Request request : requestList) {
@@ -174,7 +174,7 @@ public class TourData extends Observable {
         System.out.println("stops=" + stops);
     }
 
-    public void computeTour(){
+    public void computeTour() {
         setStops();
         dijkstra();
         tsp();
@@ -310,11 +310,11 @@ public class TourData extends Observable {
      */
     @Override
     public String toString() {
-        return "TourData{" +
-                "requestList=" + requestList +
-                ", associatedMap=" + associatedMap +
-                ", warehouse=" + warehouse +
-                ", departureTime='" + departureTime + '\'' +
-                '}';
+        return "TourData{"
+                + "requestList=" + requestList
+                + ", associatedMap=" + associatedMap
+                + ", warehouse=" + warehouse
+                + ", departureTime='" + departureTime + '\''
+                + '}';
     }
 }
