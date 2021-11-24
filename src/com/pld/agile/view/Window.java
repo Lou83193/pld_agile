@@ -25,8 +25,6 @@ import java.io.IOException;
 
 public class Window extends Application {
 
-    private static Window singletonInstance;
-
     private MenuItem fileMenu1;
     private MenuItem fileMenu2;
     private MenuItem fileMenu3;
