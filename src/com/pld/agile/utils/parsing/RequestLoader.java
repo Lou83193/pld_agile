@@ -9,6 +9,7 @@ package com.pld.agile.utils.parsing;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -18,6 +19,7 @@ import org.dom4j.io.SAXReader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,29 +61,40 @@ public class RequestLoader {
             e.printStackTrace();
             return false;
         }
+
         // DOM can be handled
         List<Node> requestNodes = tourXmlDocument.selectNodes("/planningRequest/request");
         Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
+
+        List<Request> requestList = new ArrayList<>();
+        HashMap<Integer, Stop> stopMap = new HashMap<>();
 
         Element warehouseElement = (Element) warehouseNode;
         String departureTime = warehouseElement.attributeValue("departureTime");
         Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
         tour.setDepartureTime(departureTime);
-        tour.setWarehouse(new Stop(warehouseLocation, 0));
-        
-        List<Request> requestList = new ArrayList<>();
+        Stop warehouse = new Stop(null, warehouseLocation, 0, StopType.WAREHOUSE);
+        tour.setWarehouse(warehouse);
+        stopMap.put(warehouse.getAddress().getId(), warehouse);
+
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
             Intersection pickupLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("pickupAddress"));
             double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
             Intersection deliveryLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("deliveryAddress"));
             double deliveryDuration = Double.parseDouble(requestElement.attributeValue("deliveryDuration"));
-            Stop pickup = new Stop(pickupLocation, pickupDuration);
-            Stop delivery = new Stop(deliveryLocation, deliveryDuration);
-            requestList.add(new Request(pickup, delivery));
+            Request request = new Request();
+            Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);
+            Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);
+            stopMap.put(pickup.getAddress().getId(), pickup);
+            stopMap.put(delivery.getAddress().getId(), delivery);
+            request.setPickup(pickup);
+            request.setDelivery(delivery);
+            requestList.add(request);
         }
 
         tour.setRequestList(requestList);
+        tour.setStopMap(stopMap);
 
         return true;
     }

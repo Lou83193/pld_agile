@@ -42,5 +42,8 @@ public class GraphicalView implements Observer {
     public Node getComponent() {
         return component;
     }
+    public GraphicalViewMap getGraphicalViewMap() {
+        return graphicalViewMap;
+    }
 
 }

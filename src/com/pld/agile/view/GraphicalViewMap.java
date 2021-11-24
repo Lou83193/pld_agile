@@ -4,6 +4,8 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.tsp.CompleteGraph;
+import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -82,6 +84,7 @@ public class GraphicalViewMap extends Canvas {
         List<Integer> stops = tourData.getStops();
         List<Integer> computedPath = tourData.getComputedPath();
         int[][] predecessors = tourData.getPredecessors();
+        Graph graph = tourData.getStopsGraph();
 
         if (computedPath == null) return;
 
@@ -95,19 +98,48 @@ public class GraphicalViewMap extends Canvas {
             Intersection nextStop = mapData.getIntersections().get(stops.get(nextStopId));
             double[] nextStopPos = projectLatLon(nextStop);
 
+            // Get length of path
+            double length = graph.getCost(currStopId, nextStopId);
+            double cumulatedLength = 0;
+            boolean hasDrawnArrow = false;
+
             // Trace first line
             int predecessor = predecessors[currStopId][stops.get(nextStopId)];
             Intersection currIntersection = mapData.getIntersections().get(predecessor);
             double[] currIntersectionPos = projectLatLon(currIntersection);
             gc.strokeLine(nextStopPos[0], nextStopPos[1], currIntersectionPos[0], currIntersectionPos[1]);
+            cumulatedLength += ViewUtilities.distance(nextStopPos, currIntersectionPos);
 
             // Get intermediary intersections, trace lines
             while (predecessor != stops.get(currStopId)) {
+
                 predecessor = predecessors[currStopId][predecessor];
                 Intersection nextIntersection = mapData.getIntersections().get(predecessor);
                 double[] nextIntersectionPos = projectLatLon(nextIntersection);
                 gc.strokeLine(currIntersectionPos[0], currIntersectionPos[1], nextIntersectionPos[0], nextIntersectionPos[1]);
+                double currLength = ViewUtilities.distance(currIntersectionPos, nextIntersectionPos);
+                cumulatedLength += currLength;
+
+                // Trace arrow in middle
+                /*
+                if (cumulatedLength >= length/12 && currLength > 10 && !hasDrawnArrow) {
+                    hasDrawnArrow = true;
+                    double dir = ViewUtilities.direction(currIntersectionPos, nextIntersectionPos)*180/Math.PI;
+                    System.out.println(currLength);
+                    double[] arrowPointsX = new double[3];
+                    double[] arrowPointsY = new double[3];
+                    arrowPointsX[1] = (currIntersectionPos[0] + nextIntersectionPos[0])/2;
+                    arrowPointsY[1] = (currIntersectionPos[1] + nextIntersectionPos[1])/2;
+                    arrowPointsX[0] = arrowPointsX[1] + Math.cos(dir-15)*10;
+                    arrowPointsY[0] = arrowPointsY[1] - Math.sin(dir-15)*10;
+                    arrowPointsX[2] = arrowPointsX[1] + Math.cos(dir+15)*10;
+                    arrowPointsY[2] = arrowPointsY[1] - Math.sin(dir+15)*10;
+                    gc.strokePolyline(arrowPointsX, arrowPointsY, 3);
+                }
+                */
+
                 currIntersectionPos = nextIntersectionPos;
+
             }
 
         }

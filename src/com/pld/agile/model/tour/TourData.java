@@ -26,6 +26,10 @@ public class TourData extends Observable {
      */
     private List<Request> requestList;
     /**
+     * List of all stops
+     */
+    private HashMap<Integer, Stop> stopMap;
+    /**
      * The map on which the tour takes place.
      */
     private MapData associatedMap;
@@ -77,6 +81,22 @@ public class TourData extends Observable {
         this.requestList = requestList;
         notifyObservers(UpdateType.MAP);
         notifyObservers(UpdateType.REQUESTS);
+    }
+
+    /**
+     * Getter for attribute stopMap.
+     * @return stopMap
+     */
+    public HashMap<Integer, Stop> getStopMap() {
+        return stopMap;
+    }
+
+    /**
+     * Setter for attribute stopMap.
+     * @param stopMap Map of stops composing the tour (key = their intersection id)
+     */
+    public void setStopMap(HashMap<Integer, Stop> stopMap) {
+        this.stopMap = stopMap;
     }
 
     /**
@@ -137,6 +157,10 @@ public class TourData extends Observable {
 
     public List<Integer> getComputedPath() {
         return computedPath;
+    }
+
+    public Graph getStopsGraph() {
+        return stopsGraph;
     }
 
     public void setStops(){
