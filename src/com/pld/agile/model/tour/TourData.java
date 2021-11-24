@@ -269,9 +269,10 @@ public class TourData extends Observable {
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)
-    /* H1 = (nbUnvisited+1)*dMin
-    /* H2 = l + sum of li
-    /* H3 = Sort unvisited by shortest cost to last visited vertex
+    /* H0 = 0
+    /* H2 = (nbUnvisited+1)*dMin
+    /* H3 = l + sum of li
+    /* H4 = Sort unvisited by shortest cost to last visited vertex
     */
 
     // Limited Discrepancy Search -> recall 3IF
