@@ -38,9 +38,7 @@ public class DisplayedRequestsState implements State {
     @Override
     public boolean doComputeTour(Controller c, Window window) {
         // Compute TSP
-        window.getTourData().setStops();
-        window.getTourData().dijkstra();
-        window.getTourData().tsp();
+        window.getTourData().computeTour();
         return true;
     }
 }

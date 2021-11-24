@@ -140,7 +140,7 @@ public class TourData extends Observable {
         return computedPath;
     }
 
-    public void setStops(){
+    private void setStops(){
         stops = new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
         for (Request request : requestList) {
@@ -150,8 +150,13 @@ public class TourData extends Observable {
         System.out.println("stops=" + stops);
     }
 
+    public void computeTour(){
+        setStops();
+        dijkstra();
+        tsp();
+    }
 
-    public void dijkstra() {
+    private void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
         predecessors = new int[stops.size()][nbIntersections];
         stopsGraph = new CompleteGraph(stops.size());
@@ -182,7 +187,7 @@ public class TourData extends Observable {
             );
 
             // Dist initialization
-            for (int i = 0; i < nbIntersections; i++){
+            for (int i = 0; i < nbIntersections; i++) {
                 dist[i] = Double.MAX_VALUE;
             }
             dist[currStop] = 0; // distance to current stop is 0
@@ -192,28 +197,27 @@ public class TourData extends Observable {
 
             int nbStopCalculated = 0;
 
-            while(nbStopCalculated != stops.size()) {
+            while (nbStopCalculated != stops.size()) {
 
                     if(pq.isEmpty())
                         break;
 
                     int node = pq.remove();
 
-                    for(Segment road : associatedMap.getIntersections().get(node).getOriginOf()) {
+                    for (Segment road : associatedMap.getIntersections().get(node).getOriginOf()) {
                         int nextNode = road.getDestination().getId();
 
                         if (!settled.contains(nextNode)) {
 
                             double distance = dist[nextNode];
 
-                            if(distance > dist[node] + road.getLength()) {
+                            if (distance > dist[node] + road.getLength()) {
                                 distance = dist[node] + road.getLength();
                                 dist[nextNode] = distance;
                                 pi[nextNode] = node;
                             }
 
-                            if(!pq.contains(nextNode))
-                            {
+                            if (!pq.contains(nextNode)) {
                                 pq.add(nextNode);
                             } else {
                                 pq.remove(nextNode);
@@ -243,8 +247,8 @@ public class TourData extends Observable {
         }
         //TESTS :
         System.out.println("stops graph : ");
-        for(int i=0; i< stops.size(); i++){
-            for(int j=0; j< stops.size(); j++){
+        for (int i = 0; i< stops.size(); i++) {
+            for (int j = 0; j< stops.size(); j++) {
                 System.out.print(stopsGraph.getCost(i,j) +" ");
             }
             System.out.println();
@@ -252,7 +256,7 @@ public class TourData extends Observable {
         System.out.println("END Dijkstra");
     } // ---- END of dijkstra
 
-    public void tsp() {
+    private void tsp() {
         System.out.println("TSP INIT...");
         TSP tsp = new TSP1(); // No Heuristic
         long startTime = System.currentTimeMillis();
@@ -260,8 +264,7 @@ public class TourData extends Observable {
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
         computedPath = new ArrayList<>();
-        for(int i = 0; i < stopsGraph.getNbVertices(); i++)
-        {
+        for(int i = 0; i < stopsGraph.getNbVertices(); i++) {
             computedPath.add(tsp.getSolution(i));
         }
         System.out.println(computedPath);
