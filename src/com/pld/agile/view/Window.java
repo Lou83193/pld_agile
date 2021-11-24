@@ -66,7 +66,6 @@ public class Window extends Application {
         logo.setFitWidth(600);
         // Button
         Button button = new Button("Load Map");
-        //button.setPrefSize(200, 50);
         button.getStyleClass().add("button");
         button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
         // Group
@@ -90,7 +89,7 @@ public class Window extends Application {
         pane.setId("home-pane");
 
         /* MAIN SCENE */
-        Scene scene = new Scene(pane,964, 720);
+        Scene scene = new Scene(pane,1060, 720);
         scene.getStylesheets().add("stylesheet.css");
 
         homeScene = scene;
@@ -100,7 +99,7 @@ public class Window extends Application {
     public void constructMainScene() {
 
         BorderPane pane = new BorderPane();
-        Scene scene = new Scene(pane,964, 720);
+        Scene scene = new Scene(pane,1060, 720);
         scene.getStylesheets().add("stylesheet.css");
 
         MenuBar menuBar = constructMenuBar();
@@ -109,9 +108,18 @@ public class Window extends Application {
         GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
         pane.setCenter(graphicalView.getComponent());
 
-        VBox sidePanel = new VBox();
+        BorderPane sidePanel = new BorderPane();
+        sidePanel.prefWidthProperty().bind(scene.widthProperty().subtract(graphicalView.getGraphicalViewMap().widthProperty()));
+        sidePanel.setPadding(new Insets(0, 0, 20, 0));
         TextualView textualView = new TextualView(tourData);
-        sidePanel.getChildren().add(textualView.getComponent());
+        HBox buttonWrapper = new HBox();
+        buttonWrapper.setAlignment(Pos.CENTER);
+        Button button = new Button("Compute Tour");
+        button.getStyleClass().add("button");
+        button.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
+        buttonWrapper.getChildren().add(button);
+        sidePanel.setCenter(textualView.getComponent());
+        sidePanel.setBottom(buttonWrapper);
         pane.setRight(sidePanel);
 
         pane.getStyleClass().add("white-background");

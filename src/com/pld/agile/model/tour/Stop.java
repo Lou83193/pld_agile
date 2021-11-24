@@ -22,13 +22,23 @@ public class Stop {
      * The pickup or delivery duration at the stop.
      */
     private double duration;
+    /**
+     * The stop type (pickup, delivery, or warehouse)
+     */
+    private StopType type;
+    /**
+     * The associated request
+     */
+    private Request request;
 
     /**
      * Stop constructor.
      * @param address the address
      * @param duration the duration
      */
-    public Stop(Intersection address, double duration) {
+    public Stop(Request request, Intersection address, double duration, StopType type) {
+        this.request = request;
+        this.type = type;
         this.address = address;
         this.duration = duration;
     }
@@ -63,6 +73,30 @@ public class Stop {
      */
     public void setDuration(double duration) {
         this.duration = duration;
+    }
+
+    /**
+     * Getter for attribute type.
+     * @return type
+     */
+    public StopType getType() {
+        return type;
+    }
+
+    /**
+     * Setter for attribute type.
+     * @param type the type of the stop
+     */
+    public void setType(StopType type) {
+        this.type = type;
+    }
+
+    /**
+     * Getter for attribute request.
+     * @return request
+     */
+    public Request getRequest() {
+        return request;
     }
 
     /**

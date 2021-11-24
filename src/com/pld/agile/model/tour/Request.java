@@ -29,6 +29,9 @@ public class Request {
         this.delivery = delivery;
     }
 
+    public Request() {
+    }
+
     /**
      * Getter for attribute pickup
      * @return pickup

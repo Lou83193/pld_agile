@@ -30,4 +30,12 @@ public class ViewUtilities {
         return new Color(r, g, b, 1.0);
     }
 
+    public static double distance(double[] p1, double[] p2) {
+        return Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2));
+    }
+
+    public static double direction(double[] p1, double[] p2) {
+        return Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+    }
+
 }
