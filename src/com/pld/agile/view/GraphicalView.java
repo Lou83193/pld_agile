@@ -4,6 +4,7 @@ import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.observer.UpdateType;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -30,10 +31,12 @@ public class GraphicalView implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        graphicalViewMap.drawMap();
-        graphicalViewMap.drawTour();
-        graphicalViewRequests.draw();
+    public void update(Observable o, UpdateType updateType) {
+        switch (updateType) {
+            case MAP -> graphicalViewMap.drawMap();
+            case REQUESTS -> graphicalViewRequests.draw();
+            case TOUR -> graphicalViewMap.drawTour();
+        }
     }
 
     public Node getComponent() {

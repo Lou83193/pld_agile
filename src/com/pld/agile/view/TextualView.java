@@ -6,6 +6,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -71,8 +72,10 @@ public class TextualView implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        populateTextualView();
+    public void update(Observable o, UpdateType updateType) {
+        switch (updateType) {
+            case REQUESTS -> populateTextualView();
+        }
     }
 
     public Node getComponent() {
