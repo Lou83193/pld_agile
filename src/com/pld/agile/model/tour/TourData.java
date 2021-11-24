@@ -6,16 +6,17 @@
 
 package com.pld.agile.model.tour;
 
-import com.pld.agile.utils.observer.Observable;
-import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.map.Segment;
+import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.tsp.*;
+import com.pld.agile.utils.tsp.CompleteGraph;
+import com.pld.agile.utils.tsp.Graph;
+import com.pld.agile.utils.tsp.TSP;
+import com.pld.agile.utils.tsp.TSP1;
+import javafx.util.Pair;
 
 import java.util.*;
-
-import com.pld.agile.model.map.Segment;
-import javafx.util.Pair;
 
 /**
  * Stores the data of a loaded requests list.
@@ -40,7 +41,7 @@ public class TourData extends Observable {
 
     private Graph stopsGraph;
 
-    private int [][] predecessors;
+    private int[][] predecessors;
     // First index is algorithm index
     // Second index is app index
 
@@ -151,7 +152,7 @@ public class TourData extends Observable {
 
     public void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
-        predecessors = new int [stops.size()][nbIntersections];
+        predecessors = new int[stops.size()][nbIntersections];
         stopsGraph = new CompleteGraph(stops.size());
 
         int stopIndex = 0; // need index of currStop in the list stops to fill predecessors
@@ -161,12 +162,12 @@ public class TourData extends Observable {
             System.out.println("On Stop : " + stops.get(stopIndex));
             // Current Stop Variables
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
-            int [] pi = new int [nbIntersections]; //index = intersection id in map data
+            int [] pi = new int[nbIntersections]; //index = intersection id in map data
             Set<Integer> settled = new HashSet<Integer>();
             PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<Pair<Integer, Double>>(Comparator.comparing(Pair::getValue));
 
             // Dist initialization
-            for(int i=0; i<nbIntersections; i++){
+            for (int i = 0; i < nbIntersections; i++){
                 dist[i] = Double.MAX_VALUE;
             }
             dist[currStop] = 0; // distance to current stop is 0
@@ -176,20 +177,21 @@ public class TourData extends Observable {
 
             boolean contains = false;
 
-            while(!contains) {
+            while (!contains) {
 
-                    if(pq.isEmpty())
+                    if (pq.isEmpty()) {//doesn't work
                         return;
+                    }
 
                     int node = pq.remove().getKey();
 
-                    for(Segment road : associatedMap.getIntersections().get(Math.toIntExact(node)).getOriginOf()) {
+                    for (Segment road : associatedMap.getIntersections().get(Math.toIntExact(node)).getOriginOf()) {
                         int nextNode = road.getDestination().getId();
 
-                        if(!settled.contains(nextNode)) {
+                        if (!settled.contains(nextNode)) {
 
                             double distance = dist[nextNode];
-                            if(distance > dist[node] + road.getLength()) {
+                            if (distance > dist[node] + road.getLength()) {
                                 distance = dist[node] + road.getLength();
                                 dist[nextNode] = distance;
                                 pi[nextNode] = node;
@@ -204,8 +206,8 @@ public class TourData extends Observable {
 
                     // Check if we compute path to all others stops (is that a good idea ?)
                     contains = true;
-                    for(int s : stops){
-                        if(!settled.contains(s)) {
+                    for (int s : stops) {
+                        if (!settled.contains(s)) {
                             contains = false;
                             break;
                         }
@@ -214,10 +216,10 @@ public class TourData extends Observable {
             }
 
             // Save computed data
-            for(int i=0; i < nbIntersections; i++) {
+            for (int i = 0; i < nbIntersections; i++) {
                 predecessors[stopIndex][i] = pi[i];
             }
-            for(int i=0; i < stops.size(); i++) {
+            for (int i = 0; i < stops.size(); i++) {
                 stopsGraph.setCost(stopIndex, i, dist[stops.get(i)]);
             }
             stopIndex++;
@@ -240,7 +242,7 @@ public class TourData extends Observable {
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
-        System.out.println("Solution of cost "+ tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+        System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
         computedPath = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices(); i++)
         {
