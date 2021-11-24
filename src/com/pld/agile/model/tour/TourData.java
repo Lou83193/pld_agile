@@ -11,6 +11,7 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.tsp.*;
 
+
 import java.util.*;
 
 import com.pld.agile.model.map.Segment;
@@ -150,6 +151,7 @@ public class TourData extends Observable {
         System.out.println("stops=" + stops);
     }
 
+
     public void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
         predecessors = new int [stops.size()][nbIntersections];
@@ -164,7 +166,21 @@ public class TourData extends Observable {
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
             int [] pi = new int [nbIntersections]; //index = intersection id in map data
             Set<Integer> settled = new HashSet<Integer>();
-            PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<Pair<Integer, Double>>(Comparator.comparing(Pair::getValue));
+
+            PriorityQueue<Integer> pq = new PriorityQueue<>(
+                    new Comparator<Integer>() {
+                        @Override
+                        public int compare(Integer o1, Integer o2) {
+                            if(dist[o1] < dist[o2]) {
+                                return -1;
+                            }
+                            if(dist[o1] > dist[o2]) {
+                                return 1;
+                            }
+                            return 0;
+                        }
+                    }
+            );
 
             // Dist initialization
             for(int i=0; i<nbIntersections; i++){
@@ -173,44 +189,46 @@ public class TourData extends Observable {
             dist[currStop] = 0; // distance to current stop is 0
 
             pi[currStop] = -1; //null, starting stop won't have predecessors
-            pq.add(new Pair<>(currStop, 0.0));
+            pq.add(currStop);
 
-            boolean contains = false;
+            int nbStopCalculated = 0;
 
-            while(!contains) {
+            while(nbStopCalculated != stops.size()) {
 
                     if(pq.isEmpty())
-                        return;
+                        break;
 
-                    int node = pq.remove().getKey();
+                    int node = pq.remove();
 
-                    for(Segment road : associatedMap.getIntersections().get(Math.toIntExact(node)).getOriginOf()) {
+                    for(Segment road : associatedMap.getIntersections().get(node).getOriginOf()) {
                         int nextNode = road.getDestination().getId();
 
                         if(!settled.contains(nextNode)) {
 
                             double distance = dist[nextNode];
+
                             if(distance > dist[node] + road.getLength()) {
                                 distance = dist[node] + road.getLength();
                                 dist[nextNode] = distance;
                                 pi[nextNode] = node;
                             }
 
-                            pq.add(new Pair<>(nextNode, distance));
-
+                            if(!pq.contains(nextNode))
+                            {
+                                pq.add(nextNode);
+                            } else {
+                                pq.remove(nextNode);
+                                pq.add(nextNode);
+                            }
                         }
                     }
 
                     settled.add(node);
 
-                    // Check if we compute path to all others stops (is that a good idea ?)
-                    contains = true;
-                    for(int s : stops){
-                        if(!settled.contains(s)) {
-                            contains = false;
-                            break;
-                        }
+                    if(stops.contains(node)) {
+                        nbStopCalculated ++;
                     }
+
 
             }
 
@@ -225,13 +243,13 @@ public class TourData extends Observable {
 
         }
         //TESTS :
-/*        System.out.println("stops graph : ");
+        System.out.println("stops graph : ");
         for(int i=0; i< stops.size(); i++){
             for(int j=0; j< stops.size(); j++){
                 System.out.print(stopsGraph.getCost(i,j) +" ");
             }
             System.out.println();
-        }*/
+        }
         System.out.println("END Dijkstra");
     } // ---- END of dijkstra
 
