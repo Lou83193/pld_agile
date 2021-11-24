@@ -40,8 +40,6 @@ public class GraphicalViewMap extends Canvas {
 
     public void drawMap() {
 
-        System.out.println("CANVAS RESET?");
-
         double width = getWidth();
         double height = getHeight();
         double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);

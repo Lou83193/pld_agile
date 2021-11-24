@@ -6,7 +6,7 @@
 
 package com.pld.agile.model.map;
 
-import com.pld.agile.Observable;
+import com.pld.agile.utils.observer.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

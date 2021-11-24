@@ -1,7 +1,7 @@
 package com.pld.agile.view;
 
-import com.pld.agile.Observable;
-import com.pld.agile.Observer;
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
 import javafx.scene.Group;

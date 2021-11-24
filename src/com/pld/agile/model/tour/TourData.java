@@ -6,7 +6,7 @@
 
 package com.pld.agile.model.tour;
 
-import com.pld.agile.Observable;
+import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.tsp.*;

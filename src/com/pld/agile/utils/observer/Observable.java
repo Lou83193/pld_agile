@@ -4,7 +4,7 @@
  * Copyright (c) 2021. Hexanomnom
  */
 
-package com.pld.agile;
+package com.pld.agile.utils.observer;
 
 import java.util.ArrayList;
 import java.util.Collection;
