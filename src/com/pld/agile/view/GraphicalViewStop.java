@@ -106,7 +106,7 @@ public class GraphicalViewStop extends Pane {
     public void place(double[] pos) {
         relocate(
             pos[0] - pointerCenterX,
-            pos[1] - pointerCenterY
+            pos[1] - pointerCenterY - pointerH
         );
     }
 
