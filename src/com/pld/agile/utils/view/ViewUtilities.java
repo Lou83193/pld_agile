@@ -27,7 +27,7 @@ public class ViewUtilities {
         double r = ((hash & 0xFF0000) >> 16)/255.0;
         double g = ((hash & 0x00FF00) >> 8)/255.0;
         double b = (hash & 0x0000FF)/255.0;
-        return new Color(r, g, b, 1.0);
+        return new Color(r, g, b, 1.0).brighter();
     }
 
     public static double distance(double[] p1, double[] p2) {

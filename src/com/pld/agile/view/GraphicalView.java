@@ -34,8 +34,15 @@ public class GraphicalView implements Observer {
     public void update(Observable o, UpdateType updateType) {
         switch (updateType) {
             case MAP -> graphicalViewMap.drawMap();
-            case REQUESTS -> graphicalViewRequests.draw();
-            case TOUR -> graphicalViewMap.drawTour();
+            case REQUESTS -> {
+                graphicalViewRequests.setDrawAsTour(false);
+                graphicalViewRequests.drawInitial();
+            }
+            case TOUR -> {
+                graphicalViewMap.drawTour();
+                graphicalViewRequests.setDrawAsTour(true);
+                graphicalViewRequests.drawTour();
+            }
         }
     }
 

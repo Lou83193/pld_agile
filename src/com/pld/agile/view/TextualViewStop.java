@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,10 +25,6 @@ public class TextualViewStop extends VBox {
         double duration = stop.getDuration();
         StopType type = stop.getType();
         String hour = ""; //stop.getHour();
-        Color colour = Color.BLACK;
-        if (type != StopType.WAREHOUSE) {
-            colour = ViewUtilities.stringToColour(stop.getRequest().getPickup().toString());
-        }
 
         VBox panel = new VBox(8);
         HBox labelPanel = new HBox(8);
@@ -36,7 +33,7 @@ public class TextualViewStop extends VBox {
         infoPane.setVgap(4);
 
         // Label
-        VBox labelGraphic = new GraphicalViewStop(stop, 16);
+        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, 16, 0);
         String labelTextString = "";
         switch (type) {
             case PICKUP -> labelTextString = "Pickup Stop";
