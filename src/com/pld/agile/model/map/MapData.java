@@ -134,7 +134,6 @@ public class MapData extends Observable {
      */
     public void setIntersectionsByOldID(HashMap<String, Intersection> intersectionsByOldID) {
         this.intersectionsByOldID = intersectionsByOldID;
-        notifyObservers(UpdateType.MAP);
     }
 
     /**

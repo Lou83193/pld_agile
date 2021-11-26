@@ -6,30 +6,24 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.layout.Pane;
 
 import java.util.List;
 
-public class GraphicalViewRequests extends Group {
+public class GraphicalViewRequestsLayer extends Group {
 
-    private Canvas parentCanvas;
+    private Pane graphicalMap;
     private MapData mapData;
     private TourData tourData;
     private boolean drawAsTour = false;
 
-    public GraphicalViewRequests(MapData mapData, TourData tourData, Canvas parentCanvas) {
+    public GraphicalViewRequestsLayer(MapData mapData, TourData tourData, Pane graphicalMap) {
         this.mapData = mapData;
         this.tourData = tourData;
-        this.parentCanvas = parentCanvas;
-        parentCanvas.widthProperty().addListener(evt -> draw());
-        parentCanvas.heightProperty().addListener(evt -> draw());
+        this.graphicalMap = graphicalMap;
+        graphicalMap.widthProperty().addListener(evt -> draw());
+        graphicalMap.heightProperty().addListener(evt -> draw());
     }
 
     public void draw() {
@@ -42,8 +36,8 @@ public class GraphicalViewRequests extends Group {
 
     public void drawInitial() {
 
-        double width = parentCanvas.getWidth();
-        double height = parentCanvas.getHeight();
+        double width = graphicalMap.getWidth();
+        double height = graphicalMap.getHeight();
         double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
@@ -82,8 +76,8 @@ public class GraphicalViewRequests extends Group {
 
     public void drawTour() {
 
-        double width = parentCanvas.getWidth();
-        double height = parentCanvas.getHeight();
+        double width = graphicalMap.getWidth();
+        double height = graphicalMap.getHeight();
         double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
@@ -111,15 +105,14 @@ public class GraphicalViewRequests extends Group {
     }
 
     private double[] projectLatLon(final Intersection intersection) {
-        return ViewUtilities.projectLatLon(
+        return ViewUtilities.projectMercatorLatLon(
                 intersection.getLatitude(),
                 intersection.getLongitude(),
                 mapData.getMinLat(),
                 mapData.getMinLon(),
                 mapData.getMaxLat(),
                 mapData.getMaxLon(),
-                parentCanvas.getWidth(),
-                parentCanvas.getHeight()
+                graphicalMap.getHeight()
         );
     }
 
