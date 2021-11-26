@@ -1,5 +1,5 @@
 .button {
-     -fx-font-size: 20pt;
+     -fx-font-size: 16pt;
      -fx-background-color: #4782FF;
      -fx-background-radius: 30;
      -fx-text-fill: white;
@@ -26,4 +26,9 @@
 .textual-view-stop-panel {
     -fx-background-color: #DEDEDE;
     -fx-background-radius: 10;
+}
+
+#street-name {
+    -fx-background-color: white;
+    -fx-text-box-border: transparent;
 }

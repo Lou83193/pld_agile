@@ -4,19 +4,19 @@ import com.pld.agile.controller.Controller;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.Property;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -108,11 +108,21 @@ public class Window extends Application {
         MenuBar menuBar = constructMenuBar();
         pane.setTop(menuBar);
 
+        BorderPane centerPanel = new BorderPane();
         GraphicalView graphicalView = new GraphicalView(mapData, tourData, scene);
-        pane.setCenter(graphicalView.getComponent());
+        TextField streetName = new TextField("Street Name");
+        streetName.setAlignment(Pos.CENTER);
+        streetName.setEditable(false);
+        streetName.setMouseTransparent(true);
+        streetName.setFocusTraversable(false);
+        streetName.setId("street-name");
+        centerPanel.setCenter(graphicalView.getComponent());
+        centerPanel.setBottom(streetName);
+        pane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
-        sidePanel.prefWidthProperty().bind(scene.widthProperty().subtract(graphicalView.getGraphicalViewMap().widthProperty()));
+        DoubleBinding sidePanelWidth = scene.widthProperty().subtract(graphicalView.getGraphicalViewMap().widthProperty());
+        sidePanel.prefWidthProperty().bind(sidePanelWidth);
         TextualView textualView = new TextualView(tourData);
         HBox buttonWrapper = new HBox();
         buttonWrapper.setAlignment(Pos.CENTER);
@@ -120,6 +130,7 @@ public class Window extends Application {
         mainSceneButton = new Button("Compute Tour");
         mainSceneButton.getStyleClass().add("button");
         mainSceneButton.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
+        mainSceneButton.prefWidthProperty().bind(sidePanelWidth);
         buttonWrapper.getChildren().add(mainSceneButton);
         sidePanel.setCenter(textualView.getComponent());
         sidePanel.setBottom(buttonWrapper);

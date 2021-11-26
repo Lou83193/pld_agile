@@ -31,8 +31,8 @@ public class GraphicalViewMapLayer extends Pane {
         this.mapData = mapData;
         this.tourData = tourData;
         //BorderPane root = (BorderPane)parent.getRoot(); MenuBar menuBar = (MenuBar)root.getTop();
-        prefWidthProperty().bind(parent.heightProperty().subtract(25));
-        prefHeightProperty().bind(parent.heightProperty().subtract(25));
+        prefWidthProperty().bind(parent.heightProperty().subtract(50));
+        prefHeightProperty().bind(parent.heightProperty().subtract(50));
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
         this.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -52,9 +52,6 @@ public class GraphicalViewMapLayer extends Pane {
 
         List<Segment> segments = mapData.getSegments();
 
-        int count = 0;
-        System.out.println(segments.size());
-
         for (Segment s : segments) {
 
             Intersection origin = s.getOrigin();
@@ -68,11 +65,7 @@ public class GraphicalViewMapLayer extends Pane {
             line.setStroke(Color.web("#454545"));
             this.getChildren().add(line);
 
-            count++;
-
         }
-        System.out.println(count);
-        System.out.println("----");
 
     }
 
