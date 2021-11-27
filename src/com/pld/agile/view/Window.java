@@ -155,13 +155,14 @@ public class Window extends Application {
         fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
         fileMenu2.setDisable(true);
         fileMenu3.setDisable(true);
-        System.out.println("this is where i'm set to disabled at first");
         fileMenu.getItems().addAll(fileMenu1, fileMenu2, fileMenu3);
 
         // Edit menu
         Menu editMenu = new Menu("Edit");
         MenuItem editMenu1 = new MenuItem("Undo");
         MenuItem editMenu2 = new MenuItem("Redo");
+        editMenu1.setDisable(true);
+        editMenu2.setDisable(true);
         editMenu.getItems().addAll(editMenu1, editMenu2);
 
         // About menu
@@ -182,12 +183,12 @@ public class Window extends Application {
         stage.setScene(mainScene);
     }
     public void toggleFileMenuItem(final int num, final boolean enabled) {
-        System.out.println("yeah i'm here " + num + "; " + enabled);
         switch (num) {
             case 1 -> fileMenu1.setDisable(!enabled);
             case 2 -> fileMenu2.setDisable(!enabled);
             case 3 -> fileMenu3.setDisable(!enabled);
         }
+        System.out.println(!fileMenu1.isDisable() + "; " + !fileMenu2.isDisable() + "; " + !fileMenu3.isDisable());
     }
     public void setMainSceneButton(final String label, final ButtonListener listener) {
         mainSceneButton.setText(label);
