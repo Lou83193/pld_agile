@@ -7,13 +7,8 @@ import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ZoomableScrollPane;
 import javafx.beans.binding.DoubleBinding;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 public class GraphicalView implements Observer {
 
@@ -59,12 +54,14 @@ public class GraphicalView implements Observer {
         switch (updateType) {
             case MAP -> graphicalViewMapLayer.drawMap();
             case REQUESTS -> {
-                graphicalViewRequestsLayer.setDrawAsTour(false);
+                graphicalViewMapLayer.setDrawTour(false);
+                graphicalViewRequestsLayer.setDrawTour(false);
                 graphicalViewRequestsLayer.drawInitial();
             }
             case TOUR -> {
+                graphicalViewMapLayer.setDrawTour(true);
+                graphicalViewRequestsLayer.setDrawTour(true);
                 graphicalViewMapLayer.drawTour();
-                graphicalViewRequestsLayer.setDrawAsTour(true);
                 graphicalViewRequestsLayer.drawTour();
             }
         }

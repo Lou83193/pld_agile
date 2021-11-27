@@ -112,6 +112,20 @@ public class Intersection {
         this.originOf = originOf;
     }
 
+    /**
+     * Finds the segment that goes from this intersection to the given intersection
+     * @param destination the destination intersection
+     * @return the linking segment
+     */
+    public Segment findSegmentTo(Intersection destination) {
+        for (Segment s : originOf) {
+            if (s.getDestination().equals(destination)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Intersection{" +

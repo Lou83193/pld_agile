@@ -170,6 +170,8 @@ public class TourData extends Observable {
         return stopsGraph;
     }
 
+    public List<Path> getTourPaths() { return tourPaths; }
+
     public void setStops() {
         stops = new ArrayList<Integer>();
         stops.add(warehouse.getAddress().getId());
@@ -316,26 +318,22 @@ public class TourData extends Observable {
             Path path = new Path(currStop, nextStop);
             List<Segment> pathSegments = new ArrayList<>();
 
-            // Get intermediary segments
+            // Add initial segment
+            Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(nextStopId));
             int predecessor = predecessors[currStopId][stops.get(nextStopId)];
             Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
-            while (predecessor != stops.get(currStopId)) {
+            pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
 
-                // Fetch next intersection
+            // Get intermediary segments
+            while (predecessor != stops.get(currStopId)) {
                 predecessor = predecessors[currStopId][predecessor];
                 Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
-
-                // Look for segment linking next intersection with previous intersection and save it
-                List<Segment> originOf = nextIntersection.getOriginOf();
-                for (Segment s : originOf) {
-                    if (s.getDestination().equals(currIntersection)) {
-                        pathSegments.add(s);
-                    }
-                }
-
+                pathSegments.add(nextIntersection.findSegmentTo(currIntersection));
+                currIntersection = associatedMap.getIntersections().get(predecessor);
             }
 
             // Store info in path and save it
+            Collections.reverse(pathSegments);
             path.setSegments(pathSegments);
             path.setLength(stopsGraph.getCost(currStopId, nextStopId));
             tourPaths.add(path);
