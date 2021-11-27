@@ -6,6 +6,7 @@
 
 package com.pld.agile.model.tour;
 
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.utils.observer.Observable;
@@ -14,6 +15,9 @@ import com.pld.agile.utils.tsp.CompleteGraph;
 import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.tsp.TSP;
 import com.pld.agile.utils.tsp.TSP1;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -54,6 +58,8 @@ public class TourData extends Observable {
     private List<Integer> computedPath;
     // Index: Nth stop visited
     // Value : Algorithm index
+
+    private List<Path> tourPaths;
 
     /**
      * TourData constructor.
@@ -281,6 +287,8 @@ public class TourData extends Observable {
     } // ---- END of dijkstra
 
     private void tsp() {
+
+        // Compute TSP
         System.out.println("TSP INIT...");
         TSP tsp = new TSP1(); // No Heuristic
         long startTime = System.currentTimeMillis();
@@ -292,7 +300,50 @@ public class TourData extends Observable {
             computedPath.add(tsp.getSolution(i));
         }
         System.out.println(computedPath);
+
+        // Populate model
+        tourPaths = new ArrayList<>();
+        int pathLength = computedPath.size();
+        for (int i = 0; i < pathLength; i++) {
+
+            // Get current and next stop
+            Integer currStopId = computedPath.get(i);
+            Integer nextStopId = computedPath.get((i + 1) % pathLength);
+            Stop currStop = stopMap.get(stops.get(currStopId));
+            Stop nextStop = stopMap.get(stops.get(nextStopId));
+
+            // Create path
+            Path path = new Path(currStop, nextStop);
+            List<Segment> pathSegments = new ArrayList<>();
+
+            // Get intermediary segments
+            int predecessor = predecessors[currStopId][stops.get(nextStopId)];
+            Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
+            while (predecessor != stops.get(currStopId)) {
+
+                // Fetch next intersection
+                predecessor = predecessors[currStopId][predecessor];
+                Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
+
+                // Look for segment linking next intersection with previous intersection and save it
+                List<Segment> originOf = nextIntersection.getOriginOf();
+                for (Segment s : originOf) {
+                    if (s.getDestination().equals(currIntersection)) {
+                        pathSegments.add(s);
+                    }
+                }
+
+            }
+
+            // Store info in path and save it
+            path.setSegments(pathSegments);
+            path.setLength(stopsGraph.getCost(currStopId, nextStopId));
+            tourPaths.add(path);
+
+        }
+
         notifyObservers(UpdateType.TOUR);
+
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)
