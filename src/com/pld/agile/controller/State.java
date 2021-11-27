@@ -36,9 +36,9 @@ public interface State {
             if (success) {
                 window.getTourData().setRequestList(new ArrayList<>());
                 window.getTourData().setAssociatedMap(window.getMapData());
-                window.switchSceneToMainScene();
-                window.toggleFileMenuItem(2, true);
-                window.toggleFileMenuItem(3, false);
+                window.switchToMainPane();
+                window.toggleFileMenuItem(1, true);
+                window.toggleFileMenuItem(2, false);
                 window.setMainSceneButton("Load requests", new ButtonListener(c, ButtonEventType.LOAD_REQUESTS));
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
