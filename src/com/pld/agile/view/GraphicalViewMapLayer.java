@@ -6,7 +6,6 @@ import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
-import com.pld.agile.utils.view.ZoomableScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;

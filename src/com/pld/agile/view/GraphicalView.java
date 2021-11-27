@@ -9,7 +9,6 @@ import com.pld.agile.utils.view.ZoomableScrollPane;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -46,12 +45,10 @@ public class GraphicalView implements Observer {
         component.widthProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
             graphicalViewRequestsLayer.draw();
-            System.out.println("W");
         });
         component.heightProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
             graphicalViewRequestsLayer.draw();
-            System.out.println("H");
         });
 
     }

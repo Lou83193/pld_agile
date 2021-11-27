@@ -23,13 +23,13 @@ import java.io.IOException;
 
 public class Window extends Application {
 
-    private MenuBar menuBar;
     private MenuItem fileMenu1;
     private MenuItem fileMenu2;
     private MenuItem fileMenu3;
     private TextField streetNameLabel;
     private Button mainSceneButton;
     private BorderPane sidePanel;
+
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
@@ -38,7 +38,7 @@ public class Window extends Application {
     private final MapData mapData;
     private final TourData tourData;
 
-    private final int initialW = 1060;
+    private final int initialW = 1020;
     private final int initialH = 720;
 
     public Window() {
@@ -69,7 +69,7 @@ public class Window extends Application {
         stage.setScene(homeScene);
 
         // Menu bar
-        menuBar = constructMenuBar();
+        MenuBar menuBar = constructMenuBar();
         pane.setTop(menuBar);
 
         // Logo
@@ -106,7 +106,7 @@ public class Window extends Application {
         stage.setScene(mainScene);
 
         // Menu bar
-        menuBar = constructMenuBar();
+        MenuBar menuBar = constructMenuBar();
         pane.setTop(menuBar);
 
         BorderPane centerPanel = new BorderPane();
@@ -155,6 +155,7 @@ public class Window extends Application {
         fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
         fileMenu2.setDisable(true);
         fileMenu3.setDisable(true);
+        System.out.println("this is where i'm set to disabled at first");
         fileMenu.getItems().addAll(fileMenu1, fileMenu2, fileMenu3);
 
         // Edit menu
@@ -181,6 +182,7 @@ public class Window extends Application {
         stage.setScene(mainScene);
     }
     public void toggleFileMenuItem(final int num, final boolean enabled) {
+        System.out.println("yeah i'm here " + num + "; " + enabled);
         switch (num) {
             case 1 -> fileMenu1.setDisable(!enabled);
             case 2 -> fileMenu2.setDisable(!enabled);
@@ -221,9 +223,6 @@ public class Window extends Application {
 
     public TextField getStreetNameLabel() {
         return streetNameLabel;
-    }
-    public MenuBar getMenuBar() {
-        return menuBar;
     }
 
     public static void main(String[] args) {
