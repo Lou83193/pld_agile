@@ -16,7 +16,7 @@ public class GraphicalViewRequestsLayer extends Group {
     private Pane graphicalMap;
     private MapData mapData;
     private TourData tourData;
-    private boolean drawAsTour = false;
+    private boolean drawTour = false;
 
     public GraphicalViewRequestsLayer(MapData mapData, TourData tourData, Pane graphicalMap) {
         this.mapData = mapData;
@@ -25,7 +25,7 @@ public class GraphicalViewRequestsLayer extends Group {
     }
 
     public void draw() {
-        if (drawAsTour) {
+        if (drawTour) {
             drawTour();
         } else {
             drawInitial();
@@ -34,9 +34,7 @@ public class GraphicalViewRequestsLayer extends Group {
 
     public void drawInitial() {
 
-        double width = graphicalMap.getWidth();
-        double height = graphicalMap.getHeight();
-        double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
+        double screenScale = ViewUtilities.mapValue(graphicalMap.getHeight(), 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         List<Request> requests = tourData.getRequestList();
@@ -74,9 +72,7 @@ public class GraphicalViewRequestsLayer extends Group {
 
     public void drawTour() {
 
-        double width = graphicalMap.getWidth();
-        double height = graphicalMap.getHeight();
-        double screenScale = ViewUtilities.mapValue(height, 0, 720, 0, 1);
+        double screenScale = ViewUtilities.mapValue(graphicalMap.getHeight(), 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
 
         List<Request> requests = tourData.getRequestList();
@@ -114,7 +110,7 @@ public class GraphicalViewRequestsLayer extends Group {
         );
     }
 
-    public void setDrawAsTour(boolean drawAsTour) {
-        this.drawAsTour = drawAsTour;
+    public void setDrawTour(boolean drawTour) {
+        this.drawTour = drawTour;
     }
 }

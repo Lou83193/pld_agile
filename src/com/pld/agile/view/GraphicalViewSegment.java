@@ -20,18 +20,22 @@ public class GraphicalViewSegment extends Line {
         this.setStrokeWidth(strokeWidth);
         this.setStroke(strokeColour);
         this.setStrokeLineCap(StrokeLineCap.ROUND);
-        this.addEventHandler(MouseEvent.MOUSE_ENTERED,
-            e -> {
-                displayer.setText(segment.getName());
-                this.setStroke(strokeColour.brighter());
-            }
-        );
-        this.addEventHandler(MouseEvent.MOUSE_EXITED,
-            e -> {
-                displayer.setText("");
-                this.setStroke(strokeColour);
-            }
-        );
+        if (displayer != null) {
+            this.addEventHandler(MouseEvent.MOUSE_ENTERED,
+                    e -> {
+                        displayer.setText(segment.getName());
+                        this.setStroke(strokeColour.brighter());
+                    }
+            );
+            this.addEventHandler(MouseEvent.MOUSE_EXITED,
+                    e -> {
+                        displayer.setText("");
+                        this.setStroke(strokeColour);
+                    }
+            );
+        } else {
+            this.setMouseTransparent(true);
+        }
     }
 
 }
