@@ -29,12 +29,13 @@ public class GraphicalView implements Observer {
 
         Pane pane = new Pane();
         component = new ZoomableScrollPane(pane);
-        component.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
+        component.setId("map");
+        //component.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         graphicalViewMapLayer = new GraphicalViewMapLayer(mapData, tourData, window);
         graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(mapData, tourData, graphicalViewMapLayer);
 
-        DoubleBinding graphicalViewHeight = window.getStage().getScene().heightProperty().subtract(50);
+        DoubleBinding graphicalViewHeight = window.getScene().heightProperty().subtract(50);
         component.prefWidthProperty().bind(graphicalViewHeight);
         component.prefHeightProperty().bind(graphicalViewHeight);
         graphicalViewMapLayer.prefWidthProperty().bind(component.heightProperty());

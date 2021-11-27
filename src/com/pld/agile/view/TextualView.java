@@ -35,6 +35,8 @@ public class TextualView implements Observer {
     public void populateInitialTextualView() {
 
         VBox requestListContainer = new VBox(20);
+        requestListContainer.getStyleClass().add("white-background");
+
         List<Request> requests = tourData.getRequestList();
 
         if (requests.size() == 0) {
@@ -51,7 +53,6 @@ public class TextualView implements Observer {
             requestListContainer.getChildren().addAll(requestPanel1, requestPanel2);
         }
 
-        requestListContainer.getStyleClass().add("white-background");
         component.setContent(requestListContainer);
 
     }
@@ -59,6 +60,8 @@ public class TextualView implements Observer {
     public void populateTourTextualView() {
 
         VBox requestListContainer = new VBox(20);
+        requestListContainer.getStyleClass().add("white-background");
+
         List<Request> requests = tourData.getRequestList();
         List<Integer> tourOrder = tourData.getComputedPath();
 
@@ -74,7 +77,6 @@ public class TextualView implements Observer {
             requestListContainer.getChildren().add(requestPanel);
         }
 
-        requestListContainer.getStyleClass().add("white-background");
         component.setContent(requestListContainer);
 
     }

@@ -8,8 +8,12 @@
      -fx-background-color: #6194FF;
 }
 
-.white-background {
+.white-background, .white-background > .viewport {
     -fx-background-color: white;
+}
+
+#map, #map > .viewport {
+    -fx-background-color: #DEDEDE;
 }
 
 #home-pane {

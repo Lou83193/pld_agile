@@ -28,7 +28,7 @@ public class DisplayedRequestsState implements State {
             boolean success = requestsLoader.load();
 
             if (success) {
-                window.toggleFileMenuItem(3, true);
+                window.toggleFileMenuItem(2, true);
                 window.setMainSceneButton("Compute tour", new ButtonListener(c, ButtonEventType.COMPUTE_TOUR));
                 window.placeMainSceneButton(false);
                 c.setCurrState(c.displayedRequestsState);
