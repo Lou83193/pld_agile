@@ -26,13 +26,15 @@ public class GraphicalViewMapLayer extends Pane {
 
     private MapData mapData;
     private TourData tourData;
+    private Window window;
 
-    public GraphicalViewMapLayer(MapData mapData, TourData tourData, Scene parent) {
+    public GraphicalViewMapLayer(MapData mapData, TourData tourData, Window window) {
         this.mapData = mapData;
         this.tourData = tourData;
+        this.window = window;
         //BorderPane root = (BorderPane)parent.getRoot(); MenuBar menuBar = (MenuBar)root.getTop();
-        prefWidthProperty().bind(parent.heightProperty().subtract(50));
-        prefHeightProperty().bind(parent.heightProperty().subtract(50));
+        prefWidthProperty().bind(window.getStage().getScene().heightProperty().subtract(50));
+        prefHeightProperty().bind(window.getStage().getScene().heightProperty().subtract(50));
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
         this.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -54,16 +56,19 @@ public class GraphicalViewMapLayer extends Pane {
 
         for (Segment s : segments) {
 
-            Intersection origin = s.getOrigin();
-            double[] originPos = projectLatLon(origin);
-
-            Intersection destination = s.getDestination();
-            double[] destinationPos = projectLatLon(destination);
-
-            Line line = new Line(originPos[0], originPos[1], destinationPos[0], destinationPos[1]);
-            line.setStrokeWidth(2 * screenScale * mapScale);
-            line.setStroke(Color.web("#454545"));
-            this.getChildren().add(line);
+            double[] originPos = projectLatLon(s.getOrigin());
+            double[] destinationPos = projectLatLon(s.getDestination());
+            Line graphicalViewSegment = new GraphicalViewSegment(
+                s,
+                originPos[0],
+                originPos[1],
+                destinationPos[0],
+                destinationPos[1],
+                2 * screenScale * mapScale,
+                Color.web("#454545"),
+                window.getStreetNameLabel()
+            );
+            this.getChildren().add(graphicalViewSegment);
 
         }
 

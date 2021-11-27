@@ -15,13 +15,13 @@ public class GraphicalView implements Observer {
     private GraphicalViewRequestsLayer graphicalViewRequestsLayer;
     private Pane component;
 
-    public GraphicalView(MapData mapData, TourData tourData, Scene parent) {
+    public GraphicalView(MapData mapData, TourData tourData, Window window) {
 
         // Add observers
         mapData.addObserver(this);
         tourData.addObserver(this);
 
-        graphicalViewMapLayer = new GraphicalViewMapLayer(mapData, tourData, parent);
+        graphicalViewMapLayer = new GraphicalViewMapLayer(mapData, tourData, window);
         graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(mapData, tourData, graphicalViewMapLayer);
 
         component = new Pane();
