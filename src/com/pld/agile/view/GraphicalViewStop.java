@@ -23,11 +23,9 @@ import javafx.scene.text.TextAlignment;
 
 public class GraphicalViewStop extends Pane {
 
-    private double graphicSize;
     private double pointerCenterX;
     private double pointerCenterY;
     private double pointerH;
-    private Shape stopGraphic;
     private Stop stop;
 
     public GraphicalViewStop(final Stop stop, final double size, final int num) {
@@ -39,7 +37,7 @@ public class GraphicalViewStop extends Pane {
 
         Shape symbol = new Circle();
 
-        graphicSize = size;
+        double graphicSize = size;
         pointerCenterX = size / 2;
         pointerCenterY = size / 2;
         pointerH = size;
@@ -80,7 +78,7 @@ public class GraphicalViewStop extends Pane {
             pointerCenterX, pointerCenterY + pointerH
         );
 
-        stopGraphic = Shape.union(symbol, pointer);
+       Shape stopGraphic = Shape.union(symbol, pointer);
         stopGraphic.setFill(fillColour);
         stopGraphic.setStroke(outlineColour);
         stopGraphic.setStrokeWidth(graphicSize / 10);

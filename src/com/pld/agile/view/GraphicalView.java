@@ -5,43 +5,42 @@ import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 public class GraphicalView implements Observer {
 
-    private GraphicalViewMap graphicalViewMap;
-    private GraphicalViewRequests graphicalViewRequests;
+    private GraphicalViewMapLayer graphicalViewMapLayer;
+    private GraphicalViewRequestsLayer graphicalViewRequestsLayer;
     private Pane component;
 
-    public GraphicalView(MapData mapData, TourData tourData, Scene parent) {
+    public GraphicalView(MapData mapData, TourData tourData, Window window) {
 
         // Add observers
         mapData.addObserver(this);
         tourData.addObserver(this);
 
-        graphicalViewMap = new GraphicalViewMap(mapData, tourData, parent);
-        graphicalViewRequests = new GraphicalViewRequests(mapData, tourData, graphicalViewMap);
+        graphicalViewMapLayer = new GraphicalViewMapLayer(mapData, tourData, window);
+        graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(mapData, tourData, graphicalViewMapLayer);
 
         component = new Pane();
-        component.getChildren().addAll(graphicalViewMap, graphicalViewRequests);
+        component.getChildren().addAll(graphicalViewMapLayer, graphicalViewRequestsLayer);
 
     }
 
     @Override
     public void update(Observable o, UpdateType updateType) {
         switch (updateType) {
-            case MAP -> graphicalViewMap.drawMap();
+            case MAP -> graphicalViewMapLayer.drawMap();
             case REQUESTS -> {
-                graphicalViewRequests.setDrawAsTour(false);
-                graphicalViewRequests.drawInitial();
+                graphicalViewRequestsLayer.setDrawAsTour(false);
+                graphicalViewRequestsLayer.drawInitial();
             }
             case TOUR -> {
-                graphicalViewMap.drawTour();
-                graphicalViewRequests.setDrawAsTour(true);
-                graphicalViewRequests.drawTour();
+                graphicalViewMapLayer.drawTour();
+                graphicalViewRequestsLayer.setDrawAsTour(true);
+                graphicalViewRequestsLayer.drawTour();
             }
         }
     }
@@ -49,8 +48,8 @@ public class GraphicalView implements Observer {
     public Node getComponent() {
         return component;
     }
-    public GraphicalViewMap getGraphicalViewMap() {
-        return graphicalViewMap;
+    public GraphicalViewMapLayer getGraphicalViewMap() {
+        return graphicalViewMapLayer;
     }
 
 }
