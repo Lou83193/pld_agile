@@ -23,6 +23,7 @@ import java.io.IOException;
 
 public class Window extends Application {
 
+    private MenuBar menuBar;
     private MenuItem fileMenu1;
     private MenuItem fileMenu2;
     private MenuItem fileMenu3;
@@ -68,7 +69,7 @@ public class Window extends Application {
         stage.setScene(homeScene);
 
         // Menu bar
-        MenuBar menuBar = constructMenuBar();
+        menuBar = constructMenuBar();
         pane.setTop(menuBar);
 
         // Logo
@@ -105,13 +106,10 @@ public class Window extends Application {
         stage.setScene(mainScene);
 
         // Menu bar
-        MenuBar menuBar = constructMenuBar();
+        menuBar = constructMenuBar();
         pane.setTop(menuBar);
 
         BorderPane centerPanel = new BorderPane();
-        // Graphical view
-        GraphicalView graphicalView = new GraphicalView(mapData, tourData, this);
-        centerPanel.setCenter(graphicalView.getComponent());
         // Street name label
         streetNameLabel = new TextField("Street Name");
         streetNameLabel.setAlignment(Pos.CENTER);
@@ -120,6 +118,9 @@ public class Window extends Application {
         streetNameLabel.setFocusTraversable(false);
         streetNameLabel.setId("street-name");
         centerPanel.setBottom(streetNameLabel);
+        // Graphical view
+        GraphicalView graphicalView = new GraphicalView(mapData, tourData, this);
+        centerPanel.setCenter(graphicalView.getComponent());
         pane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
@@ -211,17 +212,18 @@ public class Window extends Application {
     public Stage getStage() {
         return stage;
     }
-    public Controller getController() {
-        return controller;
-    }
     public MapData getMapData() {
         return mapData;
     }
     public TourData getTourData() {
         return tourData;
     }
+
     public TextField getStreetNameLabel() {
         return streetNameLabel;
+    }
+    public MenuBar getMenuBar() {
+        return menuBar;
     }
 
     public static void main(String[] args) {

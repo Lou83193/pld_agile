@@ -22,8 +22,6 @@ public class GraphicalViewRequestsLayer extends Group {
         this.mapData = mapData;
         this.tourData = tourData;
         this.graphicalMap = graphicalMap;
-        graphicalMap.widthProperty().addListener(evt -> draw());
-        graphicalMap.heightProperty().addListener(evt -> draw());
     }
 
     public void draw() {

@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 
 public class GraphicalViewSegment extends Line {
 
@@ -18,6 +19,7 @@ public class GraphicalViewSegment extends Line {
         super(startX, startY, endX, endY);
         this.setStrokeWidth(strokeWidth);
         this.setStroke(strokeColour);
+        this.setStrokeLineCap(StrokeLineCap.ROUND);
         this.addEventHandler(MouseEvent.MOUSE_ENTERED,
             e -> {
                 displayer.setText(segment.getName());
