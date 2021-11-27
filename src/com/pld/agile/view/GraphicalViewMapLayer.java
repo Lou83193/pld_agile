@@ -4,21 +4,13 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.tsp.CompleteGraph;
 import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 
 import java.util.List;
 
@@ -32,12 +24,7 @@ public class GraphicalViewMapLayer extends Pane {
         this.mapData = mapData;
         this.tourData = tourData;
         this.window = window;
-        //BorderPane root = (BorderPane)parent.getRoot(); MenuBar menuBar = (MenuBar)root.getTop();
-        prefWidthProperty().bind(window.getStage().getScene().heightProperty().subtract(50));
-        prefHeightProperty().bind(window.getStage().getScene().heightProperty().subtract(50));
-        widthProperty().addListener(evt -> draw());
-        heightProperty().addListener(evt -> draw());
-        this.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     public void draw() {
@@ -65,7 +52,7 @@ public class GraphicalViewMapLayer extends Pane {
                 destinationPos[0],
                 destinationPos[1],
                 2 * screenScale * mapScale,
-                Color.web("#454545"),
+                Color.web("#545454"),
                 window.getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);
@@ -78,10 +65,6 @@ public class GraphicalViewMapLayer extends Pane {
 
         double screenScale = ViewUtilities.mapValue(getHeight(), 0, 720, 0, 1);
         double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
-
-        //GraphicsContext gc = getGraphicsContext2D();
-        //gc.setLineWidth(4 * screenScale * mapScale);
-        //gc.setStroke(Color.web("#ED6A08"));
 
         List<Integer> stops = tourData.getStops();
         List<Integer> computedPath = tourData.getComputedPath();
@@ -103,19 +86,14 @@ public class GraphicalViewMapLayer extends Pane {
             double[] nextStopPos = projectLatLon(nextStop);
             Line line;
 
-            // Get length of path
-            double length = graph.getCost(currStopId, nextStopId);
-            double cumulatedLength = 0;
-            boolean hasDrawnArrow = false;
-
             // Trace first line
             int predecessor = predecessors[currStopId][stops.get(nextStopId)];
             Intersection currIntersection = mapData.getIntersections().get(predecessor);
             double[] currIntersectionPos = projectLatLon(currIntersection);
             line = new Line(nextStopPos[0], nextStopPos[1], currIntersectionPos[0], currIntersectionPos[1]);
-            line.setStrokeWidth(4 * screenScale * mapScale); line.setStroke(Color.web("#ED6A08"));
+            line.setStrokeWidth(4 * screenScale * mapScale); line.setStroke(Color.web("#ED6A08")); line.setStrokeLineCap(StrokeLineCap.ROUND);
+            line.setMouseTransparent(true);
             this.getChildren().add(line);
-            cumulatedLength += ViewUtilities.distance(nextStopPos, currIntersectionPos);
 
             // Get intermediary intersections, trace lines
             while (predecessor != stops.get(currStopId)) {
@@ -124,29 +102,9 @@ public class GraphicalViewMapLayer extends Pane {
                 Intersection nextIntersection = mapData.getIntersections().get(predecessor);
                 double[] nextIntersectionPos = projectLatLon(nextIntersection);
                 line = new Line(currIntersectionPos[0], currIntersectionPos[1], nextIntersectionPos[0], nextIntersectionPos[1]);
-                line.setStrokeWidth(4 * screenScale * mapScale); line.setStroke(Color.web("#ED6A08"));
+                line.setStrokeWidth(4 * screenScale * mapScale); line.setStroke(Color.web("#ED6A08")); line.setStrokeLineCap(StrokeLineCap.ROUND);
+                line.setMouseTransparent(true);
                 this.getChildren().add(line);
-                double currLength = ViewUtilities.distance(currIntersectionPos, nextIntersectionPos);
-                cumulatedLength += currLength;
-
-                // Trace arrow in middle
-                /*
-                if (cumulatedLength >= length/12 && currLength > 10 && !hasDrawnArrow) {
-                    hasDrawnArrow = true;
-                    double dir = ViewUtilities.direction(currIntersectionPos, nextIntersectionPos)*180/Math.PI;
-                    System.out.println(currLength);
-                    double[] arrowPointsX = new double[3];
-                    double[] arrowPointsY = new double[3];
-                    arrowPointsX[1] = (currIntersectionPos[0] + nextIntersectionPos[0])/2;
-                    arrowPointsY[1] = (currIntersectionPos[1] + nextIntersectionPos[1])/2;
-                    arrowPointsX[0] = arrowPointsX[1] + Math.cos(dir-15)*10;
-                    arrowPointsY[0] = arrowPointsY[1] - Math.sin(dir-15)*10;
-                    arrowPointsX[2] = arrowPointsX[1] + Math.cos(dir+15)*10;
-                    arrowPointsY[2] = arrowPointsY[1] - Math.sin(dir+15)*10;
-                    gc.strokePolyline(arrowPointsX, arrowPointsY, 3);
-                }
-                */
-
                 currIntersectionPos = nextIntersectionPos;
 
             }

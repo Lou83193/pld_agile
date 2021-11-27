@@ -29,6 +29,7 @@ public class Window extends Application {
     private TextField streetNameLabel;
     private Button mainSceneButton;
     private BorderPane sidePanel;
+
     private Scene homeScene;
     private Scene mainScene;
     private Stage stage;
@@ -37,7 +38,7 @@ public class Window extends Application {
     private final MapData mapData;
     private final TourData tourData;
 
-    private final int initialW = 1060;
+    private final int initialW = 1020;
     private final int initialH = 720;
 
     public Window() {
@@ -109,9 +110,6 @@ public class Window extends Application {
         pane.setTop(menuBar);
 
         BorderPane centerPanel = new BorderPane();
-        // Graphical view
-        GraphicalView graphicalView = new GraphicalView(mapData, tourData, this);
-        centerPanel.setCenter(graphicalView.getComponent());
         // Street name label
         streetNameLabel = new TextField("Street Name");
         streetNameLabel.setAlignment(Pos.CENTER);
@@ -120,6 +118,9 @@ public class Window extends Application {
         streetNameLabel.setFocusTraversable(false);
         streetNameLabel.setId("street-name");
         centerPanel.setBottom(streetNameLabel);
+        // Graphical view
+        GraphicalView graphicalView = new GraphicalView(mapData, tourData, this);
+        centerPanel.setCenter(graphicalView.getComponent());
         pane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
@@ -160,6 +161,8 @@ public class Window extends Application {
         Menu editMenu = new Menu("Edit");
         MenuItem editMenu1 = new MenuItem("Undo");
         MenuItem editMenu2 = new MenuItem("Redo");
+        editMenu1.setDisable(true);
+        editMenu2.setDisable(true);
         editMenu.getItems().addAll(editMenu1, editMenu2);
 
         // About menu
@@ -185,6 +188,7 @@ public class Window extends Application {
             case 2 -> fileMenu2.setDisable(!enabled);
             case 3 -> fileMenu3.setDisable(!enabled);
         }
+        System.out.println(!fileMenu1.isDisable() + "; " + !fileMenu2.isDisable() + "; " + !fileMenu3.isDisable());
     }
     public void setMainSceneButton(final String label, final ButtonListener listener) {
         mainSceneButton.setText(label);
@@ -211,15 +215,13 @@ public class Window extends Application {
     public Stage getStage() {
         return stage;
     }
-    public Controller getController() {
-        return controller;
-    }
     public MapData getMapData() {
         return mapData;
     }
     public TourData getTourData() {
         return tourData;
     }
+
     public TextField getStreetNameLabel() {
         return streetNameLabel;
     }

@@ -29,6 +29,7 @@
 }
 
 #street-name {
+    -fx-font-size: 11pt;
     -fx-background-color: white;
     -fx-text-box-border: transparent;
 }

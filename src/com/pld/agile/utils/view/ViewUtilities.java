@@ -10,10 +10,18 @@ import javafx.scene.paint.Color;
 
 public class ViewUtilities {
 
-    private static final double PADDING = 0.02;
-
     public static double mapValue(final double x, final double min1, final double max1, final double min2, final double max2) {
         return min2 + (x - min1) / (max1 - min1) * (max2 - min2);
+    }
+
+    public static double clamp(double x, double min, double max) {
+        if (x > max) {
+            return max;
+        }
+        if (x < min) {
+            return min;
+        }
+        return x;
     }
 
     public static double mercator(final double ang) {
@@ -26,8 +34,8 @@ public class ViewUtilities {
         double mercLat = mercator(lat);
         double mapWidth = viewPortSize * (maxLon - minLon) / (mercMaxLat - mercMinLat);
         double mapHeight = viewPortSize;
-        double x = ViewUtilities.mapValue(lon, minLon, maxLon, mapWidth * (PADDING), mapWidth * (1 - PADDING));
-        double y = ViewUtilities.mapValue(mercLat, mercMinLat, mercMaxLat, mapHeight * (1 - PADDING), mapHeight * (PADDING));
+        double x = ViewUtilities.mapValue(lon, minLon, maxLon, 0, mapWidth);
+        double y = ViewUtilities.mapValue(mercLat, mercMinLat, mercMaxLat, mapHeight, 0);
         return new double[] {x, y};
     }
 
