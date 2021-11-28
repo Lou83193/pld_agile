@@ -10,12 +10,32 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
+/**
+ * Class handling the graphical view of the model.
+ */
 public class GraphicalView implements Observer {
 
+    /**
+     * Layer containing the map segments, as well as the tour highlights.
+     */
     private GraphicalViewMapLayer graphicalViewMapLayer;
+    /**
+     * Layer containing the request stops.
+     */
     private GraphicalViewRequestsLayer graphicalViewRequestsLayer;
+    /**
+     * Wrapper zoomable component encapsulating both layers.
+     */
     private ZoomableScrollPane component;
 
+    /**
+     * GraphicalView constructor.
+     * Adds observers on the model objects, populates the graphical components,
+     * Sets size bindings and adds resizing listeners.
+     * @param mapData The application's MapData instance.
+     * @param tourData The application's TourData instance.
+     * @param window The application's Window instance.
+     */
     public GraphicalView(MapData mapData, TourData tourData, Window window) {
 
         // Add observers
@@ -25,10 +45,13 @@ public class GraphicalView implements Observer {
         Pane pane = new Pane();
         component = new ZoomableScrollPane(pane);
         component.setId("map");
-        //component.setBackground(new Background(new BackgroundFill(Color.web("#DEDEDE"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        graphicalViewMapLayer = new GraphicalViewMapLayer(mapData, tourData, window);
-        graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(mapData, tourData, graphicalViewMapLayer);
+        graphicalViewMapLayer = new GraphicalViewMapLayer(
+                mapData, tourData, window
+        );
+        graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(
+                mapData, tourData, graphicalViewMapLayer
+        );
 
         DoubleBinding graphicalViewHeight = window.getScene().heightProperty().subtract(50);
         component.prefWidthProperty().bind(graphicalViewHeight);
@@ -36,7 +59,10 @@ public class GraphicalView implements Observer {
         graphicalViewMapLayer.prefWidthProperty().bind(component.heightProperty());
         graphicalViewMapLayer.prefHeightProperty().bind(component.heightProperty());
 
-        pane.getChildren().addAll(graphicalViewMapLayer, graphicalViewRequestsLayer);
+        pane.getChildren().addAll(
+            graphicalViewMapLayer,
+            graphicalViewRequestsLayer
+        );
 
         component.widthProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
@@ -49,8 +75,13 @@ public class GraphicalView implements Observer {
 
     }
 
+    /**
+     * Updates the views whenever the model notifies a change.
+     * @param o The observable object who notified the view.
+     * @param updateType The type of update that has been made.
+     */
     @Override
-    public void update(Observable o, UpdateType updateType) {
+    public void update(final Observable o, final UpdateType updateType) {
         switch (updateType) {
             case MAP -> graphicalViewMapLayer.drawMap();
             case REQUESTS -> {
@@ -67,9 +98,17 @@ public class GraphicalView implements Observer {
         }
     }
 
+    /**
+     * Getter for component.
+     * @return component
+     */
     public Node getComponent() {
         return component;
     }
+    /**
+     * Getter for graphicalViewMapLayer.
+     * @return graphicalViewMapLayer
+     */
     public GraphicalViewMapLayer getGraphicalViewMap() {
         return graphicalViewMapLayer;
     }

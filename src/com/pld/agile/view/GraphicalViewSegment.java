@@ -13,9 +13,33 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
+/**
+ * Graphical object representing a Segment in the graphical view.
+ * A Segment is represented (in the graphical view) by a line.
+ */
 public class GraphicalViewSegment extends Line {
 
-    public GraphicalViewSegment(Segment segment, double startX, double startY, double endX, double endY, double strokeWidth, Color strokeColour, TextField displayer) {
+    /**
+     * GraphicalViewSegment constructor.
+     * @param segment The associated Segment model object.
+     * @param startX The segment's starting position's X.
+     * @param startY The segment's starting position's Y.
+     * @param endX The segment's ending position's X.
+     * @param endY The segment's ending position's Y.
+     * @param strokeWidth The segment's line thickness.
+     * @param strokeColour The segment's line colour.
+     * @param displayer TextField in which to display the segment's street name
+     *                  (when hovered).
+     */
+    public GraphicalViewSegment(final Segment segment,
+                                final double startX,
+                                final double startY,
+                                final double endX,
+                                final double endY,
+                                final double strokeWidth,
+                                final Color strokeColour,
+                                final TextField displayer) {
+
         super(startX, startY, endX, endY);
         this.setStrokeWidth(strokeWidth);
         this.setStroke(strokeColour);

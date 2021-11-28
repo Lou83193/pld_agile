@@ -8,22 +8,45 @@ import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
-
 import java.util.List;
 
+/**
+ * Class handling the graphical display of the requests.
+ */
 public class GraphicalViewRequestsLayer extends Group {
 
+    /**
+     * The associated graphical map layer.
+     */
     private Pane graphicalMap;
+    /**
+     * The application's MapData instance.
+     */
     private MapData mapData;
+    /**
+     * The application's TourData instance.
+     */
     private TourData tourData;
+    /**
+     * Boolean switch instructing whether to draw the requests as a tour or not.
+     */
     private boolean drawTour = false;
 
+    /**
+     * GraphicalViewRequestsLayer constructor.
+     * @param mapData The application's MapData instance
+     * @param tourData The application's TourData instance
+     * @param graphicalMap The associated graphical map layer
+     */
     public GraphicalViewRequestsLayer(MapData mapData, TourData tourData, Pane graphicalMap) {
         this.mapData = mapData;
         this.tourData = tourData;
         this.graphicalMap = graphicalMap;
     }
 
+    /**
+     * Draws the requests, either as a tour or unordered.
+     */
     public void draw() {
         if (drawTour) {
             drawTour();
@@ -32,10 +55,22 @@ public class GraphicalViewRequestsLayer extends Group {
         }
     }
 
+    /**
+     * Draws the requests in an unordered fashion, by populating the pane with
+     * graphical stops.
+     */
     public void drawInitial() {
 
-        double screenScale = ViewUtilities.mapValue(graphicalMap.getHeight(), 0, 720, 0, 1);
-        double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
+        double screenScale = ViewUtilities.mapValue(
+                graphicalMap.getHeight(),
+                0, 720,
+                0, 1
+        );
+        double mapScale = ViewUtilities.mapValue(
+                mapData.getMaxLon() - mapData.getMinLon(),
+                0.02235, 0.07610,
+                1.25, 0.75
+        );
 
         List<Request> requests = tourData.getRequestList();
         this.getChildren().clear();
@@ -70,10 +105,22 @@ public class GraphicalViewRequestsLayer extends Group {
 
     }
 
+    /**
+     * Draws the requests in an ordered fashion, by populating the pane with
+     * graphical stops.
+     */
     public void drawTour() {
 
-        double screenScale = ViewUtilities.mapValue(graphicalMap.getHeight(), 0, 720, 0, 1);
-        double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
+        double screenScale = ViewUtilities.mapValue(
+                graphicalMap.getHeight(),
+                0, 720,
+                0, 1
+        );
+        double mapScale = ViewUtilities.mapValue(
+                mapData.getMaxLon() - mapData.getMinLon(),
+                0.02235, 0.07610,
+                1.25, 0.75
+        );
 
         List<Request> requests = tourData.getRequestList();
         List<Integer> tourOrder = tourData.getComputedPath();
@@ -98,6 +145,12 @@ public class GraphicalViewRequestsLayer extends Group {
 
     }
 
+    /**
+     * Projects an intersection's (lat; lon) address to a pixel coordinate
+     * based on the container's size and the mapData's bounds.
+     * @param intersection The intersection whose address to project.
+     * @return A double[] containing the {x, y} projection.
+     */
     private double[] projectLatLon(final Intersection intersection) {
         return ViewUtilities.projectMercatorLatLon(
                 intersection.getLatitude(),
@@ -110,7 +163,11 @@ public class GraphicalViewRequestsLayer extends Group {
         );
     }
 
-    public void setDrawTour(boolean drawTour) {
+    /**
+     * Setter for attribute drawTour.
+     * @param drawTour Whether to draw the tour's trace or not
+     */
+    public void setDrawTour(final boolean drawTour) {
         this.drawTour = drawTour;
     }
 }

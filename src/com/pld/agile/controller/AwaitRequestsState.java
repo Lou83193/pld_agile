@@ -14,6 +14,12 @@ import java.io.File;
  */
 public class AwaitRequestsState implements State {
 
+    /**
+     * Loads the requests to tourData if map is loaded (default doesn't load).
+     * @param c the controller
+     * @param window the application window
+     * @return boolean success
+     */
     @Override
     public boolean doLoadRequests(final Controller c, final Window window) {
         // Fetch file
@@ -29,7 +35,10 @@ public class AwaitRequestsState implements State {
 
             if (success) {
                 window.toggleFileMenuItem(2, true);
-                window.setMainSceneButton("Compute tour", new ButtonListener(c, ButtonEventType.COMPUTE_TOUR));
+                window.setMainSceneButton(
+                        "Compute tour",
+                        new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
+                );
                 window.placeMainSceneButton(false);
                 c.setCurrState(c.displayedRequestsState);
             }

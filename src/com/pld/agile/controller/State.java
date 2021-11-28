@@ -13,7 +13,6 @@ import java.util.ArrayList;
  * State design pattern interface.
  */
 public interface State {
-    // todo : javadoc
 
     /**
      * Loads the map to the mapData object (default loads a map).
@@ -39,7 +38,10 @@ public interface State {
                 window.switchToMainPane();
                 window.toggleFileMenuItem(1, true);
                 window.toggleFileMenuItem(2, false);
-                window.setMainSceneButton("Load requests", new ButtonListener(c, ButtonEventType.LOAD_REQUESTS));
+                window.setMainSceneButton(
+                        "Load requests",
+                        new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
+                );
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
                 c.setCurrState(c.awaitRequestsState);
@@ -60,7 +62,8 @@ public interface State {
     }
 
     /**
-     * Computes a tour and displays it (default doesn't do it since there is no guarantee that requests are loaded).
+     * Computes a tour and displays it (default doesn't do it
+     * since there is no guarantee that requests are loaded).
      * @param c the controller
      * @param window the application window
      * @return boolean success

@@ -2,22 +2,26 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
-import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
+/**
+ * Graphical object representing a Stop in the textual view.
+ * A Stop is represented (in the textual view) by a panel
+ * containing text fields displaying its attributes.
+ */
 public class TextualViewStop extends VBox {
 
+    /**
+     * TextualViewStop constructor.
+     * Populates the graphical object.
+     * @param stop The corresponding Stop model object.
+     */
     public TextualViewStop(Stop stop) {
 
         double lat = stop.getAddress().getLatitude();
