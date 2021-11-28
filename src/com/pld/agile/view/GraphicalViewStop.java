@@ -21,34 +21,57 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Graphical object representing a Stop in the graphical view.
+ * A Stop is represented (in the graphical view) by an icon with a shape
+ * pinpointing to the Stop's position on the map. It can also contain its order
+ * number within the pointer.
+ * <p>
+ * Pickups Stops are represented by circle pointers.
+ * Delivery Stops are represented by square pointers.
+ * Warehouse Stops are represented by diamond pointers.
+ */
 public class GraphicalViewStop extends Pane {
 
+    /**
+     * The center of the shape's X coordinate.
+     */
     private double pointerCenterX;
+    /**
+     * The center of the shape's Y coordinate.
+     */
     private double pointerCenterY;
+    /**
+     * The pointer's height.
+     */
     private double pointerH;
-    private Stop stop;
 
-    public GraphicalViewStop(final Stop stop, final double size, final int num) {
+    /**
+     * TextualViewStop constructor.
+     * Populates the graphical object.
+     * @param stop The corresponding Stop model object.
+     * @param graphicSize The size of the pointer.
+     * @param num The order number of the stop.
+     */
+    public GraphicalViewStop(final Stop stop, final double graphicSize, final int num) {
 
-        this.stop = stop;
-        StopType type = stop.getType();
         Color fillColour = Color.BLACK;
         Color outlineColour = Color.BLACK;
-
         Shape symbol = new Circle();
 
-        double graphicSize = size;
-        pointerCenterX = size / 2;
-        pointerCenterY = size / 2;
-        pointerH = size;
+        pointerCenterX = graphicSize / 2;
+        pointerCenterY = graphicSize / 2;
+        pointerH = graphicSize;
 
         double pointerX = graphicSize / 2;
         double pointerY = graphicSize / 2;
 
-        switch (type) {
+        switch (stop.getType()) {
 
             case PICKUP:
-                fillColour = ViewUtilities.stringToColour(stop.getRequest().getPickup().getAddress().toString());
+                fillColour = ViewUtilities.stringToColour(
+                    stop.getRequest().getPickup().getAddress().toString()
+                );
                 symbol = new Circle(graphicSize / 2);
                 symbol.setTranslateX(graphicSize / 2);
                 symbol.setTranslateY(graphicSize / 2);
@@ -59,7 +82,9 @@ public class GraphicalViewStop extends Pane {
                 break;
 
             case DELIVERY:
-                fillColour = ViewUtilities.stringToColour(stop.getRequest().getPickup().getAddress().toString());
+                fillColour = ViewUtilities.stringToColour(
+                    stop.getRequest().getPickup().getAddress().toString()
+                );
                 symbol = new Rectangle(graphicSize, graphicSize);
                 break;
 
@@ -101,7 +126,11 @@ public class GraphicalViewStop extends Pane {
 
     }
 
-    public void place(double[] pos) {
+    /**
+     * Relocates the graphical object to the given position.
+     * @param pos The position to relocate the graphical object to.
+     */
+    public void place(final double[] pos) {
         relocate(
             pos[0] - pointerCenterX,
             pos[1] - pointerCenterY - pointerH

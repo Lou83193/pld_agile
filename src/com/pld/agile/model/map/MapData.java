@@ -54,17 +54,17 @@ public class MapData extends Observable {
 
 
     /**
-     * Constructor for the class MapData, initializes the attributes intersections and segments
+     * Constructor for the class MapData, initializes the attributes intersections and segments.
      * @param intersections List of all Intersections
      * @param segments List of all Segments
      */
-    public MapData(List<Intersection> intersections, List<Segment> segments){
+    public MapData(List<Intersection> intersections, List<Segment> segments) {
         this.intersections = intersections;
         this.segments = segments;
     }
 
     /**
-     * Constructor for the class MapData, initializes the attributes intersections and segments
+     * Constructor for the class MapData, initializes the attributes intersections and segments.
      */
     public MapData() {
         intersectionsByOldID = new HashMap<String, Intersection>();
@@ -85,7 +85,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Reset the bounds of map to infinitely big / small values (minimum / maximum latitude / longitude)
+     * Reset the bounds of map to infinitely big / small values (minimum / maximum latitude / longitude).
      */
     public void resetBounds() {
         maxLat = Integer.MIN_VALUE;
@@ -96,7 +96,7 @@ public class MapData extends Observable {
 
     // GETTERS
     /**
-     * Getter for attribute intersections
+     * Getter for attribute intersections.
      * @return returns the map of all Intersections
      */
     public HashMap<String, Intersection> getIntersectionsByOldID() {
@@ -104,7 +104,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Getter for attribute segments
+     * Getter for attribute segments.
      * @return returns the list of all Segments
      */
     public List<Segment> getSegments() {
@@ -137,7 +137,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Setter for attribute segments
+     * Setter for attribute segments.
      * @param segments List of all Segments
      */
     public void setSegments(List<Segment> segments) {
@@ -146,7 +146,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Getter for attribute maxLat
+     * Getter for attribute maxLat.
      * @return maxLat
      */
     public double getMaxLat() {
@@ -154,7 +154,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Setter for attribute maxLat
+     * Setter for attribute maxLat.
      * @param maxLat maximum latitude
      */
     public void setMaxLat(double maxLat) {
@@ -162,7 +162,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Getter for attribute minLat
+     * Getter for attribute minLat.
      * @return minLat
      */
     public double getMinLat() {
@@ -170,7 +170,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Setter for attribute minLat
+     * Setter for attribute minLat.
      * @param minLat minimum latitude
      */
     public void setMinLat(double minLat) {
@@ -178,7 +178,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Getter for attribute maxLon
+     * Getter for attribute maxLon.
      * @return maxLon
      */
     public double getMaxLon() {
@@ -186,7 +186,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Setter for attribute maxLon
+     * Setter for attribute maxLon.
      * @param maxLon maximum longitude
      */
     public void setMaxLon(double maxLon) {
@@ -194,7 +194,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Getter for attribute minLon
+     * Getter for attribute minLon.
      * @return minLon
      */
     public double getMinLon() {
@@ -202,7 +202,7 @@ public class MapData extends Observable {
     }
 
     /**
-     * Setter for attribute minLon
+     * Setter for attribute minLon.
      * @param minLon minimum longitude
      */
     public void setMinLon(double minLon) {

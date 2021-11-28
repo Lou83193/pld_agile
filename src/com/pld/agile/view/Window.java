@@ -15,43 +15,86 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
+/**
+ * Window class of the application.
+ */
 public class Window extends Application {
 
+    /**
+     * The window's stage.
+     */
     private Stage stage;
+    /**
+     * The window's only scene.
+     */
     private Scene scene;
+    /**
+     * The border pane containing the top menu bar
+     * and the contents of the window.
+     */
     private BorderPane wrapperPane;
+    /**
+     * The top menu bar containing the file, edit, and about menus.
+     */
     private MenuBar menuBar;
+    /**
+     * The contents of the home page.
+     */
     private BorderPane homePane;
+    /**
+     * The contents of the main page.
+     */
     private BorderPane mainPane;
-
+    /**
+     * Text field displaying the street name
+     * of the currently hovered map segment.
+     */
     private TextField streetNameLabel;
+    /**
+     * Action button of the main page's side panel.
+     */
     private Button mainSceneButton;
+    /**
+     * Main page's side panel.
+     */
     private BorderPane sidePanel;
 
+    /**
+     * The application's Controller instance.
+     */
     private final Controller controller;
+    /**
+     * The application's MapData instance.
+     */
     private final MapData mapData;
+    /**
+     * The application's TourData instance.
+     */
     private final TourData tourData;
 
-    private final int initialW = 1020;
-    private final int initialH = 720;
-
+    /**
+     * Window constructor.
+     */
     public Window() {
         this.mapData = new MapData();
         this.tourData = new TourData();
         this.controller = new Controller(this);
     }
 
-
+    /**
+     * JavaFX launch method.
+     * @param s The window's stage.
+     * @throws IOException JavaFX exception.
+     */
     @Override
     public void start(final Stage s) throws IOException {
 
         stage = s;
 
         wrapperPane = new BorderPane();
-        scene = new Scene(wrapperPane, initialW, initialH);
+        scene = new Scene(wrapperPane, 1020, 720);
         scene.getStylesheets().add("stylesheet.css");
 
         constructMenuBar();
@@ -67,6 +110,10 @@ public class Window extends Application {
 
     }
 
+    /**
+     * Constructs the content pane of the home page.
+     * Directly sets the homePane attribute.
+     */
     public void constructHomePane() {
 
         homePane = new BorderPane();
@@ -79,7 +126,9 @@ public class Window extends Application {
         // Button
         Button button = new Button("Load Map");
         button.getStyleClass().add("button");
-        button.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
+        button.setOnAction(
+            new ButtonListener(controller, ButtonEventType.LOAD_MAP)
+        );
         // Group
         VBox homePage = new VBox(15);
         homePage.setAlignment(Pos.CENTER);
@@ -97,6 +146,10 @@ public class Window extends Application {
 
     }
 
+    /**
+     * Constructs the content pane of the main page.
+     * Directly sets the mainPane attribute.
+     */
     public void constructMainPane() {
 
         mainPane = new BorderPane();
@@ -112,7 +165,9 @@ public class Window extends Application {
         streetNameLabel.setId("street-name");
         centerPanel.setBottom(streetNameLabel);
         // Graphical view
-        GraphicalView graphicalView = new GraphicalView(mapData, tourData, this);
+        GraphicalView graphicalView = new GraphicalView(
+                mapData, tourData, this
+        );
         centerPanel.setCenter(graphicalView.getComponent());
         mainPane.setCenter(centerPanel);
 
@@ -128,7 +183,9 @@ public class Window extends Application {
         buttonWrapper.setPadding(new Insets(0, 20, 20, 20));
         mainSceneButton = new Button("Compute Tour");
         mainSceneButton.getStyleClass().add("button");
-        mainSceneButton.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
+        mainSceneButton.setOnAction(
+            new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR)
+        );
         mainSceneButton.prefWidthProperty().bind(sidePanelWidth);
         buttonWrapper.getChildren().add(mainSceneButton);
         sidePanel.setBottom(buttonWrapper);
@@ -136,6 +193,10 @@ public class Window extends Application {
 
     }
 
+    /**
+     * Constructs the application's menu bar.
+     * Directly sets the menuBar attribute.
+     */
     public void constructMenuBar() {
 
         // File menu
@@ -143,9 +204,15 @@ public class Window extends Application {
         MenuItem fileMenu1 = new MenuItem("Load map");
         MenuItem fileMenu2 = new MenuItem("Load requests");
         MenuItem fileMenu3 = new MenuItem("Compute tour");
-        fileMenu1.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_MAP));
-        fileMenu2.setOnAction(new ButtonListener(controller, ButtonEventType.LOAD_REQUESTS));
-        fileMenu3.setOnAction(new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR));
+        fileMenu1.setOnAction(
+            new ButtonListener(controller, ButtonEventType.LOAD_MAP)
+        );
+        fileMenu2.setOnAction(
+            new ButtonListener(controller, ButtonEventType.LOAD_REQUESTS)
+        );
+        fileMenu3.setOnAction(
+            new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR)
+        );
         fileMenu2.setDisable(true);
         fileMenu3.setDisable(true);
         fileMenu.getItems().addAll(fileMenu1, fileMenu2, fileMenu3);
@@ -170,16 +237,39 @@ public class Window extends Application {
 
     }
 
+    /**
+     * Switches the view from the home page to the main page.
+     */
     public void switchToMainPane() {
         wrapperPane.setCenter(mainPane);
     }
-    public void toggleFileMenuItem(final int num, final boolean enabled) {
+
+    /**
+     * Toggles file menu items to either enabled or disabled.
+     * @param num The id of the file menu item.
+     * @param enabled Whether the file menu item should be enabled or disabled.
+     */
+    public void toggleFileMenuItem(final int num,
+                                   final boolean enabled) {
         menuBar.getMenus().get(0).getItems().get(num).setDisable(!enabled);
     }
-    public void setMainSceneButton(final String label, final ButtonListener listener) {
+
+    /**
+     * Sets the label and the listener of the main page's action button.
+     * @param label The label of the button.
+     * @param listener The listener of the button.
+     */
+    public void setMainSceneButton(final String label,
+                                   final ButtonListener listener) {
         mainSceneButton.setText(label);
         mainSceneButton.setOnAction(listener);
     }
+
+    /**
+     * Places the main page's action button either at the top of the side panel,
+     * or at the bottom.
+     * @param top Whether the action button should be placed at the top or not.
+     */
     public void placeMainSceneButton(final boolean top) {
         if (top) {
             HBox bottomNode = (HBox) sidePanel.getBottom();
@@ -198,23 +288,46 @@ public class Window extends Application {
         }
     }
 
+    /**
+     * Getter for stage.
+     * @return stage
+     */
     public Stage getStage() {
         return stage;
     }
+    /**
+     * Getter for scene.
+     * @return scene
+     */
     public Scene getScene() {
         return scene;
     }
+    /**
+     * Getter for mapData.
+     * @return mapData
+     */
     public MapData getMapData() {
         return mapData;
     }
+    /**
+     * Getter for tourData.
+     * @return tourData
+     */
     public TourData getTourData() {
         return tourData;
     }
-
+    /**
+     * Getter for streetNameLabel.
+     * @return streetNameLabel
+     */
     public TextField getStreetNameLabel() {
         return streetNameLabel;
     }
 
+    /**
+     * Main method of the application.
+     * @param args Launch arguments.
+     */
     public static void main(String[] args) {
         launch();
     }

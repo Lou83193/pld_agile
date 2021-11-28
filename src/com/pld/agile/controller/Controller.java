@@ -6,10 +6,7 @@
 
 package com.pld.agile.controller;
 
-import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.Window;
-import javafx.stage.FileChooser;
-import java.io.File;
 
 /**
  * Controller class.
@@ -17,11 +14,12 @@ import java.io.File;
 public class Controller {
     /**
      * Current State of the Controller.
-     * The response of the controller to same inputs might change depending on the current State.
+     * The response of the controller to same inputs might change
+     * depending on the current State.
      */
     private State currState;
     /**
-     * Application Window
+     * Application Window.
      */
     private Window window;
 
@@ -38,7 +36,8 @@ public class Controller {
     protected State awaitRequestsState = new AwaitRequestsState();
     /**
      * State when the map and a list of requests are loaded.
-     * User can load another map, load another list of requests or ask the app to compute the tour.
+     * User can load another map, load another list of requests
+     * or ask the app to compute the tour.
      */
     protected State displayedRequestsState = new DisplayedRequestsState();
 
@@ -47,7 +46,7 @@ public class Controller {
      * Initialises the parameters.
      * @param window application Window
      */
-    public Controller (Window window) {
+    public Controller(Window window) {
         this.window = window;
         this.currState = awaitMapState;
     }
@@ -61,19 +60,19 @@ public class Controller {
     }
 
     /**
-     * Calls method doLoadMap() of the current state
+     * Calls method doLoadMap() of the current state.
      */
     public void loadMap() {
         currState.doLoadMap(this, window);
     }
     /**
-     * Calls method doLoadRequests() of the current state
+     * Calls method doLoadRequests() of the current state.
      */
     public void loadTour() {
         currState.doLoadRequests(this, window);
     }
     /**
-     * Calls method doComputeTour() of the current state
+     * Calls method doComputeTour() of the current state.
      */
     public void computeTour() {
         currState.doComputeTour(this, window);

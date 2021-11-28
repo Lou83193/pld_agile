@@ -10,15 +10,28 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-
 import java.util.List;
 
+/**
+ * Class handling the textual view of the model.
+ */
 public class TextualView implements Observer {
 
-    private ScrollPane component;
+    /**
+     * The application's TourData instance.
+     */
     private TourData tourData;
+    /**
+     * Wrapper component encapsulating the textual view.
+     */
+    private ScrollPane component;
 
-    public TextualView(TourData tourData) {
+    /**
+     * TextualView constructor.
+     * Adds observers on the model objects, populates the graphical components.
+     * @param tourData The application's TourData instance.
+     */
+    public TextualView(final TourData tourData) {
 
         this.tourData = tourData;
         tourData.addObserver(this);
@@ -32,6 +45,10 @@ public class TextualView implements Observer {
 
     }
 
+    /**
+     * Populates the textual view in no particular order,
+     * by iterating through the tour data's requests list.
+     */
     public void populateInitialTextualView() {
 
         VBox requestListContainer = new VBox(20);
@@ -50,13 +67,20 @@ public class TextualView implements Observer {
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup());
             VBox requestPanel2 = new TextualViewStop(request.getDelivery());
-            requestListContainer.getChildren().addAll(requestPanel1, requestPanel2);
+            requestListContainer.getChildren().addAll(
+                    requestPanel1,
+                    requestPanel2
+            );
         }
 
         component.setContent(requestListContainer);
 
     }
 
+    /**
+     * Populates the textual view in the calculated tour's order,
+     * by iterating through the tour data's computed path.
+     */
     public void populateTourTextualView() {
 
         VBox requestListContainer = new VBox(20);
@@ -81,6 +105,11 @@ public class TextualView implements Observer {
 
     }
 
+    /**
+     * Updates the views whenever the model notifies a change.
+     * @param o The observable object who notified the view.
+     * @param updateType The type of update that has been made.
+     */
     @Override
     public void update(Observable o, UpdateType updateType) {
         switch (updateType) {
@@ -89,6 +118,10 @@ public class TextualView implements Observer {
         }
     }
 
+    /**
+     * Getter for component.
+     * @return component
+     */
     public Node getComponent() {
         return component;
     }

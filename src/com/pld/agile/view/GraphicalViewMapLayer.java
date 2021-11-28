@@ -5,22 +5,41 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
 import java.util.List;
 
+/**
+ * Class handling the graphical map and the tour's trace on it.
+ */
 public class GraphicalViewMapLayer extends Pane {
 
+    /**
+     * The application's MapData instance.
+     */
     private MapData mapData;
+    /**
+     * The application's TourData instance.
+     */
     private TourData tourData;
+    /**
+     * The application's Window instance.
+     */
     private Window window;
+    /**
+     * Boolean switch instructing whether to draw the tour's trace or not.
+     */
     private boolean drawTour = false;
 
+    /**
+     * GraphicalViewMapLayer constructor.
+     * @param mapData The application's MapData instance
+     * @param tourData The application's TourData instance
+     * @param window The application's Window instance
+     */
     public GraphicalViewMapLayer(MapData mapData, TourData tourData, Window window) {
         this.mapData = mapData;
         this.tourData = tourData;
@@ -28,6 +47,9 @@ public class GraphicalViewMapLayer extends Pane {
         this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    /**
+     * Draws the map, and (if needed) the tour's trace on it.
+     */
     public void draw() {
         drawMap();
         if (drawTour) {
@@ -35,10 +57,21 @@ public class GraphicalViewMapLayer extends Pane {
         }
     }
 
+    /**
+     * Draws the map, by populating the pane with graphical segments.
+     */
     public void drawMap() {
 
-        double screenScale = ViewUtilities.mapValue(getHeight(), 0, 720, 0, 1);
-        double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
+        double screenScale = ViewUtilities.mapValue(
+                getHeight(),
+                0, 720,
+                0, 1
+        );
+        double mapScale = ViewUtilities.mapValue(
+                mapData.getMaxLon() - mapData.getMinLon(),
+                0.02235, 0.07610,
+                1.25, 0.75
+        );
 
         this.getChildren().clear();
 
@@ -64,10 +97,21 @@ public class GraphicalViewMapLayer extends Pane {
 
     }
 
+    /**
+     * Draws the tour trace, by populating the pane with graphical segments.
+     */
     public void drawTour() {
 
-        double screenScale = ViewUtilities.mapValue(getHeight(), 0, 720, 0, 1);
-        double mapScale = ViewUtilities.mapValue(mapData.getMaxLon() - mapData.getMinLon(), 0.02235, 0.07610, 1.25, 0.75);
+        double screenScale = ViewUtilities.mapValue(
+                getHeight(),
+                0, 720,
+                0, 1
+        );
+        double mapScale = ViewUtilities.mapValue(
+                mapData.getMaxLon() - mapData.getMinLon(),
+                0.02235, 0.07610,
+                1.25, 0.75
+        );
 
         List<Path> tourPaths = tourData.getTourPaths();
         for (Path path : tourPaths) {
@@ -95,7 +139,13 @@ public class GraphicalViewMapLayer extends Pane {
 
     }
 
-    private double[] projectLatLon(Intersection intersection) {
+    /**
+     * Projects an intersection's (lat; lon) address to a pixel coordinate
+     * based on the container's size and the mapData's bounds.
+     * @param intersection The intersection whose address to project.
+     * @return A double[] containing the {x, y} projection.
+     */
+    private double[] projectLatLon(final Intersection intersection) {
         return ViewUtilities.projectMercatorLatLon(
             intersection.getLatitude(),
             intersection.getLongitude(),
@@ -107,10 +157,18 @@ public class GraphicalViewMapLayer extends Pane {
         );
     }
 
-    public void setDrawTour(boolean drawTour) {
+    /**
+     * Setter for attribute drawTour.
+     * @param drawTour Whether to draw the tour's trace or not
+     */
+    public void setDrawTour(final boolean drawTour) {
         this.drawTour = drawTour;
     }
 
+    /**
+     * Overridden method to ensure the pane is resizeable.
+     * @return true.
+     */
     @Override
     public boolean isResizable() {
         return true;
