@@ -264,17 +264,18 @@ public class TourData extends Observable {
 
 
             // Save computed data
-
             for (int i = 0; i < nbIntersections; i++) {
                 predecessors[stopIndex][i] = pi[i];
             }
 
-            List<Segment> pathSegments = new ArrayList<>();
             Stop currStop = stopMap.get(stops.get(stopIndex));
 
-
             for (int i = 0; i < stops.size(); i++) {
+
                 if (i != stopIndex) {
+                    
+                    List<Segment> pathSegments = new ArrayList<>();
+
                     // Add initial segment
                     Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(i));
                     int predecessor = predecessors[stopIndex][stops.get(i)];
@@ -341,7 +342,7 @@ public class TourData extends Observable {
         // Populate model
         tourPaths = new ArrayList<>();
         int pathLength = computedPath.size();
-        for (int i = 0; i < pathLength -1 ; i++) {
+        for (int i = 0; i < pathLength - 1; i++) {
             System.out.println("path added : [" +computedPath.get(i)+','+computedPath.get(i+1)+']');
             tourPaths.add(stopsGraph.getPath(computedPath.get(i),computedPath.get(i+1)));
         }
