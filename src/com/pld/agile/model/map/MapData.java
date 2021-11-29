@@ -67,7 +67,7 @@ public class MapData extends Observable {
      * Constructor for the class MapData, initializes the attributes intersections and segments.
      */
     public MapData() {
-        intersectionsByOldID = new HashMap<String, Intersection>();
+        intersectionsByOldID = new HashMap<>();
         segments = new ArrayList<>();
     }
 
@@ -211,9 +211,6 @@ public class MapData extends Observable {
 
     @Override
     public String toString() {
-        return "MapData{" +
-                "intersections=" + intersectionsByOldID +
-                ", segments=" + segments +
-                '}';
+        return "MapData{" + "intersections=" + intersections + ", segments=" + segments + '}';
     }
 }
