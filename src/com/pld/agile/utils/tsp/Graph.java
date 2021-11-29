@@ -5,6 +5,7 @@
  */
 
 package com.pld.agile.utils.tsp;
+import com.pld.agile.model.tour.Path;
 
 public interface Graph {
 	/**
@@ -19,6 +20,8 @@ public interface Graph {
 	 */
 	public abstract double getCost(int i, int j);
 
+	public abstract Path getPath(int i, int j);
+
 	/**
 	 * @param i 
 	 * @param j 
@@ -32,5 +35,7 @@ public interface Graph {
 	 * @param value
 	 */
 	public abstract void setCost(int i, int j, double value);
+
+	public abstract void setPath(int i, int j, Path value);
 
 }

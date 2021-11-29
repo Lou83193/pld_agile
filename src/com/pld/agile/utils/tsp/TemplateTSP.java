@@ -6,6 +6,7 @@
 
 package com.pld.agile.utils.tsp;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,13 +35,13 @@ public abstract class TemplateTSP implements TSP {
 		branchAndBound(0, unvisited, visited, 0);
 	}
 	
-	public Integer getSolution(int i){
-		if (g != null && i>=0 && i<g.getNbVertices())
+	public Integer getSolution(int i) {
+		if (g != null && i >= 0 && i < g.getNbVertices())
 			return bestSol[i];
 		return -1;
 	}
 	
-	public double getSolutionCost(){
+	public double getSolutionCost() {
 		if (g != null)
 			return bestSolCost;
 		return -1;
@@ -76,9 +77,9 @@ public abstract class TemplateTSP implements TSP {
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
 	    if (unvisited.size() == 0){ 
 	    	if (g.isArc(currentVertex,0)){ 
-	    		if (currentCost+g.getCost(currentVertex,0) < bestSolCost){ 
+	    		if (currentCost+g.getPath(currentVertex,0).getLength() < bestSolCost){
 	    			visited.toArray(bestSol);
-	    			bestSolCost = currentCost+g.getCost(currentVertex,0);
+	    			bestSolCost = currentCost+g.getPath(currentVertex,0).getLength();
 	    		}
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
@@ -92,15 +93,13 @@ public abstract class TemplateTSP implements TSP {
 					unvisited.add(nextVertex+1);
 				}
 	            branchAndBound(nextVertex, unvisited, visited, 
-	            		currentCost+g.getCost(currentVertex, nextVertex));
+	            		currentCost+g.getPath(currentVertex, nextVertex).getLength());
 	            visited.remove(nextVertex);
 	            unvisited.add(nextVertex);
-				if(nextVertex%2 == 1)
-				{
+				if (nextVertex%2 == 1) {
 					unvisited.remove(nextVertex+1);
 				}
 	        }	    
 	    }
 	}
-
 }
