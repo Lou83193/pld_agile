@@ -16,17 +16,9 @@ import java.util.List;
 public class GraphicalViewRequestsLayer extends Group {
 
     /**
-     * The associated graphical map layer.
+     * The parent GraphicalView instance.
      */
-    private Pane graphicalMap;
-    /**
-     * The application's MapData instance.
-     */
-    private MapData mapData;
-    /**
-     * The application's TourData instance.
-     */
-    private TourData tourData;
+    private GraphicalView graphicalView;
     /**
      * Boolean switch instructing whether to draw the requests as a tour or not.
      */
@@ -34,14 +26,10 @@ public class GraphicalViewRequestsLayer extends Group {
 
     /**
      * GraphicalViewRequestsLayer constructor.
-     * @param mapData The application's MapData instance
-     * @param tourData The application's TourData instance
-     * @param graphicalMap The associated graphical map layer
+     * @param graphicalView The parent GraphicalView instance
      */
-    public GraphicalViewRequestsLayer(MapData mapData, TourData tourData, Pane graphicalMap) {
-        this.mapData = mapData;
-        this.tourData = tourData;
-        this.graphicalMap = graphicalMap;
+    public GraphicalViewRequestsLayer(GraphicalView graphicalView) {
+        this.graphicalView = graphicalView;
     }
 
     /**
@@ -60,6 +48,10 @@ public class GraphicalViewRequestsLayer extends Group {
      * graphical stops.
      */
     public void drawInitial() {
+
+        GraphicalViewMapLayer graphicalMap = graphicalView.getGraphicalViewMap();
+        MapData mapData = graphicalView.getMapData();
+        TourData tourData = graphicalView.getTourData();
 
         double screenScale = ViewUtilities.mapValue(
                 graphicalMap.getHeight(),
@@ -83,7 +75,7 @@ public class GraphicalViewRequestsLayer extends Group {
 
         Stop warehouse = tourData.getWarehouse();
         GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicSize, 0);
-        double[] warehousePos = projectLatLon(warehouse.getAddress());
+        double[] warehousePos = graphicalView.projectLatLon(warehouse.getAddress());
         warehouseGraphic.place(warehousePos);
         this.getChildren().add(warehouseGraphic);
 
@@ -91,13 +83,13 @@ public class GraphicalViewRequestsLayer extends Group {
 
             Stop pickup = request.getPickup();
             GraphicalViewStop pickupGraphic = new GraphicalViewStop(pickup, graphicSize, 0);
-            double[] pickupPos = projectLatLon(pickup.getAddress());
+            double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
             pickupGraphic.place(pickupPos);
             this.getChildren().add(pickupGraphic);
 
             Stop delivery = request.getDelivery();
             GraphicalViewStop deliveryGraphic = new GraphicalViewStop(delivery, graphicSize, 0);
-            double[] deliveryPos = projectLatLon(delivery.getAddress());
+            double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
             deliveryGraphic.place(deliveryPos);
             this.getChildren().add(deliveryGraphic);
 
@@ -110,6 +102,10 @@ public class GraphicalViewRequestsLayer extends Group {
      * graphical stops.
      */
     public void drawTour() {
+
+        GraphicalViewMapLayer graphicalMap = graphicalView.getGraphicalViewMap();
+        MapData mapData = graphicalView.getMapData();
+        TourData tourData = graphicalView.getTourData();
 
         double screenScale = ViewUtilities.mapValue(
                 graphicalMap.getHeight(),
@@ -137,30 +133,12 @@ public class GraphicalViewRequestsLayer extends Group {
             Integer stopId = tourData.getStops().get(i);
             Stop stop = tourData.getStopMap().get(stopId);
             GraphicalViewStop stopGraphic = new GraphicalViewStop(stop, graphicSize, count);
-            double[] stopPos = projectLatLon(stop.getAddress());
+            double[] stopPos = graphicalView.projectLatLon(stop.getAddress());
             stopGraphic.place(stopPos);
             this.getChildren().add(stopGraphic);
             count++;
         }
 
-    }
-
-    /**
-     * Projects an intersection's (lat; lon) address to a pixel coordinate
-     * based on the container's size and the mapData's bounds.
-     * @param intersection The intersection whose address to project.
-     * @return A double[] containing the {x, y} projection.
-     */
-    private double[] projectLatLon(final Intersection intersection) {
-        return ViewUtilities.projectMercatorLatLon(
-                intersection.getLatitude(),
-                intersection.getLongitude(),
-                mapData.getMinLat(),
-                mapData.getMinLon(),
-                mapData.getMaxLat(),
-                mapData.getMaxLon(),
-                graphicalMap.getHeight()
-        );
     }
 
     /**
