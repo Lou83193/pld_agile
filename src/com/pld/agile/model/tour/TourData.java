@@ -289,7 +289,7 @@ public class TourData extends Observable {
 
         // Compute TSP
         System.out.println("TSP INIT...");
-        TSP tsp = new TSP2(); // No Heuristic
+        TSP tsp = new TSP3();
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
