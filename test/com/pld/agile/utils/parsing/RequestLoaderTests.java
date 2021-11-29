@@ -6,9 +6,11 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -21,6 +23,15 @@ public class RequestLoaderTests {
     private MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
     private final TourData tourData = new TourData();
     private RequestLoader requestLoader = null;
+
+    @BeforeAll
+    public void loadMap (){
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public TourData generateRequestList (double[] array){
         List<Request> tmpReqList = new ArrayList<Request>();
@@ -47,7 +58,6 @@ public class RequestLoaderTests {
     public void test3Requests() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
-        mapLoader.load();
         requestLoader.load();
 
         double[] expectedRequestArray = {
@@ -68,7 +78,6 @@ public class RequestLoaderTests {
     public void testRedundancy() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_redundancy.xml", tourData);
-        mapLoader.load();
         requestLoader.load();
 
         double[] expectedRequestArray = {
@@ -91,7 +100,7 @@ public class RequestLoaderTests {
     public void testNotDepotAddress() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notDepotAddress.xml", tourData);
-        mapLoader.load();
+        requestLoader.load();
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -102,7 +111,7 @@ public class RequestLoaderTests {
     public void testDepotMissing() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_depotMissing.xml", tourData);
-        mapLoader.load();
+        requestLoader.load();
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -114,7 +123,7 @@ public class RequestLoaderTests {
     public void testDepotAddressMissing() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
-        mapLoader.load();
+        requestLoader.load();
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -126,7 +135,6 @@ public class RequestLoaderTests {
     public void testDepartureTimeMissing() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_departureTimeMissing.xml", tourData);
-        mapLoader.load();
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -138,13 +146,66 @@ public class RequestLoaderTests {
     public void testNotStopAddress() {
         tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
-        mapLoader.load();
+        requestLoader.load();
 
+        double[] expectedRequestArray = {
+                2,45.0009,4.0,480.0,
+                3,45.0,3.99872,40.0,
+                4,44.9991,4.0,540.0,
+                1,45.0,4.00128,480.0,
+        };
 
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        assertEquals(expectedResult,tourData.getRequestList().toString());
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
 
     }
+
+    @Test
+    //Test nb 2.8
+    public void testStopAddressMissing() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
+        requestLoader.load();
+
+        double[] expectedRequestArray = {
+                0,45.0, 4.0, 360.0,
+                1,45.0,4.00128,480.0,
+                4,44.9991, 4.0, 180.0,
+                1,45.0,4.00128,540.0
+        };
+
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        assertEquals(expectedResult,tourData.getRequestList().toString());
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+
+    @Test
+    //Test nb 2.9
+    public void testStopDurationMissing() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_stopDurationMissing.xml", tourData);
+        requestLoader.load();
+
+        double[] expectedRequestArray = {
+                0,45.0, 4.0, 360.0,
+                1,45.0,4.00128,480.0,
+                4,44.9991, 4.0, 180.0,
+                1,45.0,4.00128,540.0
+        };
+
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        assertEquals(expectedResult,tourData.getRequestList().toString());
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+
 
 
 

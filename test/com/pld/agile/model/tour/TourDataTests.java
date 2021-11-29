@@ -5,6 +5,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.Window;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class TourDataTests {
@@ -14,12 +15,20 @@ public class TourDataTests {
     private final RequestLoader requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourDataOriginal);
     private TourData tourData;
 
+    @BeforeAll
+    public void loadMap (){
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     //Test n°3.1
     public void testNotOptimalTour (){
         tourDataOriginal.setAssociatedMap(mapData);
         tourData = tourDataOriginal;
-        mapLoader.load();
         requestLoader.load();
 
         tourData.setStops();

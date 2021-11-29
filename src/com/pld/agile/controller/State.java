@@ -1,7 +1,7 @@
 package com.pld.agile.controller;
 
 import com.pld.agile.utils.parsing.MapLoader;
-import com.pld.agile.utils.parsing.SyntaxException;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
