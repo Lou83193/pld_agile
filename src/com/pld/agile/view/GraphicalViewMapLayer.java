@@ -18,13 +18,9 @@ import java.util.List;
 public class GraphicalViewMapLayer extends Pane {
 
     /**
-     * The application's MapData instance.
+     * The parent GraphicalView instance.
      */
-    private MapData mapData;
-    /**
-     * The application's TourData instance.
-     */
-    private TourData tourData;
+    private GraphicalView graphicalView;
     /**
      * The application's Window instance.
      */
@@ -36,13 +32,11 @@ public class GraphicalViewMapLayer extends Pane {
 
     /**
      * GraphicalViewMapLayer constructor.
-     * @param mapData The application's MapData instance
-     * @param tourData The application's TourData instance
+     * @param graphicalView The parent GraphicalView instance
      * @param window The application's Window instance
      */
-    public GraphicalViewMapLayer(MapData mapData, TourData tourData, Window window) {
-        this.mapData = mapData;
-        this.tourData = tourData;
+    public GraphicalViewMapLayer(GraphicalView graphicalView, Window window) {
+        this.graphicalView = graphicalView;
         this.window = window;
         this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -62,6 +56,8 @@ public class GraphicalViewMapLayer extends Pane {
      */
     public void drawMap() {
 
+        MapData mapData = graphicalView.getMapData();
+
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
                 0, 720,
@@ -79,17 +75,12 @@ public class GraphicalViewMapLayer extends Pane {
 
         for (Segment segment : segments) {
 
-            double[] originPos = projectLatLon(segment.getOrigin());
-            double[] destinationPos = projectLatLon(segment.getDestination());
             Line graphicalViewSegment = new GraphicalViewSegment(
-                segment,
-                originPos[0],
-                originPos[1],
-                destinationPos[0],
-                destinationPos[1],
-                2 * screenScale * mapScale,
-                Color.web("#545454"),
-                window.getStreetNameLabel()
+                    graphicalView,
+                    segment,
+                    2 * screenScale * mapScale,
+                    Color.web("#545454"),
+                    window.getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);
 
@@ -101,6 +92,9 @@ public class GraphicalViewMapLayer extends Pane {
      * Draws the tour trace, by populating the pane with graphical segments.
      */
     public void drawTour() {
+
+        MapData mapData = graphicalView.getMapData();
+        TourData tourData = graphicalView.getTourData();
 
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
@@ -116,45 +110,16 @@ public class GraphicalViewMapLayer extends Pane {
         List<Path> tourPaths = tourData.getTourPaths();
         for (Path path : tourPaths) {
 
-            List<Segment> pathSegments = path.getSegments();
-            for (Segment segment : pathSegments) {
-
-                double[] originPos = projectLatLon(segment.getOrigin());
-                double[] destinationPos = projectLatLon(segment.getDestination());
-                Line graphicalViewSegment = new GraphicalViewSegment(
-                        segment,
-                        originPos[0],
-                        originPos[1],
-                        destinationPos[0],
-                        destinationPos[1],
-                        4 * screenScale * mapScale,
-                        Color.web("#ED6A08"),
-                        null
-                );
-                this.getChildren().add(graphicalViewSegment);
-
-            }
+            GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
+                    graphicalView,
+                    path,
+                    4 * screenScale * mapScale,
+                    Color.web("#ED6A08")
+            );
+            this.getChildren().add(graphicalViewPath);
 
         }
 
-    }
-
-    /**
-     * Projects an intersection's (lat; lon) address to a pixel coordinate
-     * based on the container's size and the mapData's bounds.
-     * @param intersection The intersection whose address to project.
-     * @return A double[] containing the {x, y} projection.
-     */
-    private double[] projectLatLon(final Intersection intersection) {
-        return ViewUtilities.projectMercatorLatLon(
-            intersection.getLatitude(),
-            intersection.getLongitude(),
-            mapData.getMinLat(),
-            mapData.getMinLon(),
-            mapData.getMaxLat(),
-            mapData.getMaxLon(),
-            getHeight()
-        );
     }
 
     /**
