@@ -125,8 +125,21 @@ public class RequestLoaderTests {
     //Test nb 2.6
     public void testDepartureTimeMissing() {
         tourData.setAssociatedMap(mapData);
-        requestLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_departureTimeMissing.xml", tourData);
         mapLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+    @Test
+    //Test nb 2.7
+    public void testNotStopAddress() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
+        mapLoader.load();
+
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
