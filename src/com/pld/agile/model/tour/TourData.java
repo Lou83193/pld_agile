@@ -52,7 +52,7 @@ public class TourData extends Observable {
 
     private List<Integer> stops;
 
-    private List<Integer> computedPath;
+    //private List<Integer> computedPath;
     // Index: Nth stop visited
     // Value : Algorithm index
 
@@ -159,9 +159,9 @@ public class TourData extends Observable {
         return stops;
     }
 
-    public List<Integer> getComputedPath() {
+    /*public List<Integer> getComputedPath() {
         return computedPath;
-    }
+    }*/
 
     public Graph getStopsGraph() {
         return stopsGraph;
@@ -332,7 +332,7 @@ public class TourData extends Observable {
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
-        computedPath = new ArrayList<>();
+        List<Integer> computedPath = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices(); i++) {
             computedPath.add(tsp.getSolution(i));
         }
