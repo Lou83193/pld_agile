@@ -54,7 +54,8 @@ public class MapLoader {
      */
     private void addSegmentIfNotRedundant(List<Segment> segments, Segment s) {
         boolean shouldAdd = true;
-        shouldAdd = !s.getOrigin().equals(s.getDestination()); // we don't add segments of same origin & dest
+        // we don't add segments of same origin & dest, of length 0
+        shouldAdd = (!s.getOrigin().equals(s.getDestination())) || (s.getLength() == 0);
         Segment toBeRemoved = null;
         for (Segment presentSegment : s.getOrigin().getOriginOf()) { // iterate over all segments with the same origin
             if (presentSegment.getDestination().getId() == s.getDestination().getId() && presentSegment.getLength() <= s.getLength()) {
