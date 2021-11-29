@@ -52,7 +52,6 @@ public class MapLoader {
      * @param s
      */
     private void addSegmentIfNotRedundant(List<Segment> segments, Segment s) {
-        // TODO : enlever segment de l'intersection aussi
         boolean shouldAdd = true;
         Segment toBeRemoved = null;
         for (Segment presentSegment : s.getOrigin().getOriginOf()) { // iterate over all segments with the same origin
@@ -122,9 +121,7 @@ public class MapLoader {
         map.setIntersections(intersections);
         map.setSegments(segments);
 
-
-
-        return true;
+        return (map.getIntersections().size() > 0);
     }
 
     /**
