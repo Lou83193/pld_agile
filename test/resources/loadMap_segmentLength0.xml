@@ -7,5 +7,5 @@
     <segment destination="2" length="100" name="Avenue Général Frère" origin="1"/>
     <segment destination="3" length="0" name="Boulevard Général Frère" origin="1"/>
     <segment destination="4" length="100" name="Rue de la Meuse" origin="1"/>
-    <segment destination="2" length="100" name="Rue de la Moselle" origin="3"/>
+    <segment destination="5" length="100" name="Rue de la Moselle" origin="4"/>
 </map>
