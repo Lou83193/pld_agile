@@ -106,6 +106,7 @@ public class Window extends Application {
 
         stage.setScene(scene);
         stage.setTitle("COLIFFIMO - Route Planner");
+        stage.getIcons().add(new Image("icon.png"));
         stage.show();
 
     }
