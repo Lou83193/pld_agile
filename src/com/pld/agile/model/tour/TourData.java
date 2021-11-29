@@ -273,7 +273,7 @@ public class TourData extends Observable {
             for (int i = 0; i < stops.size(); i++) {
 
                 if (i != stopIndex) {
-                    
+
                     List<Segment> pathSegments = new ArrayList<>();
 
                     // Add initial segment

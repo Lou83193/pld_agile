@@ -2,6 +2,7 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
@@ -119,7 +120,7 @@ public class GraphicalViewRequestsLayer extends Group {
         );
 
         List<Request> requests = tourData.getRequestList();
-        List<Integer> tourOrder = tourData.getComputedPath();
+        List<Path> tourPaths = tourData.getTourPaths();
         this.getChildren().clear();
 
         if (requests.size() == 0) {
@@ -129,9 +130,8 @@ public class GraphicalViewRequestsLayer extends Group {
         double graphicSize = 24 * screenScale * mapScale;
 
         int count = 0;
-        for (Integer i : tourOrder) {
-            Integer stopId = tourData.getStops().get(i);
-            Stop stop = tourData.getStopMap().get(stopId);
+        for (Path path : tourPaths) {
+            Stop stop = path.getOrigin();
             GraphicalViewStop stopGraphic = new GraphicalViewStop(stop, graphicSize, count);
             double[] stopPos = graphicalView.projectLatLon(stop.getAddress());
             stopGraphic.place(stopPos);
