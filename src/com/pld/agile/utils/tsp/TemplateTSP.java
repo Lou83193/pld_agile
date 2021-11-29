@@ -91,9 +91,7 @@ public abstract class TemplateTSP implements TSP {
 	            		currentCost+g.getPath(currentVertex, nextVertex).getLength());
 	            visited.remove(nextVertex);
 	            unvisited.add(nextVertex);
-				if (nextVertex%2 == 1) {
-					unvisited.remove(nextVertex+1);
-				}
+
 	        }
 	    }
 	}
