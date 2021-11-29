@@ -42,7 +42,7 @@ public class TourData extends Observable {
     /**
      * The departure time from the warehouse.
      */
-    private Date departureTime;
+    private String departureTime;
 
     private Graph stopsGraph;
 
@@ -143,9 +143,6 @@ public class TourData extends Observable {
         this.departureTime = departureTime;
     }
 
-   /* public int[][] getPredecessors() {
-        return predecessors;
-    }*/
 
     public List<Integer> getStops() {
         return stops;
@@ -322,11 +319,19 @@ public class TourData extends Observable {
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
         List<Integer> computedPath = new ArrayList<>();
 
+        //Date currentTime=departureTime;
         for(int i = 0; i < stopsGraph.getNbVertices(); i++) {
             computedPath.add(tsp.getSolution(i));
             Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
             currentStop.setStopNumber(i);
-            //currentStop.setArrivalTime();
+            /* IN PROGRESS
+            long timeInSecs = currentTime.getTimeInMillis();
+            // t = d/v
+            Intersection currIntersection = associatedMap.getIntersections().get(stops.get(tsp.getSolution(i)));
+            Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
+            long travelDuration = (long) (currIntersection.findSegmentTo(nextIntersection).getLenth()/ (15/60*60*1000));
+            currentStop.setDepartureTime(currentStop.getArrivalTime.getTimeInMillis()+currentStop.getDuration()*1000);
+            currentTime=currentStop.getDepartureTime();*/
         }
         System.out.println("Computed path : "+computedPath);
 
