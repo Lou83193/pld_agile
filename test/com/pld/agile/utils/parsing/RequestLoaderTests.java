@@ -13,14 +13,14 @@ import java.io.PrintStream;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class RequestsLoaderTests {
+public class RequestLoaderTests {
     private final MapData mapData = new MapData();
     private MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
     private final TourData tourData = new TourData();
-    private RequestLoader requestsLoader = null;
+    private RequestLoader requestLoader = null;
 
     public TourData generateRequestList (double[] array){
         List<Request> tmpReqList = new ArrayList<Request>();
@@ -43,12 +43,12 @@ public class RequestsLoaderTests {
         return res;
     }
     @Test
-    //Test n°2.1
+    //Test nb 2.1
     public void test3Requests() {
         tourData.setAssociatedMap(mapData);
-        requestsLoader= new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
         mapLoader.load();
-        requestsLoader.load();
+        requestLoader.load();
 
         double[] expectedRequestArray = {
                 0,45.0, 4.0, 360.0,
@@ -64,12 +64,12 @@ public class RequestsLoaderTests {
     }
 
     @Test
-    //Test n°2.2
+    //Test nb 2.2
     public void testRedundancy() {
         tourData.setAssociatedMap(mapData);
-        requestsLoader = new RequestLoader("test/resources/loadRequests_redundancy.xml", tourData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_redundancy.xml", tourData);
         mapLoader.load();
-        requestsLoader.load();
+        requestLoader.load();
 
         double[] expectedRequestArray = {
                 0,45.0,4.0,360.0,
@@ -87,37 +87,53 @@ public class RequestsLoaderTests {
     }
 
     @Test
-    //Test n°2.3
-    public void testDepotAddressMissing() {
+    //Test nb 2.3
+    public void testNotDepotAddress() {
         tourData.setAssociatedMap(mapData);
-        requestsLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_notDepotAddress.xml", tourData);
         mapLoader.load();
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        //redirect the System-output (normally the console) to a variable
-        System.setErr(new PrintStream(outContent));
-        boolean res = requestsLoader.load();
 
-        assertFalse(res);
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+    }
 
-        //check if your error message is in the output variable
-        //TO-DO
+    @Test
+    //Test nb 2.4
+    public void testDepotMissing() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_depotMissing.xml", tourData);
+        mapLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
 
     }
 
     @Test
-    //Test n°2.4
-    public void testPickupMissing() {
+    //Test nb 2.5
+    public void testDepotAddressMissing() {
         tourData.setAssociatedMap(mapData);
-        requestsLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
         mapLoader.load();
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        //redirect the System-output (normally the console) to a variable
-        System.setErr(new PrintStream(outContent));
-        requestsLoader.load();
-        String expectedResult = "[Request{pickup=Stop{address=Intersection{id='2', latitude=45.0009, longitude=4.0}, duration=480.0}, delivery=Stop{address=Intersection{id='3', latitude=45.0, longitude=3.99872}, duration=0.0}}, Request{pickup=Stop{address=Intersection{id='4', latitude=44.9991, longitude=4.0}, duration=180.0}, delivery=Stop{address=Intersection{id='1', latitude=45.0, longitude=4.00128}, duration=540.0}}]";
-        //check if your error message is in the output variable
-        //TO-DO
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
     }
+
+    @Test
+    //Test nb 2.6
+    public void testDepartureTimeMissing() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
+        mapLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+
 
 
 }
