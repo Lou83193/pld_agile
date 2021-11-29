@@ -8,6 +8,7 @@ package com.pld.agile.model.tour;
 
 import com.pld.agile.model.map.Intersection;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +31,14 @@ public class Stop {
      * The associated request
      */
     private Request request;
+    /**
+     * The time of arrival at the stop
+     */
+    private Date arrivalTime;
+    /**
+     * The time of departure at the stop
+     */
+    private Date departureTime;
 
     /**
      * Stop constructor.
@@ -90,6 +99,12 @@ public class Stop {
     public void setType(StopType type) {
         this.type = type;
     }
+
+    public void setArrivalTime(Date arrivalTime){ this.arrivalTime=arrivalTime; }
+
+    public void setDepartureTime(Date departureTime){ this.departureTime=departureTime; }
+
+
 
     /**
      * Getter for attribute request.

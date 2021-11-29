@@ -1,5 +1,6 @@
 package com.pld.agile.view;
 
+import com.pld.agile.model.tour.Path;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.tour.Request;
@@ -87,16 +88,15 @@ public class TextualView implements Observer {
         requestListContainer.getStyleClass().add("white-background");
 
         List<Request> requests = tourData.getRequestList();
-        List<Integer> tourOrder = tourData.getComputedPath();
+        List<Path> tourPaths = tourData.getTourPaths();
 
         if (requests.size() == 0) {
             component.setContent(requestListContainer);
             return;
         }
 
-        for (Integer i : tourOrder) {
-            Integer stopId = tourData.getStops().get(i);
-            Stop stop = tourData.getStopMap().get(stopId);
+        for (Path path : tourPaths) {
+            Stop stop = path.getOrigin();
             VBox requestPanel = new TextualViewStop(stop);
             requestListContainer.getChildren().add(requestPanel);
         }
