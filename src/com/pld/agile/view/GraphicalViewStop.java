@@ -7,13 +7,15 @@
 package com.pld.agile.view;
 
 import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.StopType;
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.Observer;
+import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.Shadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -31,7 +33,7 @@ import javafx.scene.text.TextAlignment;
  * Delivery Stops are represented by square pointers.
  * Warehouse Stops are represented by diamond pointers.
  */
-public class GraphicalViewStop extends Pane {
+public class GraphicalViewStop extends Pane implements Observer {
 
     /**
      * The center of the shape's X coordinate.
@@ -46,6 +48,9 @@ public class GraphicalViewStop extends Pane {
      */
     private double pointerH;
 
+    private Color fillColour;
+    private Color outlineColour;
+
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.
@@ -55,8 +60,11 @@ public class GraphicalViewStop extends Pane {
      */
     public GraphicalViewStop(final Stop stop, final double graphicSize, final int num) {
 
-        Color fillColour = Color.BLACK;
-        Color outlineColour = Color.BLACK;
+        stop.addObserver(this);
+
+        fillColour = Color.BLACK;
+        outlineColour = Color.BLACK;
+
         Shape symbol = new Circle();
 
         pointerCenterX = graphicSize / 2;
@@ -103,7 +111,7 @@ public class GraphicalViewStop extends Pane {
             pointerCenterX, pointerCenterY + pointerH
         );
 
-       Shape stopGraphic = Shape.union(symbol, pointer);
+        Shape stopGraphic = Shape.union(symbol, pointer);
         stopGraphic.setFill(fillColour);
         stopGraphic.setStroke(outlineColour);
         stopGraphic.setStrokeWidth(graphicSize / 10);
@@ -137,4 +145,24 @@ public class GraphicalViewStop extends Pane {
         );
     }
 
+    @Override
+    public void update(Observable observed, UpdateType updateType) {
+
+        switch (updateType) {
+            case STOP_HIGHLIGHT -> {
+                Stop stop = (Stop)observed;
+                if (stop.isHighlighted()) {
+                    DropShadow shadow = new DropShadow();
+                    shadow.setColor(outlineColour);
+                    shadow.setRadius(0);
+                    shadow.setSpread(1);
+                    shadow.setOffsetY(-3);
+                    this.setEffect(shadow);
+                } else {
+                    this.setEffect(null);
+                }
+            }
+        }
+
+    }
 }

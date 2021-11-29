@@ -9,6 +9,7 @@ import com.pld.agile.utils.observer.UpdateType;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class TextualView implements Observer {
      */
     private TourData tourData;
     /**
+     * The application's Window instance.
+     */
+    private Window window;
+    /**
      * Wrapper component encapsulating the textual view.
      */
     private ScrollPane component;
@@ -29,11 +34,12 @@ public class TextualView implements Observer {
     /**
      * TextualView constructor.
      * Adds observers on the model objects, populates the graphical components.
-     * @param tourData The application's TourData instance.
+     * @param window The application's Window instance.
      */
-    public TextualView(final TourData tourData) {
+    public TextualView(final Window window) {
 
-        this.tourData = tourData;
+        this.window = window;
+        this.tourData = window.getTourData();
         tourData.addObserver(this);
 
         // Create ScrollPane
@@ -62,11 +68,20 @@ public class TextualView implements Observer {
         }
 
         VBox warehousePanel = new TextualViewStop(tourData.getWarehouse());
+        warehousePanel.setOnMouseClicked(
+                e -> window.getController().clickOnTextualStop(tourData.getWarehouse())
+        );
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup());
+            requestPanel1.setOnMouseClicked(
+                    e -> window.getController().clickOnTextualStop(request.getPickup())
+            );
             VBox requestPanel2 = new TextualViewStop(request.getDelivery());
+            requestPanel2.setOnMouseClicked(
+                    e -> window.getController().clickOnTextualStop(request.getDelivery())
+            );
             requestListContainer.getChildren().addAll(
                     requestPanel1,
                     requestPanel2
@@ -98,6 +113,7 @@ public class TextualView implements Observer {
             Integer stopId = tourData.getStops().get(i);
             Stop stop = tourData.getStopMap().get(stopId);
             VBox requestPanel = new TextualViewStop(stop);
+            requestPanel.setOnMouseClicked(e -> window.getController().clickOnTextualStop(stop));
             requestListContainer.getChildren().add(requestPanel);
         }
 

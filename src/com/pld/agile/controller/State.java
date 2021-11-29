@@ -1,5 +1,8 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Request;
+import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
@@ -70,5 +73,34 @@ public interface State {
      */
     default boolean doComputeTour(Controller c, Window window) {
         return false;
+    }
+
+    default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnTextualStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnGraphicalView(Controller c, Window window) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
     }
 }

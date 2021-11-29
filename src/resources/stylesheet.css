@@ -1,10 +1,10 @@
-.button {
+.main-button {
      -fx-font-size: 16pt;
      -fx-background-color: #4782FF;
      -fx-background-radius: 30;
      -fx-text-fill: white;
 }
-.button:hover {
+.main-button:hover {
      -fx-background-color: #6194FF;
 }
 
@@ -22,18 +22,50 @@
     -fx-background-position: center center;
 }
 
+.uneditable-textfield {
+    -fx-text-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-font-style: italic;
+    -fx-text-fill: #434343;
+}
+
 .textual-view-stop-panel-label {
     -fx-font-size: 11pt;
     -fx-font-weight: bold;
+}
+
+.textual-view-stop-panel-hour {
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: #434343;
 }
 
 .textual-view-stop-panel {
     -fx-background-color: #DEDEDE;
     -fx-background-radius: 10;
 }
+.textual-view-stop-panel-highlighted {
+    -fx-background-color: #EEEEEE;
+}
 
 #street-name {
     -fx-font-size: 11pt;
     -fx-background-color: white;
     -fx-text-box-border: transparent;
+}
+
+.control-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-padding: 2;
+}
+.control-button:hover {
+    -fx-background-color: #EEEEEE;
+}
+
+.add-button {
+    -fx-background-color: #57F038;
+    -fx-background-radius: 4;
+    -fx-font-weight: bold;
+    -fx-font-size: 11pt;
 }
