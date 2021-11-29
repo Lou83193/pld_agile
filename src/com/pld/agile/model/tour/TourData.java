@@ -346,6 +346,7 @@ public class TourData extends Observable {
             System.out.println("path added : [" +computedPath.get(i)+','+computedPath.get(i+1)+']');
             tourPaths.add(stopsGraph.getPath(computedPath.get(i),computedPath.get(i+1)));
         }
+        tourPaths.add(stopsGraph.getPath(computedPath.get(pathLength-1),computedPath.get(0)));
 
         /*int pathLength = computedPath.size();
         for (int i = 0; i < pathLength; i++) {
