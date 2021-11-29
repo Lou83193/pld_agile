@@ -7,6 +7,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ public class RequestLoaderTests {
     private final TourData tourData = new TourData();
     private RequestLoader requestLoader = null;
 
-    @BeforeAll
+    @BeforeEach
     public void loadMap (){
         try {
             mapLoader.load();
@@ -64,7 +65,7 @@ public class RequestLoaderTests {
                 0,45.0, 4.0, 360.0,
                 1,45.0,4.00128,480.0,
                 2,45.0009, 4.0, 480.0,
-                3,45.0, 3.99872, 0.0,
+                3,45.0, 3.99872, 40.0,
                 4,44.9991, 4.0, 180.0,
                 1,45.0,4.00128,540.0
         };
@@ -91,7 +92,7 @@ public class RequestLoaderTests {
                 0,45.0,4.0,480.0,
         };
 
-        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();
         assertEquals(expectedResult,tourData.getRequestList().toString());
     }
 
@@ -155,7 +156,7 @@ public class RequestLoaderTests {
                 1,45.0,4.00128,480.0,
         };
 
-        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();
         assertEquals(expectedResult,tourData.getRequestList().toString());
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -176,7 +177,7 @@ public class RequestLoaderTests {
                 1,45.0,4.00128,540.0
         };
 
-        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();
         assertEquals(expectedResult,tourData.getRequestList().toString());
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -198,13 +199,69 @@ public class RequestLoaderTests {
                 1,45.0,4.00128,540.0
         };
 
-        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();;
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();
         assertEquals(expectedResult,tourData.getRequestList().toString());
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
 
     }
 
+    @Test
+    //Test nb 2.10
+    public void testNotStopDuration() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_notStopDuration.xml", tourData);
+        requestLoader.load();
+
+        double[] expectedRequestArray = {
+                0,45.0, 4.0, 360.0,
+                1,45.0,4.00128,480.0,
+                4,44.9991, 4.0, 180.0,
+                1,45.0,4.00128,540.0
+        };
+
+        String expectedResult = generateRequestList(expectedRequestArray).getRequestList().toString();
+        assertEquals(expectedResult,tourData.getRequestList().toString());
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+    @Test
+    //Test nb 2.11
+    public void testNoPlanningRequestNode() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_noPlanningRequestNode.xml", tourData);
+        requestLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+    @Test
+    //Test nb 2.12
+    public void testNoFile() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_noFile.xml", tourData);
+        requestLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
+
+    @Test
+    //Test nb 2.13
+    public void testNoRequestNode() {
+        tourData.setAssociatedMap(mapData);
+        requestLoader = new RequestLoader("test/resources/loadRequests_noRequestNode.xml", tourData);
+        requestLoader.load();
+
+        Exception e = assertThrows(Exception.class, requestLoader::load);
+        //assertEquals(e.getMessage(),"Syntax Error...");
+
+    }
 
 
 
