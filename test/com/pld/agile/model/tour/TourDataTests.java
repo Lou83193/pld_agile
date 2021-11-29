@@ -1,30 +1,31 @@
 package com.pld.agile.model.tour;
 
+import com.pld.agile.controller.Controller;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.parsing.RequestLoader;
+import com.pld.agile.view.Window;
 import org.junit.jupiter.api.Test;
 
 public class TourDataTests {
     private final MapData mapData = new MapData ();
-    private boolean success;
+    private MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
     private final TourData tourDataOriginal = new TourData();
-    private final RequestLoader requestLoader = new RequestLoader("test/resources/loadRequests_3Requests.xml", tourDataOriginal);
+    private final RequestLoader requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourDataOriginal);
     private TourData tourData;
 
     @Test
     //Test n°3.1
-    public void test3Requests (){
+    public void testNotOptimalTour (){
         tourDataOriginal.setAssociatedMap(mapData);
         tourData = tourDataOriginal;
-        success = requestLoader.load();
+        mapLoader.load();
+        requestLoader.load();
 
-        //to complete
+        tourData.setStops();
 
-        if(tourData.toString().compareTo(tourDataOriginal.toString())==0){
-            System.out.println("Success");
-        }else{
-            System.out.println("Fail");
-        }
+
+
     }
 
     @Test
@@ -32,7 +33,7 @@ public class TourDataTests {
     public void testRedundancy (){
         tourDataOriginal.setAssociatedMap(mapData);
         tourData = tourDataOriginal;
-        success = requestLoader.load();
+        //success = requestLoader.load();
 
         //to complete
 
@@ -48,7 +49,7 @@ public class TourDataTests {
     public void testTimeOut (){
         tourDataOriginal.setAssociatedMap(mapData);
         tourData = tourDataOriginal;
-        success = requestLoader.load();
+        //success = requestLoader.load();
 
 
     }
