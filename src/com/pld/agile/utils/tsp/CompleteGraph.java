@@ -10,8 +10,11 @@ import com.pld.agile.model.tour.Path;
 
 public class CompleteGraph implements Graph {
 	int nbVertices;
+
 	Path [][] paths;
 	double [][] costs;
+	double minCost;
+
 	
 	/**
 	 * Create a complete directed graph such that each edge has a weight within [MIN_COST,MAX_COST]
@@ -26,6 +29,7 @@ public class CompleteGraph implements Graph {
 				costs[i][j]=Double.MAX_VALUE ;
 		    }
 		}
+		minCost = Double.MAX_VALUE;
 	}
 
 	@Override
@@ -70,7 +74,14 @@ public class CompleteGraph implements Graph {
 		if (i < 0 || i >= nbVertices || j < 0 || j >= nbVertices) {
 			return;
 		}
-		costs[i][j]=value;
+		costs[i][j] = value;
+		if(i!=j && minCost > value)
+		{
+			minCost = value;
+		}
 	}
+
+	@Override
+	public double getMinCost() {return minCost;}
 
 }

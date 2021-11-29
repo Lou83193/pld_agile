@@ -11,10 +11,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.tsp.CompleteGraph;
-import com.pld.agile.utils.tsp.Graph;
-import com.pld.agile.utils.tsp.TSP;
-import com.pld.agile.utils.tsp.TSP1;
+import com.pld.agile.utils.tsp.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -330,7 +327,7 @@ public class TourData extends Observable {
 
         // Compute TSP
         System.out.println("TSP INIT...");
-        TSP tsp = new TSP1(); // No Heuristic
+        TSP tsp = new TSP3();
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
@@ -389,13 +386,11 @@ public class TourData extends Observable {
     } // ---- END of TSP
 
     // Branch&Bound (notes for myself)
-    /* H0 = 0
+    /* H1 = 0
     /* H2 = (nbUnvisited+1)*dMin
     /* H3 = l + sum of li
     /* H4 = Sort unvisited by shortest cost to last visited vertex
     */
-
-    // Limited Discrepancy Search -> recall 3IF
 
     /**
      * Generates a String which describes the object

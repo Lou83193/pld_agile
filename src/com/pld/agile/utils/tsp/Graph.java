@@ -36,6 +36,10 @@ public interface Graph {
 	 */
 	public abstract void setCost(int i, int j, double value);
 
+
 	public abstract void setPath(int i, int j, Path value);
+
+	public abstract double getMinCost();
+
 
 }

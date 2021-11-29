@@ -22,9 +22,10 @@ public class SeqIter implements Iterator<Integer> {
 	 * @param g
 	 */
 	public SeqIter (Collection<Integer> unvisited, int currentVertex, Graph g) {
+		nbCandidates = 0;
 		this.candidates = new Integer[unvisited.size()];
-		for (Integer s : unvisited){
-			if (g.isArc(currentVertex, s))
+		for (Integer s : unvisited) {
+			if(canBeVisited(unvisited, s))
 				candidates[nbCandidates++] = s;
 		}
 	}
@@ -42,5 +43,16 @@ public class SeqIter implements Iterator<Integer> {
 
 	@Override
 	public void remove() {}
+
+	protected boolean canBeVisited(Collection<Integer> unvisited, Integer s) {
+		if(s%2 == 1) { // s is a pickup
+			return true;
+		} else {
+			if(unvisited.contains(s-1)) { //s corresponding pickup stop isn't already visited
+				return false;
+			}
+			return true;
+		}
+	}
 
 }
