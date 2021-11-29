@@ -21,26 +21,25 @@ public class GraphicalViewSegment extends Line {
 
     /**
      * GraphicalViewSegment constructor.
+     * @param graphicalView The parent GraphicalView instance.
      * @param segment The associated Segment model object.
-     * @param startX The segment's starting position's X.
-     * @param startY The segment's starting position's Y.
-     * @param endX The segment's ending position's X.
-     * @param endY The segment's ending position's Y.
      * @param strokeWidth The segment's line thickness.
      * @param strokeColour The segment's line colour.
      * @param displayer TextField in which to display the segment's street name
      *                  (when hovered).
      */
-    public GraphicalViewSegment(final Segment segment,
-                                final double startX,
-                                final double startY,
-                                final double endX,
-                                final double endY,
+    public GraphicalViewSegment(final GraphicalView graphicalView,
+                                final Segment segment,
                                 final double strokeWidth,
                                 final Color strokeColour,
                                 final TextField displayer) {
-
-        super(startX, startY, endX, endY);
+        super();
+        double[] originPos = graphicalView.projectLatLon(segment.getOrigin());
+        double[] destinationPos = graphicalView.projectLatLon(segment.getDestination());
+        this.setStartX(originPos[0]);
+        this.setStartY(originPos[1]);
+        this.setEndX(destinationPos[0]);
+        this.setEndY(destinationPos[1]);
         this.setStrokeWidth(strokeWidth);
         this.setStroke(strokeColour);
         this.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -57,8 +56,6 @@ public class GraphicalViewSegment extends Line {
                         this.setStroke(strokeColour);
                     }
             );
-        } else {
-            this.setMouseTransparent(true);
         }
     }
 
