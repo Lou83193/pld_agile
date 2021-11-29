@@ -22,8 +22,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_5Inter4Seg.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
@@ -52,8 +55,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_4Inter4Seg.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
@@ -107,8 +113,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_sameIntersectionsSegment.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
@@ -138,8 +147,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_segmentLength0.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
