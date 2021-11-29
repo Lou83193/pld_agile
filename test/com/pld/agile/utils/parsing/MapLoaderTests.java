@@ -1,27 +1,64 @@
 package com.pld.agile.utils.parsing;
 
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.map.Segment;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MapLoaderTests {
 
+    private MapData createMapData(List<Map<String, Object>> intersectionsData, List<Map<String, Object>> segmentsData) {
+        List<Intersection> intersections = new ArrayList<>();
+        for (Map<String, Object> item : intersectionsData) {
+            intersections.add(new Intersection((int) item.get("id"), (double) item.get("latitude"), (double) item.get("longitude")));
+        }
+        List<Segment> segments = new ArrayList<>();
+        for (Map<String, Object> item : segmentsData) {
+            segments.add(new Segment((String) item.get("name"), (int) item.get("length"), intersections.get((int) item.get("originId")), intersections.get((int) item.get("destinationId"))));
+        }
+
+        return new MapData(intersections, segments);
+    }
+
     @Test
     // Test n°1.1
     public void test5Intersections4Segments() {
         String filePath = "test/resources/loadMap_5Inter4Seg.xml";
-        MapData mapData = new MapData();
-        MapLoader mapLoader = new MapLoader(filePath, mapData);
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
         boolean res = mapLoader.load();
         assertTrue(res);
 
-        String expected = "MapData{intersections={1=Intersection{id='0', latitude=45.0, longitude=4.0}, 2=Intersection{id='1', latitude=45.0, longitude=4.00128}, 3=Intersection{id='2', latitude=45.0009, longitude=4.0}, 4=Intersection{id='3', latitude=45.0, longitude=3.99872}, 5=Intersection{id='4', latitude=44.9991, longitude=4.0}}, segments=[Segment{length=100.0, name='Avenue Général Frère', origin=Intersection{id='0', latitude=45.0, longitude=4.0}, destination=Intersection{id='1', latitude=45.0, longitude=4.00128}}, Segment{length=100.0, name='Boulevard Général Frère', origin=Intersection{id='0', latitude=45.0, longitude=4.0}, destination=Intersection{id='2', latitude=45.0009, longitude=4.0}}, Segment{length=100.0, name='Rue de la Meuse', origin=Intersection{id='0', latitude=45.0, longitude=4.0}, destination=Intersection{id='3', latitude=45.0, longitude=3.99872}}, Segment{length=100.0, name='Rue de la Moselle', origin=Intersection{id='0', latitude=45.0, longitude=4.0}, destination=Intersection{id='4', latitude=44.9991, longitude=4.0}}]}";
-        assertEquals(expected, mapData.toString());
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 1), Map.entry("latitude", 45.0), Map.entry("longitude", 4.00128)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 4))
+        );
+
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        String expected = expectedMapData.toString();
+        assertEquals(expected, actualMapData.toString());
     }
+
 
     @Test
     //Test n°1.4
