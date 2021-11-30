@@ -163,15 +163,17 @@ public class GraphicalViewStop extends Pane implements Observer {
                 Stop stop = (Stop)observed;
                 if (stop.isHighlighted()) {
                     DropShadow shadow = new DropShadow();
-                    shadow.setColor(Color.WHITE);
-                    shadow.setRadius(20);
+                    shadow.setColor(ViewUtilities.mixColours(Color.RED, Color.WHITE, 0.6));
+                    shadow.setRadius(5);
                     this.setEffect(shadow);
                     stopGraphic.setFill(ViewUtilities.mixColours(fillColour, Color.WHITE, 0.1));
                     highlightPointerGraphic.setFill(Color.RED);
+                    stopGraphic.setStroke(Color.RED);
                 } else {
                     this.setEffect(null);
                     stopGraphic.setFill(fillColour);
                     highlightPointerGraphic.setFill(Color.TRANSPARENT);
+                    stopGraphic.setStroke(outlineColour);
                 }
             }
         }

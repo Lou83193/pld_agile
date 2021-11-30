@@ -70,18 +70,18 @@ public class TextualView implements Observer {
 
         VBox warehousePanel = new TextualViewStop(tourData.getWarehouse(), component);
         warehousePanel.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(tourData.getWarehouse())
+            e -> window.getController().clickOnTextualStop(tourData.getWarehouse())
         );
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup(), component);
             requestPanel1.setOnMouseClicked(
-                    e -> window.getController().clickOnTextualStop(request.getPickup())
+                e -> window.getController().clickOnTextualStop(request.getPickup())
             );
             VBox requestPanel2 = new TextualViewStop(request.getDelivery(), component);
             requestPanel2.setOnMouseClicked(
-                    e -> window.getController().clickOnTextualStop(request.getDelivery())
+                e -> window.getController().clickOnTextualStop(request.getDelivery())
             );
             requestListContainer.getChildren().addAll(
                     requestPanel1,
@@ -112,8 +112,10 @@ public class TextualView implements Observer {
       
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();
-            VBox requestPanel = new TextualViewStop(stop);
-            requestPanel.setOnMouseClicked(e -> window.getController().clickOnTextualStop(stop));
+            VBox requestPanel = new TextualViewStop(stop, component);
+            requestPanel.setOnMouseClicked(
+                e -> window.getController().clickOnTextualStop(stop)
+            );
             requestListContainer.getChildren().add(requestPanel);
         }
 

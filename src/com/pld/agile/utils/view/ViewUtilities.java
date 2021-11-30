@@ -6,6 +6,7 @@
 
 package com.pld.agile.utils.view;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
@@ -77,6 +78,11 @@ public class ViewUtilities {
         double yMax = node.getBoundsInParent().getMaxY();
         double yMin = node.getBoundsInParent().getMinY();
         double yCurr = pane.getVvalue() * height;
+        Bounds paneBounds = pane.localToScene(pane.getBoundsInParent());
+        Bounds nodeBounds = node.localToScene(node.getBoundsInLocal());
+        if (paneBounds.intersects(nodeBounds)) {
+            return;
+        }
         if (yMin < 1) {
             pane.setVvalue(0);
         } else if (yMax > yCurr) {
