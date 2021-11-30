@@ -2,6 +2,7 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
@@ -80,12 +81,16 @@ public class DisplayedTourState implements State {
     }
 
     @Override
-    public void doStartAddRequest(Controller c) {
+    public void doStartAddRequest(Controller c, Window window) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
     }
 
     @Override
     public void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
         c.setCurrState(c.movingStopState);
     }
 

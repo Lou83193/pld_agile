@@ -35,6 +35,10 @@ public class ViewUtilities {
         return Math.log(Math.tan((Math.PI / 4) + (ang * Math.PI / 360))) * 180 / Math.PI;
     }
 
+    public static double mercatorInv(final double mercAng) {
+        return (Math.atan(Math.exp(mercAng * Math.PI / 180)) - Math.PI / 4) * 360 / Math.PI;
+    }
+
     public static double[] projectMercatorLatLon(final double lat, final double lon, final double minLat, final double minLon, final double maxLat, final double maxLon, final double viewPortSize) {
         double mercMinLat = mercator(minLat);
         double mercMaxLat = mercator(maxLat);
@@ -46,12 +50,32 @@ public class ViewUtilities {
         return new double[] {x, y};
     }
 
+    public static double[] projectMercatorLatLonInv(final double x, final double y, final double minLat, final double minLon, final double maxLat, final double maxLon, final double viewPortSize) {
+        double mercMinLat = mercator(minLat);
+        double mercMaxLat = mercator(maxLat);
+        double mapWidth = viewPortSize * (maxLon - minLon) / (mercMaxLat - mercMinLat);
+        double mapHeight = viewPortSize;
+        double lon = ViewUtilities.mapValue(x, 0, mapWidth, minLon, maxLon);
+        double mercLat = ViewUtilities.mapValue(y, 0, mapHeight, mercMinLat, mercMaxLat);
+        double lat = mercatorInv(mercLat);
+        return new double[] {lat, lon};
+    }
+
     public static Color stringToColour(final String s) {
         int hash = s.hashCode();
-        double r = ((hash & 0xFF0000) >> 16)/255.0;
-        double g = ((hash & 0x00FF00) >> 8)/255.0;
-        double b = (hash & 0x0000FF)/255.0;
+        double r = ((hash & 0xFF0000) >> 16) / 255.0;
+        double g = ((hash & 0x00FF00) >> 8) / 255.0;
+        double b = (hash & 0x0000FF) / 255.0;
         return new Color(r, g, b, 1.0).brighter();
+    }
+
+    public static double distanceLatLon(final double lat1, final double lon1, final double lat2, final double lon2) {
+        double earthRadius = 6378137.0;
+        double lat1r = lat1 * Math.PI / 180;
+        double lon1r = lon1 * Math.PI / 180;
+        double lat2r = lat2 * Math.PI / 180;
+        double lon2r = lon2 * Math.PI / 180;
+        return Math.acos(Math.sin(lat1r) * Math.sin(lat2r) + Math.cos(lat1r) * Math.cos(lat2r) * Math.cos(lon2r - lon1r)) * earthRadius;
     }
 
     public static double distance(final double[] p1, final double[] p2) {

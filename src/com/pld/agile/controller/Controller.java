@@ -119,8 +119,8 @@ public class Controller {
     /**
      * Calls method clickOnGraphicalView() of the current state.
      */
-    public void clickOnGraphicalView() {
-        currState.doClickOnGraphicalView(this, window);
+    public void clickOnGraphicalView(double[] latLonPos) {
+        currState.doClickOnGraphicalView(this, window, latLonPos);
     }
     /**
      * Calls method deleteRequest() of the current state.
@@ -150,7 +150,7 @@ public class Controller {
      * Calls method startAddRequest() of the current state.
      */
     public void startAddRequest() {
-        currState.doStartAddRequest(this);
+        currState.doStartAddRequest(this, window);
     }
     /**
      * Calls method dragOnGraphicalStop() of the current state.
@@ -161,8 +161,8 @@ public class Controller {
     /**
      * Calls method releaseOnGraphicalView() of the current state.
      */
-    public void dragOffGraphicalStop() {
-        currState.doDragOffGraphicalStop(this, window);
+    public void dragOffGraphicalStop(double[] latLonPos) {
+        currState.doDragOffGraphicalStop(this, window, latLonPos);
     }
 
 }
