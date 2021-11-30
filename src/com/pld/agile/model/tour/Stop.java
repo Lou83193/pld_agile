@@ -46,6 +46,10 @@ public class Stop extends Observable {
      * The time of departure at the stop
      */
     private Date departureTime;
+    /**
+     * The stop is visited in stopNumber position
+     */
+    private int stopNumber;
 
     /**
      * Stop constructor.
@@ -108,11 +112,41 @@ public class Stop extends Observable {
         this.type = type;
     }
 
+    /**
+     * Getter for attribute address.
+     * @return arrivalTime
+     */
+    public Date getArrivalTime() { return arrivalTime; }
+
+    /**
+     * Setter for attribute type.
+     * @param arrivalTime the time of arrival of the stop
+     */
     public void setArrivalTime(Date arrivalTime){ this.arrivalTime=arrivalTime; }
 
+    /**
+     * Getter for attribute address.
+     * @return departureTime
+     */
+    public Date getDepartureTime() { return departureTime; }
+
+    /**
+     * Setter for attribute type.
+     * @param departureTime the time of departure of the stop
+     */
     public void setDepartureTime(Date departureTime){ this.departureTime=departureTime; }
 
+    /**
+     * Getter for attribute address.
+     * @return stopNumber
+     */
+    public int getStopNumber() { return stopNumber; }
 
+    /**
+     * Setter for attribute type.
+     * @param stopNumber the number of visit of the stop
+     */
+    public void setStopNumber(int stopNumber){ this.stopNumber=stopNumber; }
 
     /**
      * Getter for attribute request.
