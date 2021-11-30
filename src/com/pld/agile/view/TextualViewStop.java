@@ -20,6 +20,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.util.Date;
+
 /**
  * Graphical object representing a Stop in the textual view.
  * A Stop is represented (in the textual view) by a panel
@@ -33,8 +35,9 @@ public class TextualViewStop extends VBox implements Observer {
      * TextualViewStop constructor.
      * Populates the graphical object.
      * @param stop The corresponding Stop model object.
+     * @param editable Whether the component has edit buttons or not.
      */
-    public TextualViewStop(Stop stop, ScrollPane parent) {
+    public TextualViewStop(Stop stop, ScrollPane parent, boolean editable) {
 
         stop.addObserver(this);
 
@@ -44,7 +47,12 @@ public class TextualViewStop extends VBox implements Observer {
         double lon = stop.getAddress().getLongitude();
         double duration = stop.getDuration();
         StopType type = stop.getType();
-        String hour = "08h00"; //stop.getHour();
+        Date departureTime = stop.getDepartureTime();
+        String hour = "";
+        if (departureTime != null) {
+            hour = departureTime.getHours() + "h" + departureTime.getMinutes();
+        }
+        int stopNumber = stop.getStopNumber();
 
         BorderPane panel = new BorderPane();
         BorderPane contentPane = new BorderPane();
@@ -55,7 +63,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, 14, 0);
+        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, 14, stopNumber);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -94,28 +102,32 @@ public class TextualViewStop extends VBox implements Observer {
         contentPane.setCenter(infoPane);
         panel.setLeft(contentPane);
 
-        VBox controls = new VBox(6);
-        // Delete button
-        Image deleteIcon = new Image("deleteIcon.png", 20, 20, true, true);
-        ImageView deleteIconView = new ImageView(deleteIcon);
-        Button deleteButton = new Button();
-        deleteButton.setGraphic(deleteIconView);
-        deleteButton.getStyleClass().add("control-button");
-        // Arrow up
-        Image upIcon = new Image("arrowIcon.png", 20, 20, true, true);
-        ImageView upIconView = new ImageView(upIcon);
-        Button upButton = new Button();
-        upButton.setGraphic(upIconView);
-        upButton.getStyleClass().add("control-button");
-        // Arrow down
-        Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
-        ImageView downIconView = new ImageView(downIcon);
-        downIconView.setRotate(180);
-        Button downButton = new Button();
-        downButton.setGraphic(downIconView);
-        downButton.getStyleClass().add("control-button");
-        controls.getChildren().addAll(deleteButton, upButton, downButton);
-        panel.setRight(controls);
+        if (editable) {
+
+            VBox controls = new VBox(6);
+            // Delete button
+            Image deleteIcon = new Image("deleteIcon.png", 20, 20, true, true);
+            ImageView deleteIconView = new ImageView(deleteIcon);
+            Button deleteButton = new Button();
+            deleteButton.setGraphic(deleteIconView);
+            deleteButton.getStyleClass().add("control-button");
+            // Arrow up
+            Image upIcon = new Image("arrowIcon.png", 20, 20, true, true);
+            ImageView upIconView = new ImageView(upIcon);
+            Button upButton = new Button();
+            upButton.setGraphic(upIconView);
+            upButton.getStyleClass().add("control-button");
+            // Arrow down
+            Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
+            ImageView downIconView = new ImageView(downIcon);
+            downIconView.setRotate(180);
+            Button downButton = new Button();
+            downButton.setGraphic(downIconView);
+            downButton.getStyleClass().add("control-button");
+            controls.getChildren().addAll(deleteButton, upButton, downButton);
+            panel.setRight(controls);
+
+        }
 
         this.getChildren().add(panel);
         this.setPadding(new Insets(10));
