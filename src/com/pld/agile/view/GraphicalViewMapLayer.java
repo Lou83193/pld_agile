@@ -38,7 +38,7 @@ public class GraphicalViewMapLayer extends Pane {
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
                 .withPressedDurationThreshold(150)
                 .setOnMouseClickedNotDragged((mouseEvent) -> {
-                    graphicalView.getWindow().getController().clickOnGraphicalView();
+                    graphicalView.getWindow().getController().clickOnGraphicalView(new double[] {0, 0});
                 });
 
     }

@@ -103,27 +103,19 @@ public interface State {
 
     default void doClickOnTextualStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
-        tourData.getWarehouse().setHighlighted(false);
-        for (Request request : tourData.getRequestList()) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
-        }
+        tourData.unHighlightStops();
         stop.setHighlighted(true);
     }
 
-    default void doClickOnGraphicalView(Controller c, Window window) {
+    default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
         TourData tourData = window.getTourData();
-        tourData.getWarehouse().setHighlighted(false);
-        for (Request request : tourData.getRequestList()) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
-        }
+        tourData.unHighlightStops();
     }
 
     default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
     }
 
-    default void doDragOffGraphicalStop(Controller c, Window window) {
+    default void doDragOffGraphicalStop(Controller c, Window window, double[] latLonPos) {
     }
 
     default void doDeleteRequest(Controller c, Window window, Request request) {
@@ -142,7 +134,7 @@ public interface State {
         // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
     }
 
-    default void doStartAddRequest(Controller c) {
+    default void doStartAddRequest(Controller c, Window window) {
     }
 
 }
