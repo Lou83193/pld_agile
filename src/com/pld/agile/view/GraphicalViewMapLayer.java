@@ -43,8 +43,8 @@ public class GraphicalViewMapLayer extends Pane {
                             mouseEvent.getX(),
                             mouseEvent.getY(),
                             graphicalView.getMapData().getMinLat(),
-                            graphicalView.getMapData().getMaxLat(),
                             graphicalView.getMapData().getMinLon(),
+                            graphicalView.getMapData().getMaxLat(),
                             graphicalView.getMapData().getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
