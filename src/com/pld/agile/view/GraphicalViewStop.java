@@ -50,6 +50,8 @@ public class GraphicalViewStop extends Pane implements Observer {
 
     private Color fillColour;
     private Color outlineColour;
+    private Shape stopGraphic;
+    private Shape highlightPointerGraphic;
 
     /**
      * TextualViewStop constructor.
@@ -111,13 +113,21 @@ public class GraphicalViewStop extends Pane implements Observer {
             pointerCenterX, pointerCenterY + pointerH
         );
 
-        Shape stopGraphic = Shape.union(symbol, pointer);
+        stopGraphic = Shape.union(symbol, pointer);
         stopGraphic.setFill(fillColour);
         stopGraphic.setStroke(outlineColour);
         stopGraphic.setStrokeWidth(graphicSize / 10);
         stopGraphic.setStrokeLineJoin(StrokeLineJoin.ROUND);
 
-        this.getChildren().add(stopGraphic);
+        double pointerSize = graphicSize / 4;
+        highlightPointerGraphic = new Circle(pointerSize);
+        highlightPointerGraphic.setFill(Color.TRANSPARENT);
+        highlightPointerGraphic.relocate(
+                pointerCenterX - pointerSize,
+                pointerCenterY + pointerH - pointerSize
+        );
+
+        this.getChildren().addAll(highlightPointerGraphic, stopGraphic);
 
         if (num > 0) {
             int fontSize = (int) (graphicSize * 0.7);
@@ -153,13 +163,15 @@ public class GraphicalViewStop extends Pane implements Observer {
                 Stop stop = (Stop)observed;
                 if (stop.isHighlighted()) {
                     DropShadow shadow = new DropShadow();
-                    shadow.setColor(outlineColour);
-                    shadow.setRadius(0);
-                    shadow.setSpread(1);
-                    shadow.setOffsetY(-3);
+                    shadow.setColor(Color.WHITE);
+                    shadow.setRadius(20);
                     this.setEffect(shadow);
+                    stopGraphic.setFill(ViewUtilities.mixColours(fillColour, Color.WHITE, 0.1));
+                    highlightPointerGraphic.setFill(Color.RED);
                 } else {
                     this.setEffect(null);
+                    stopGraphic.setFill(fillColour);
+                    highlightPointerGraphic.setFill(Color.TRANSPARENT);
                 }
             }
         }

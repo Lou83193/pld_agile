@@ -5,6 +5,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
@@ -34,9 +35,12 @@ public class GraphicalViewMapLayer extends Pane {
         this.graphicalView = graphicalView;
         this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        this.setOnMouseClicked(
-            e -> graphicalView.getWindow().getController().clickOnGraphicalView()
-        );
+        MouseClickNotDragDetector.clickNotDragDetectingOn(this)
+                .withPressedDurationThreshold(150)
+                .setOnMouseClickedNotDragged((mouseEvent) -> {
+                    graphicalView.getWindow().getController().clickOnGraphicalView();
+                });
+
     }
 
     /**

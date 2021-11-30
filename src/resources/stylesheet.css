@@ -44,9 +44,6 @@
     -fx-background-color: #DEDEDE;
     -fx-background-radius: 10;
 }
-.textual-view-stop-panel-highlighted {
-    -fx-background-color: #EEEEEE;
-}
 
 #street-name {
     -fx-font-size: 11pt;

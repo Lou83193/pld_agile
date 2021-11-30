@@ -5,19 +5,18 @@ import com.pld.agile.model.tour.StopType;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -28,14 +27,18 @@ import javafx.scene.text.Text;
  */
 public class TextualViewStop extends VBox implements Observer {
 
+    ScrollPane parent;
+
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.
      * @param stop The corresponding Stop model object.
      */
-    public TextualViewStop(Stop stop) {
+    public TextualViewStop(Stop stop, ScrollPane parent) {
 
         stop.addObserver(this);
+
+        this.parent = parent;
 
         double lat = stop.getAddress().getLatitude();
         double lon = stop.getAddress().getLongitude();
@@ -118,6 +121,12 @@ public class TextualViewStop extends VBox implements Observer {
         this.setPadding(new Insets(10));
         this.setSpacing(10);
         this.getStyleClass().add("textual-view-stop-panel");
+        this.setBorder(new Border(new BorderStroke(
+                Color.TRANSPARENT,
+                BorderStrokeStyle.SOLID,
+                new CornerRadii(10),
+                new BorderWidths(2)
+        )));
 
     }
 
@@ -128,9 +137,20 @@ public class TextualViewStop extends VBox implements Observer {
             case STOP_HIGHLIGHT -> {
                 Stop stop = (Stop)observed;
                 if (stop.isHighlighted()) {
-                    this.getStyleClass().add("textual-view-stop-panel-highlighted");
+                    this.setBorder(new Border(new BorderStroke(
+                            Color.RED,
+                            BorderStrokeStyle.SOLID,
+                            new CornerRadii(10),
+                            new BorderWidths(2)
+                    )));
+                    ViewUtilities.ensureVisible(parent, this);
                 } else {
-                    this.getStyleClass().remove("textual-view-stop-panel-highlighted");
+                    this.setBorder(new Border(new BorderStroke(
+                            Color.TRANSPARENT,
+                            BorderStrokeStyle.SOLID,
+                            new CornerRadii(10),
+                            new BorderWidths(2)
+                    )));
                 }
             }
         }
