@@ -17,6 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -42,7 +43,7 @@ public class TourData extends Observable {
     /**
      * The departure time from the warehouse.
      */
-    private String departureTime;
+    private LocalTime departureTime;
 
     private Graph stopsGraph;
 
@@ -57,7 +58,7 @@ public class TourData extends Observable {
         super();
         requestList = new ArrayList<>();
         associatedMap = null;
-        departureTime = "";
+        departureTime = null;
         warehouse = null;
     }
 
@@ -131,7 +132,7 @@ public class TourData extends Observable {
      * Getter for attribute departureTime
      * @return departureTime
      */
-    public String getDepartureTime() {
+    public LocalTime getDepartureTime() {
         return departureTime;
     }
 
@@ -139,7 +140,7 @@ public class TourData extends Observable {
      * Setter for attribute departureTime
      * @param departureTime the departure time from the warehouse
      */
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
 
@@ -319,20 +320,25 @@ public class TourData extends Observable {
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
         List<Integer> computedPath = new ArrayList<>();
 
-        //Date currentTime=departureTime;
-        for(int i = 0; i < stopsGraph.getNbVertices(); i++) {
+        LocalTime currentTime = departureTime;
+        for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
             computedPath.add(tsp.getSolution(i));
             Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
             currentStop.setStopNumber(i);
-            /* IN PROGRESS
-            long timeInSecs = currentTime.getTimeInMillis();
-            // t = d/v
-            Intersection currIntersection = associatedMap.getIntersections().get(stops.get(tsp.getSolution(i)));
-            Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
-            long travelDuration = (long) (currIntersection.findSegmentTo(nextIntersection).getLenth()/ (15/60*60*1000));
-            currentStop.setDepartureTime(currentStop.getArrivalTime.getTimeInMillis()+currentStop.getDuration()*1000);
-            currentTime=currentStop.getDepartureTime();*/
+
+            currentStop.setArrivalTime(currentTime);
+            currentTime = currentTime.plusSeconds(currentStop.getDuration());
+            currentStop.setDepartureTime(currentTime);
+            double d = stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)).getLength();
+            int t = (int)(d/(15/3.6))+1;
+            currentTime = currentTime.plusSeconds(t);
+
+            System.out.println("currentTime : "+currentTime);
+
         }
+        Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
+        currentStop.setArrivalTime(currentTime);
+        System.out.println("Heure d'arrivée : "+currentTime);
         System.out.println("Computed path : "+computedPath);
 
         // Populate model
