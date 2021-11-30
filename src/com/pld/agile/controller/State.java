@@ -119,4 +119,16 @@ public interface State {
             request.getDelivery().setHighlighted(false);
         }
     }
+
+    default boolean doDeleteRequest(Controller c, Window window, Request request) {
+        return false;
+    }
+
+    default boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
+        return false;
+    }
+
+    default boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
+        return false;
+    }
 }

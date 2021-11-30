@@ -29,7 +29,7 @@ import java.util.Date;
  */
 public class TextualViewStop extends VBox implements Observer {
 
-    ScrollPane parent;
+    ScrollPane scrollPane;
 
     /**
      * TextualViewStop constructor.
@@ -37,11 +37,11 @@ public class TextualViewStop extends VBox implements Observer {
      * @param stop The corresponding Stop model object.
      * @param editable Whether the component has edit buttons or not.
      */
-    public TextualViewStop(Stop stop, ScrollPane parent, boolean editable) {
+    public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
         stop.addObserver(this);
 
-        this.parent = parent;
+        this.scrollPane = (ScrollPane) parent.getComponent();
 
         double lat = stop.getAddress().getLatitude();
         double lon = stop.getAddress().getLongitude();
@@ -111,12 +111,18 @@ public class TextualViewStop extends VBox implements Observer {
             Button deleteButton = new Button();
             deleteButton.setGraphic(deleteIconView);
             deleteButton.getStyleClass().add("control-button");
+            deleteButton.setOnMouseClicked(
+                e -> parent.getWindow().getController().deleteRequest(stop.getRequest())
+            );
             // Arrow up
             Image upIcon = new Image("arrowIcon.png", 20, 20, true, true);
             ImageView upIconView = new ImageView(upIcon);
             Button upButton = new Button();
             upButton.setGraphic(upIconView);
             upButton.getStyleClass().add("control-button");
+            upButton.setOnMouseClicked(
+                e -> parent.getWindow().getController().shiftStopOrderUp(stop)
+            );
             // Arrow down
             Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
             ImageView downIconView = new ImageView(downIcon);
@@ -124,6 +130,9 @@ public class TextualViewStop extends VBox implements Observer {
             Button downButton = new Button();
             downButton.setGraphic(downIconView);
             downButton.getStyleClass().add("control-button");
+            downButton.setOnMouseClicked(
+                    e -> parent.getWindow().getController().shiftStopOrderDown(stop)
+            );
             controls.getChildren().addAll(deleteButton, upButton, downButton);
             panel.setRight(controls);
 
@@ -155,7 +164,7 @@ public class TextualViewStop extends VBox implements Observer {
                             new CornerRadii(10),
                             new BorderWidths(2)
                     )));
-                    //ViewUtilities.ensureVisible(parent, this);
+                    //ViewUtilities.ensureVisible(scrollPane, this);
                 } else {
                     this.setBorder(new Border(new BorderStroke(
                             Color.TRANSPARENT,

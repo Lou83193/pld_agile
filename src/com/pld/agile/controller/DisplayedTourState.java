@@ -1,5 +1,7 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Request;
+import com.pld.agile.model.tour.Stop;
 import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
@@ -12,7 +14,7 @@ import java.io.File;
  * State when the map and a list of requests are loaded.
  * User can load another map, load another list of requests or ask the app to compute the tour.
  */
-public class DisplayedRequestsState implements State {
+public class DisplayedTourState implements State {
 
     /**
      * Loads the requests to tourData if map is loaded (default doesn't load).
@@ -62,4 +64,35 @@ public class DisplayedRequestsState implements State {
         c.setCurrState(c.displayedTourState);
         return true;
     }
+
+    @Override
+    public boolean doDeleteRequest(Controller c, Window window, Request request) {
+        // look in tour data's list of paths to find the two stops of the request
+        // for both the pickup and the delivery:
+        // once the two corresponding paths have been found, fetch the other ends of the paths
+        // use tourdata's graph to get the path between them
+        // insert that path in tour data's tourPaths instead of the two previous paths
+        return false;
+    }
+
+    @Override
+    public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
+        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
+        // then shift the stop up or down
+        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
+        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
+        // don't forget to change order attribute in stop
+        return false;
+    }
+
+    @Override
+    public boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
+        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
+        // then shift the stop up or down
+        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
+        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
+        // don't forget to change order attribute in stop
+        return false;
+    }
+
 }
