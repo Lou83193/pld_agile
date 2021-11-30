@@ -144,6 +144,17 @@ public class TourData extends Observable {
         this.departureTime = departureTime;
     }
 
+    /**
+     * Unhighlights every stop.
+     */
+    public void unHighlightStops() {
+        warehouse.setHighlighted(false);
+        for (Request request : requestList) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+    }
+
 
     public List<Integer> getStops() {
         return stops;

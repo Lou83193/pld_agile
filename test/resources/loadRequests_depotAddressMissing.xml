@@ -1,6 +1,6 @@
 <planningRequest>
-    <depot address="42" departureTime="8:0:0"/>
+    <depot departureTime="8:0:0"/>
     <request pickupAddress="1" deliveryAddress="2" pickupDuration="360" deliveryDuration="480"/>
-    <request pickupAddress="3" deliveryAddress="4" pickupDuration="480" deliveryDuration="0"/>
+    <request pickupAddress="3" deliveryAddress="4" pickupDuration="480" deliveryDuration="40"/>
     <request pickupAddress="5" deliveryAddress="2" pickupDuration="180" deliveryDuration="540"/>
 </planningRequest>
