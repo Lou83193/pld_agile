@@ -4,12 +4,16 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
+import com.pld.agile.utils.parsing.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -33,9 +37,8 @@ public interface State {
         if (mapFile != null) {
 
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
-            boolean success = mapLoader.load();
-
-            if (success) {
+            try {
+                mapLoader.load();
                 window.getTourData().setRequestList(new ArrayList<>());
                 window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchToMainPane();
@@ -48,8 +51,21 @@ public interface State {
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
                 c.setCurrState(c.awaitRequestsState);
+
+                return true;
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Map loading error");
+                alert.showAndWait();
+                return false;
+            } catch (SyntaxException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Map loading error");
+                alert.showAndWait();
+                return false;
             }
-            return success;
         }
         return false;
     }

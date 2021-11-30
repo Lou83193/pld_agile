@@ -16,6 +16,7 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,8 @@ public class MapLoader {
      */
     private void addSegmentIfNotRedundant(List<Segment> segments, Segment s) {
         boolean shouldAdd = true;
+        // we don't add segments of same origin & dest, of length 0
+        shouldAdd = (!s.getOrigin().equals(s.getDestination())) || (s.getLength() == 0);
         Segment toBeRemoved = null;
         for (Segment presentSegment : s.getOrigin().getOriginOf()) { // iterate over all segments with the same origin
             if (presentSegment.getDestination().getId() == s.getDestination().getId() && presentSegment.getLength() <= s.getLength()) {
@@ -77,51 +80,58 @@ public class MapLoader {
      * Coordinates the entire parsing process - only method to call to fill the provided map.
      * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
      */
-    public boolean load() {
+    public void load() throws IOException, SyntaxException {
         try {
             generateDocument();
         } catch (DocumentException e) {
             // invalid XML file
             e.printStackTrace();
-            return false;
+            throw new IOException("Invalid specified file.");
         }
         // DOM can be handled
-        List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
+        try {
+            List<Node> intersectionNodes = mapXmlDocument.selectNodes("/map/intersection");
 
-        map.resetBounds();
-        HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
-        List<Intersection> intersections = new ArrayList<>();
-        int currId = 0;
-        for (Node intersectionNode : intersectionNodes) {
-            Element intersectionElement = (Element) intersectionNode;
-            String id = intersectionElement.attributeValue("id");
-            double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
-            double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
-            map.updateBounds(lat, lon);
-            Intersection i = new Intersection(currId, lat, lon); // override id
-            intersectionsById.put(id, i);
-            intersections.add(i);
-            currId++;
+            map.resetBounds();
+            HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
+            List<Intersection> intersections = new ArrayList<>();
+            int currId = 0;
+            for (Node intersectionNode : intersectionNodes) {
+                Element intersectionElement = (Element) intersectionNode;
+                String id = intersectionElement.attributeValue("id");
+                double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
+                double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+                map.updateBounds(lat, lon);
+                Intersection i = new Intersection(currId, lat, lon); // override id
+                intersectionsById.put(id, i);
+                intersections.add(i);
+                currId++;
+            }
+
+            List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
+            List<Segment> segments = new ArrayList<>();
+            for (Node segmentNode : segmentNodes) {
+                Element segmentElement = (Element) segmentNode;
+                String idOrigin = segmentElement.attributeValue("origin");
+                String idDest = segmentElement.attributeValue("destination");
+                double length = Double.parseDouble(segmentElement.attributeValue("length"));
+                String name = segmentElement.attributeValue("name");
+
+                Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
+                addSegmentIfNotRedundant(segments, s);
+            }
+
+            map.setIntersectionsByOldID(intersectionsById);
+            map.setIntersections(intersections);
+            map.setSegments(segments);
+        } catch (Exception e) {
+            // parsing exception happens when an attribute is missing or invalid
+            throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 
-        List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
-        List<Segment> segments = new ArrayList<>();
-        for (Node segmentNode : segmentNodes) {
-            Element segmentElement = (Element) segmentNode;
-            String idOrigin = segmentElement.attributeValue("origin");
-            String idDest = segmentElement.attributeValue("destination");
-            double length = Double.parseDouble(segmentElement.attributeValue("length"));
-            String name = segmentElement.attributeValue("name");
-
-            Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
-            addSegmentIfNotRedundant(segments, s);
+        if (map.getIntersections().size() == 0 || map.getSegments().size() == 0) {
+            throw new SyntaxException("Invalid file syntax - couldn't use it to fill the map data.");
         }
-
-        map.setIntersectionsByOldID(intersectionsById);
-        map.setIntersections(intersections);
-        map.setSegments(segments);
-
-        return (map.getIntersections().size() > 0);
     }
 
     /**

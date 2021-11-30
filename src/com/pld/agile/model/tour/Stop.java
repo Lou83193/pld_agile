@@ -10,6 +10,7 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +38,14 @@ public class Stop extends Observable {
      * Whether the stop is highlighted in the view or not.
      */
     private boolean highlighted;
+    /**
+     * The time of arrival at the stop
+     */
+    private Date arrivalTime;
+    /**
+     * The time of departure at the stop
+     */
+    private Date departureTime;
 
     /**
      * Stop constructor.
@@ -98,6 +107,12 @@ public class Stop extends Observable {
     public void setType(StopType type) {
         this.type = type;
     }
+
+    public void setArrivalTime(Date arrivalTime){ this.arrivalTime=arrivalTime; }
+
+    public void setDepartureTime(Date departureTime){ this.departureTime=departureTime; }
+
+
 
     /**
      * Getter for attribute request.
