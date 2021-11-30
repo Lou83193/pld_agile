@@ -50,29 +50,13 @@ public class DisplayedTourState implements State {
         return false;
     }
 
-    /**
-     * Computes a tour and displays it (default doesn't do it
-     * since there is no guarantee that requests are loaded).
-     * @param c the controller
-     * @param window the application window
-     * @return boolean success
-     */
     @Override
-    public boolean doComputeTour(Controller c, Window window) {
-        // Compute TSP
-        window.getTourData().computeTour();
-        c.setCurrState(c.displayedTourState);
-        return true;
-    }
-
-    @Override
-    public boolean doDeleteRequest(Controller c, Window window, Request request) {
+    public void doDeleteRequest(Controller c, Window window, Request request) {
         // look in tour data's list of paths to find the two stops of the request
         // for both the pickup and the delivery:
         // once the two corresponding paths have been found, fetch the other ends of the paths
         // use tourdata's graph to get the path between them
         // insert that path in tour data's tourPaths instead of the two previous paths
-        return false;
     }
 
     @Override
@@ -93,6 +77,16 @@ public class DisplayedTourState implements State {
         // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
         // don't forget to change order attribute in stop
         return false;
+    }
+
+    @Override
+    public void doStartAddRequest(Controller c) {
+        c.setCurrState(c.addingRequestState1);
+    }
+
+    @Override
+    public void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+        c.setCurrState(c.movingStopState);
     }
 
 }

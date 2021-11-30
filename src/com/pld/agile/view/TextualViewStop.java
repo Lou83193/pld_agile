@@ -6,6 +6,8 @@ import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -92,10 +94,22 @@ public class TextualViewStop extends VBox implements Observer {
         posInput.getStyleClass().add("uneditable-textfield");
         infoPane.add(posText, 0, 0);
         infoPane.add(posInput, 1, 0);
+
         // Duration
         if (type != StopType.WAREHOUSE) {
             Text durationText = new Text(" Duration:");
-            TextField durationInput = new TextField(duration + "");
+            TextField durationInput = new TextField((int)duration + "");
+            durationInput.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    // Replace with only numberical numbers
+                    if (!newValue.matches("\\d*")) {
+                        durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+                    }
+                    // Update model
+                    int duration1 = Integer.parseInt(durationInput.getText());
+                    parent.getWindow().getController().changeStopDuration(stop, duration1);
+                }
+            );
             infoPane.add(durationText, 0, 1);
             infoPane.add(durationInput, 1, 1);
         }
