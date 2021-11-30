@@ -68,18 +68,18 @@ public class TextualView implements Observer {
             return;
         }
 
-        VBox warehousePanel = new TextualViewStop(tourData.getWarehouse(), component, false);
+        VBox warehousePanel = new TextualViewStop(tourData.getWarehouse(), this, false);
         warehousePanel.setOnMouseClicked(
             e -> window.getController().clickOnTextualStop(tourData.getWarehouse())
         );
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
-            VBox requestPanel1 = new TextualViewStop(request.getPickup(), component, false);
+            VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
             requestPanel1.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(request.getPickup())
             );
-            VBox requestPanel2 = new TextualViewStop(request.getDelivery(), component, false);
+            VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
             requestPanel2.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(request.getDelivery())
             );
@@ -112,7 +112,7 @@ public class TextualView implements Observer {
       
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();
-            VBox requestPanel = new TextualViewStop(stop, component, true);
+            VBox requestPanel = new TextualViewStop(stop, this, true);
             requestPanel.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(stop)
             );
@@ -142,5 +142,12 @@ public class TextualView implements Observer {
      */
     public Node getComponent() {
         return component;
+    }
+    /**
+     * Getter for window.
+     * @return window
+     */
+    public Window getWindow() {
+        return window;
     }
 }

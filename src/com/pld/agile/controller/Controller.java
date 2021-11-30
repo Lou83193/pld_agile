@@ -6,6 +6,7 @@
 
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.view.Window;
 
@@ -41,6 +42,13 @@ public class Controller {
      * or ask the app to compute the tour.
      */
     protected State displayedRequestsState = new DisplayedRequestsState();
+    /**
+     * State when the map and a list of requests are loaded,
+     * and the corresponding tour is computed. User can load another map,
+     * load another list of requests, modify the tour, or ask the app to
+     * compute the tour again.
+     */
+    protected State displayedTourState = new DisplayedTourState();
 
     /**
      * Constructor of the controller.
@@ -95,6 +103,24 @@ public class Controller {
      */
     public void clickOnGraphicalView() {
         currState.doClickOnGraphicalView(this, window);
+    }
+    /**
+     * Calls method deleteRequest() of the current state.
+     */
+    public void deleteRequest(Request request) {
+        currState.doDeleteRequest(this, window, request);
+    }
+    /**
+     * Calls method shiftStopOrderUp() of the current state.
+     */
+    public void shiftStopOrderUp(Stop stop) {
+        currState.doShiftStopOrderUp(this, window, stop);
+    }
+    /**
+     * Calls method shiftStopOrderDown() of the current state.
+     */
+    public void shiftStopOrderDown(Stop stop) {
+        currState.doShiftStopOrderDown(this, window, stop);
     }
 
 }
