@@ -59,6 +59,11 @@ public class DisplayedRequestsState implements State {
     public boolean doComputeTour(Controller c, Window window) {
         // Compute TSP
         window.getTourData().computeTour();
+        window.setMainSceneButton(
+                "Add request",
+                new ButtonListener(c, ButtonEventType.ADD_REQUEST)
+        );
+        c.setCurrState(c.displayedTourState);
         return true;
     }
 }

@@ -1,5 +1,8 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Request;
+import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.parsing.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
@@ -87,4 +90,59 @@ public interface State {
     default boolean doComputeTour(Controller c, Window window) {
         return false;
     }
+
+    default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnTextualStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnGraphicalView(Controller c, Window window) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+    }
+
+    default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+    }
+
+    default void doDragOffGraphicalStop(Controller c, Window window) {
+    }
+
+    default void doDeleteRequest(Controller c, Window window, Request request) {
+    }
+
+    default boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
+        return false;
+    }
+
+    default boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
+        return false;
+    }
+
+    default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
+        // change the attribute in stop
+        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+    }
+
+    default void doStartAddRequest(Controller c) {
+    }
+
 }

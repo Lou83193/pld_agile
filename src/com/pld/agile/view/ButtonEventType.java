@@ -15,5 +15,9 @@ public enum ButtonEventType {
     /**
      * Event invoked to compute a tour with the loaded requests.
      */
-    COMPUTE_TOUR
+    COMPUTE_TOUR,
+    /**
+     * Event invoked to add a request to the tour.
+     */
+    ADD_REQUEST
 }
