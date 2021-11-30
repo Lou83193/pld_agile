@@ -10,6 +10,7 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Stop extends Observable {
     /**
      * The pickup or delivery duration at the stop.
      */
-    private double duration;
+    private long duration;
     /**
      * The stop type (pickup, delivery, or warehouse)
      */
@@ -41,11 +42,11 @@ public class Stop extends Observable {
     /**
      * The time of arrival at the stop
      */
-    private Date arrivalTime;
+    private LocalTime arrivalTime;
     /**
      * The time of departure at the stop
      */
-    private Date departureTime;
+    private LocalTime departureTime;
     /**
      * The stop is visited in stopNumber position
      */
@@ -56,7 +57,7 @@ public class Stop extends Observable {
      * @param address the address
      * @param duration the duration
      */
-    public Stop(Request request, Intersection address, double duration, StopType type) {
+    public Stop(Request request, Intersection address, long duration, StopType type) {
         this.request = request;
         this.type = type;
         this.address = address;
@@ -84,7 +85,7 @@ public class Stop extends Observable {
      * Getter for attribute duration.
      * @return duration
      */
-    public double getDuration() {
+    public long getDuration() {
         return duration;
     }
 
@@ -92,7 +93,7 @@ public class Stop extends Observable {
      * Setter for attribute duration.
      * @param duration the pickup or delivery duration at the stop
      */
-    public void setDuration(double duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -116,25 +117,25 @@ public class Stop extends Observable {
      * Getter for attribute address.
      * @return arrivalTime
      */
-    public Date getArrivalTime() { return arrivalTime; }
+    public LocalTime getArrivalTime() { return arrivalTime; }
 
     /**
      * Setter for attribute type.
      * @param arrivalTime the time of arrival of the stop
      */
-    public void setArrivalTime(Date arrivalTime){ this.arrivalTime=arrivalTime; }
+    public void setArrivalTime(LocalTime arrivalTime){ this.arrivalTime=arrivalTime; }
 
     /**
      * Getter for attribute address.
      * @return departureTime
      */
-    public Date getDepartureTime() { return departureTime; }
+    public LocalTime getDepartureTime() { return departureTime; }
 
     /**
      * Setter for attribute type.
      * @param departureTime the time of departure of the stop
      */
-    public void setDepartureTime(Date departureTime){ this.departureTime=departureTime; }
+    public void setDepartureTime(LocalTime departureTime){ this.departureTime=departureTime; }
 
     /**
      * Getter for attribute address.
