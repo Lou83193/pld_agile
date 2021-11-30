@@ -8,6 +8,7 @@ import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -38,7 +39,16 @@ public class GraphicalViewMapLayer extends Pane {
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
                 .withPressedDurationThreshold(150)
                 .setOnMouseClickedNotDragged((mouseEvent) -> {
-                    graphicalView.getWindow().getController().clickOnGraphicalView(new double[] {0, 0});
+                    double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
+                            mouseEvent.getX(),
+                            mouseEvent.getY(),
+                            graphicalView.getMapData().getMinLat(),
+                            graphicalView.getMapData().getMaxLat(),
+                            graphicalView.getMapData().getMinLon(),
+                            graphicalView.getMapData().getMaxLon(),
+                            ((ScrollPane) graphicalView.getComponent()).getHeight()
+                    );
+                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
                 });
 
     }

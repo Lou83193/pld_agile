@@ -52,6 +52,30 @@ public class DisplayedTourState implements State {
     }
 
     @Override
+    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    @Override
+    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+        stop.setHighlighted(true);
+    }
+
+    @Override
+    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+    }
+
+    @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
         // look in tour data's list of paths to find the two stops of the request
         // for both the pickup and the delivery:

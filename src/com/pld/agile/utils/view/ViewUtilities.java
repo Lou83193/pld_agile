@@ -56,7 +56,7 @@ public class ViewUtilities {
         double mapWidth = viewPortSize * (maxLon - minLon) / (mercMaxLat - mercMinLat);
         double mapHeight = viewPortSize;
         double lon = ViewUtilities.mapValue(x, 0, mapWidth, minLon, maxLon);
-        double mercLat = ViewUtilities.mapValue(y, 0, mapHeight, mercMinLat, mercMaxLat);
+        double mercLat = ViewUtilities.mapValue(y, mapHeight, 0, mercMinLat, mercMaxLat);
         double lat = mercatorInv(mercLat);
         return new double[] {lat, lon};
     }

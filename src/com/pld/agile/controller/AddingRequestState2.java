@@ -20,12 +20,4 @@ public class AddingRequestState2 implements State {
         c.setCurrState(c.displayedTourState);
     }
 
-    @Override
-    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-    }
-
-    @Override
-    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-    }
-
 }

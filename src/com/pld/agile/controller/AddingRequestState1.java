@@ -21,12 +21,4 @@ public class AddingRequestState1 implements State {
         c.setCurrState(c.addingRequestState2);
     }
 
-    @Override
-    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-    }
-
-    @Override
-    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-    }
-
 }

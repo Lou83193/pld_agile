@@ -22,6 +22,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -49,10 +51,11 @@ public class TextualViewStop extends VBox implements Observer {
         double lon = stop.getAddress().getLongitude();
         double duration = stop.getDuration();
         StopType type = stop.getType();
-        Date departureTime = stop.getDepartureTime();
+        LocalTime departureTime = stop.getDepartureTime();
         String hour = "";
         if (departureTime != null) {
-            hour = departureTime.getHours() + "h" + departureTime.getMinutes();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            hour = formatter.format(departureTime);
         }
         int stopNumber = stop.getStopNumber();
 
