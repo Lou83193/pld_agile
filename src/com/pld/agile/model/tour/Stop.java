@@ -7,6 +7,8 @@
 package com.pld.agile.model.tour;
 
 import com.pld.agile.model.map.Intersection;
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.UpdateType;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +16,8 @@ import java.util.List;
 /**
  * Represents a stop in a tour.
  */
-public class Stop {
+public class Stop extends Observable {
+
     /**
      * Intersection where the Stop is located.
      */
@@ -31,6 +34,10 @@ public class Stop {
      * The associated request
      */
     private Request request;
+    /**
+     * Whether the stop is highlighted in the view or not.
+     */
+    private boolean highlighted;
     /**
      * The time of arrival at the stop
      */
@@ -50,6 +57,7 @@ public class Stop {
         this.type = type;
         this.address = address;
         this.duration = duration;
+        this.highlighted = false;
     }
 
     /**
@@ -112,6 +120,15 @@ public class Stop {
      */
     public Request getRequest() {
         return request;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+        notifyObservers(UpdateType.STOP_HIGHLIGHT);
     }
 
     /**

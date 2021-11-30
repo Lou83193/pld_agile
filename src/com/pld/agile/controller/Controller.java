@@ -6,6 +6,7 @@
 
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Stop;
 import com.pld.agile.view.Window;
 
 /**
@@ -76,6 +77,24 @@ public class Controller {
      */
     public void computeTour() {
         currState.doComputeTour(this, window);
+    }
+    /**
+     * Calls method clickOnGraphicalStop() of the current state.
+     */
+    public void clickOnGraphicalStop(Stop stop) {
+        currState.doClickOnGraphicalStop(this, window, stop);
+    }
+    /**
+     * Calls method clickOnTextualStop() of the current state.
+     */
+    public void clickOnTextualStop(Stop stop) {
+        currState.doClickOnTextualStop(this, window, stop);
+    }
+    /**
+     * Calls method clickOnGraphicalView() of the current state.
+     */
+    public void clickOnGraphicalView() {
+        currState.doClickOnGraphicalView(this, window);
     }
 
 }
