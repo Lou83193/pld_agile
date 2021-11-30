@@ -45,10 +45,28 @@ public class Controller {
     /**
      * State when the map and a list of requests are loaded,
      * and the corresponding tour is computed. User can load another map,
-     * load another list of requests, modify the tour, or ask the app to
-     * compute the tour again.
+     * load another list of requests, or modify the tour.
      */
     protected State displayedTourState = new DisplayedTourState();
+    /**
+     * State when the map and a list of requests are loaded, the corresponding
+     * tour is computed, and the user has asked to add another request.
+     * User can only click on the graphical view (to add a pickup stop).
+     */
+    protected State addingRequestState1 = new AddingRequestState1();
+    /**
+     * State when the map and a list of requests are loaded, the corresponding
+     * tour is computed, and the user has already started to add a new request.
+     * (ie a pickup has been placed). User can only click on the graphical view
+     * (to add a delivery stop).
+     */
+    protected State addingRequestState2 = new AddingRequestState2();
+    /**
+     * State when the map and a list of requests are loaded, the corresponding
+     * tour is computed, and the user has dragged on a stop to move it. User
+     * can only release the mouse to place the stop at its new location.
+     */
+    protected State movingStopState = new MovingStopState();
 
     /**
      * Constructor of the controller.
@@ -121,6 +139,30 @@ public class Controller {
      */
     public void shiftStopOrderDown(Stop stop) {
         currState.doShiftStopOrderDown(this, window, stop);
+    }
+    /**
+     * Calls method changeStopDuration() of the current state.
+     */
+    public void changeStopDuration(Stop stop, int newDuration) {
+        currState.doChangeStopDuration(this, window, stop, newDuration);
+    }
+    /**
+     * Calls method startAddRequest() of the current state.
+     */
+    public void startAddRequest() {
+        currState.doStartAddRequest(this);
+    }
+    /**
+     * Calls method dragOnGraphicalStop() of the current state.
+     */
+    public void dragOnGraphicalStop(Stop stop) {
+        currState.doDragOnGraphicalStop(this, window, stop);
+    }
+    /**
+     * Calls method releaseOnGraphicalView() of the current state.
+     */
+    public void dragOffGraphicalStop() {
+        currState.doDragOffGraphicalStop(this, window);
     }
 
 }

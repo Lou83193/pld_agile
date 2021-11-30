@@ -120,8 +120,13 @@ public interface State {
         }
     }
 
-    default boolean doDeleteRequest(Controller c, Window window, Request request) {
-        return false;
+    default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+    }
+
+    default void doDragOffGraphicalStop(Controller c, Window window) {
+    }
+
+    default void doDeleteRequest(Controller c, Window window, Request request) {
     }
 
     default boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
@@ -131,4 +136,13 @@ public interface State {
     default boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
         return false;
     }
+
+    default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
+        // change the attribute in stop
+        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+    }
+
+    default void doStartAddRequest(Controller c) {
+    }
+
 }
