@@ -115,14 +115,12 @@ public class GraphicalView implements Observer {
             case MAP -> graphicalViewMapLayer.drawMap();
             case REQUESTS -> {
                 graphicalViewMapLayer.setDrawTour(false);
-                graphicalViewRequestsLayer.setDrawTour(false);
-                graphicalViewRequestsLayer.drawInitial();
+                graphicalViewRequestsLayer.draw();
             }
             case TOUR -> {
                 graphicalViewMapLayer.setDrawTour(true);
-                graphicalViewRequestsLayer.setDrawTour(true);
                 graphicalViewMapLayer.drawTour();
-                graphicalViewRequestsLayer.drawTour();
+                graphicalViewRequestsLayer.draw();
             }
         }
     }
