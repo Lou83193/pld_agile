@@ -115,16 +115,18 @@ public interface State {
     }
 
     default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
-        // change the attribute in stop
-        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+        TourData tourData = window.getTourData();
+        stop.setDuration(newDuration);
+        tourData.setStopTimeAndNumber();
     }
 
     default void doStartAddRequest(Controller c, Window window) {
     }
 
     default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
-        // change attribute in stop
-        // loop through all the stops and recompute
+        TourData tourData = window.getTourData();
+        tourData.setDepartureTime(time);
+        tourData.setStopTimeAndNumber();
     }
 
 }

@@ -51,12 +51,14 @@ public class TourData extends Observable {
 
     private List<Path> tourPaths;
 
+
     /**
      * TourData constructor.
      */
     public TourData() {
         super();
         requestList = new ArrayList<>();
+        tourPaths = new ArrayList<>();
         associatedMap = null;
         departureTime = null;
         warehouse = null;
@@ -155,6 +157,70 @@ public class TourData extends Observable {
         }
     }
 
+    public void deleteRequest(Request request) {
+
+        Stop pickup = request.getPickup();
+        Stop delivery = request.getDelivery();
+        Stop currentOrigin = null;
+        Stop currentDestination = null;
+
+        for (int i = 0; i < tourPaths.size(); i++) {
+            Path path = tourPaths.get(i);
+
+            /**
+             * If we found the request which we want to remove in the previous iteration,
+             * we find the new path between the previous stop and the next stop,
+             * and we add it to the tourPath.
+             */
+            if (currentOrigin != null) {
+
+                //Store destination and remove path to it
+                currentDestination = path.getDestination();
+                tourPaths.remove(path);
+
+                //Find new path
+                int indexOrigin = -1, indexDestination = -1;
+                for (int j = 0; j < stops.size(); j++) {
+                    if (stops.get(j) == currentOrigin.getAddress().getId()) {
+                        indexOrigin = j;
+                    } else if (stops.get(j) == currentDestination.getAddress().getId()) {
+                        indexDestination = j;
+                    }
+                    if (indexOrigin != -1 && indexDestination != -1) {
+                        break;
+                    }
+                }
+
+                Path newPath = stopsGraph.getPath(indexOrigin, indexDestination);
+
+                //Insert in position i
+                tourPaths.add(i, newPath);
+                currentOrigin = null;
+            }
+
+            /**
+             * If the destination of the current path
+             * is the stop which we want to remove
+             * we store the origin of that stop and
+             * remove the path to it
+             */
+            if (path.getDestination().equals(pickup) || path.getDestination().equals(delivery)) {
+                currentOrigin = path.getOrigin();
+                tourPaths.remove(path);
+                i--;
+            }
+
+        }
+
+        /**
+         * Remove from request list
+         */
+        requestList.removeIf(request::equals);
+
+        setStopTimeAndNumber();
+
+    }
+
 
     public List<Integer> getStops() {
         return stops;
@@ -180,6 +246,10 @@ public class TourData extends Observable {
         setStops();
         dijkstra();
         tsp();
+    }
+
+    public void updateStopsGraph() {
+        dijkstra();
     }
 
     private void dijkstra() {
@@ -304,9 +374,9 @@ public class TourData extends Observable {
         }
         //TESTS :
         System.out.println("stops graph : ");
-        for (int i = 0; i< stops.size(); i++) {
-            for (int j = 0; j< stops.size(); j++) {
-                System.out.println(stopsGraph.getCost(i,j)+" ");
+        for (int i = 0; i < stops.size(); i++) {
+            for (int j = 0; j < stops.size(); j++) {
+                System.out.println(stopsGraph.getCost(i, j) + " ");
             }
             System.out.println();
         }
@@ -314,43 +384,46 @@ public class TourData extends Observable {
 
     } // ---- END of dijkstra
 
+    public void setStopTimeAndNumber() {
+
+        LocalTime currentTime = departureTime;
+        for(int i = 0; i < tourPaths.size(); i++) {
+
+            Stop currentStop = tourPaths.get(i).getOrigin();
+
+            currentStop.setStopNumber(i);
+            currentStop.setArrivalTime(currentTime);
+            currentTime = currentTime.plusSeconds(currentStop.getDuration());
+            currentStop.setDepartureTime(currentTime);
+
+            double d = tourPaths.get(i).getLength();
+            int t = (int)(d/(15/3.6))+1;
+            currentTime = currentTime.plusSeconds(t);
+
+        }
+        Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
+        currentStop.setStopNumber(tourPaths.size()-1);
+        currentStop.setArrivalTime(currentTime);
+
+        notifyObservers(UpdateType.TOUR);
+    }
+
     private void tsp() {
 
         // Compute TSP
-        System.out.println("TSP INIT...");
         TSP tsp = new TSP3();
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
 
-        LocalTime currentTime = departureTime;
-        for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
-            Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
-            currentStop.setStopNumber(i);
-
-            currentStop.setArrivalTime(currentTime);
-            currentTime = currentTime.plusSeconds(currentStop.getDuration());
-            currentStop.setDepartureTime(currentTime);
-            double d = stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)).getLength();
-            int t = (int)(d/(15/3.6))+1;
-            currentTime = currentTime.plusSeconds(t);
-
-            System.out.println("currentTime : "+currentTime);
-
-        }
-        Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
-        currentStop.setStopNumber(stopsGraph.getNbVertices()-1);
-        currentStop.setArrivalTime(currentTime);
-
-        // Populate model
         tourPaths = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
             tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
         }
         tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
 
-        notifyObservers(UpdateType.TOUR);
+        setStopTimeAndNumber();
 
     } // ---- END of TSP
 

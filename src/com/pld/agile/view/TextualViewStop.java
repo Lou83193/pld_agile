@@ -22,6 +22,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -98,22 +99,24 @@ public class TextualViewStop extends VBox implements Observer {
             // Hour of departure
             if (type == StopType.WAREHOUSE) {
                 TimeTextField departureHourInput = new TimeTextField(departureTimeString);
-                departureHourInput.hoursProperty().addListener(
-                    (observable, oldValue, newValue) -> {
-                        // Update model
-                        int hour = departureHourInput.hoursProperty().getValue();
-                        int minute = departureHourInput.hoursProperty().getValue();
-                        LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                        parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                departureHourInput.setOnKeyPressed(
+                    (event) -> {
+                        if (event.getCode() == KeyCode.ENTER) {
+                            int hour = departureHourInput.hoursProperty().getValue();
+                            int minute = departureHourInput.minutesProperty().getValue();
+                            LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                            parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        }
                     }
                 );
-                departureHourInput.minutesProperty().addListener(
+                departureHourInput.focusedProperty().addListener(
                     (observable, oldValue, newValue) -> {
-                        // Update model
-                        int hour = departureHourInput.hoursProperty().getValue();
-                        int minute = departureHourInput.hoursProperty().getValue();
-                        LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                        parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        if (!newValue) {
+                            int hour = departureHourInput.hoursProperty().getValue();
+                            int minute = departureHourInput.minutesProperty().getValue();
+                            LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                            parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        }
                     }
                 );
                 departureHourInput.setPrefWidth(60);
@@ -145,14 +148,28 @@ public class TextualViewStop extends VBox implements Observer {
             Text durationText = new Text(" Duration:");
             TextField durationInput = new TextField((int)duration + "");
             durationInput.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    // Replace with only numberical numbers
-                    if (!newValue.matches("\\d*")) {
-                        durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+                    (observable, oldValue, newValue) -> {
+                        // Replace with only numberical numbers
+                        if (!newValue.matches("\\d*")) {
+                            durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+                        }
                     }
-                    // Update model
-                    int duration1 = Integer.parseInt(durationInput.getText());
-                    parent.getWindow().getController().changeStopDuration(stop, duration1);
+            );
+            durationInput.setOnKeyPressed(
+                    (event) -> {
+                        if (event.getCode() == KeyCode.ENTER) {
+                            int durationValue = Integer.parseInt(durationInput.getText());
+                            parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                            this.requestFocus();
+                        }
+                    }
+            );
+            durationInput.focusedProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (!newValue) {
+                        int durationValue = Integer.parseInt(durationInput.getText());
+                        parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                    }
                 }
             );
             infoPane.add(durationText, 0, 1);
