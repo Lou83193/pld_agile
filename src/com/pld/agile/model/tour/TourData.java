@@ -160,10 +160,6 @@ public class TourData extends Observable {
         return stops;
     }
 
-    /*public List<Integer> getComputedPath() {
-        return computedPath;
-    }*/
-
     public Graph getStopsGraph() {
         return stopsGraph;
     }
@@ -327,11 +323,9 @@ public class TourData extends Observable {
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
-        List<Integer> computedPath = new ArrayList<>();
 
         LocalTime currentTime = departureTime;
         for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
-            computedPath.add(tsp.getSolution(i));
             Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
             currentStop.setStopNumber(i);
 
@@ -347,8 +341,6 @@ public class TourData extends Observable {
         }
         Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
         currentStop.setArrivalTime(currentTime);
-        System.out.println("Heure d'arrivée : "+currentTime);
-        System.out.println("Computed path : "+computedPath);
 
         // Populate model
         tourPaths = new ArrayList<>();
