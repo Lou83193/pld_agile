@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IntersectionTest {
 
     @Test
-    public void Intersection(){
+    public void testIntersection(){
         int id = 2;
         double lat = 46;
         double lon = 42;
@@ -29,7 +29,7 @@ class IntersectionTest {
         assertEquals(originOf,intersection.getOriginOf());
     }
     @Test
-    public void findSegmentTo() {
+    public void testFindSegmentTo() {
         Intersection inter1 = new Intersection(1,42,42);
         Intersection inter2 = new Intersection(2,46,79);
         Intersection inter3 = new Intersection(3,89,39);
