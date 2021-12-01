@@ -80,7 +80,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, 14, stopNumber);
+        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -219,11 +219,14 @@ public class TextualViewStop extends VBox implements Observer {
         this.setSpacing(10);
         this.getStyleClass().add("textual-view-stop-panel");
         this.setBorder(new Border(new BorderStroke(
-                Color.TRANSPARENT,
-                BorderStrokeStyle.SOLID,
-                new CornerRadii(10),
-                new BorderWidths(2)
+            Color.TRANSPARENT,
+            BorderStrokeStyle.SOLID,
+            new CornerRadii(10),
+            new BorderWidths(2)
         )));
+        this.setOnMouseClicked(
+            e -> parent.getWindow().getController().clickOnTextualStop(stop)
+        );
 
     }
 
@@ -233,20 +236,20 @@ public class TextualViewStop extends VBox implements Observer {
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
                 Stop stop = (Stop)observed;
-                if (stop.isHighlighted()) {
+                if (stop.getHighlighted() > 0) {
                     this.setBorder(new Border(new BorderStroke(
-                            Color.RED,
-                            BorderStrokeStyle.SOLID,
-                            new CornerRadii(10),
-                            new BorderWidths(2)
+                        ViewUtilities.ORANGE,
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(10),
+                        new BorderWidths(2)
                     )));
                     //ViewUtilities.ensureVisible(scrollPane, this);
                 } else {
                     this.setBorder(new Border(new BorderStroke(
-                            Color.TRANSPARENT,
-                            BorderStrokeStyle.SOLID,
-                            new CornerRadii(10),
-                            new BorderWidths(2)
+                        Color.TRANSPARENT,
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(10),
+                        new BorderWidths(2)
                     )));
                 }
             }

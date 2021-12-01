@@ -13,6 +13,16 @@ import javafx.scene.paint.Color;
 
 public class ViewUtilities {
 
+    public static Color GREY = Color.web("#545454");
+    public static Color ORANGE = Color.web("#ED6A08");
+    public static Color BLUE = Color.web("#1F69ED");
+    public static Color DARK_ORANGE = Color.web("#ED3213");
+    public static Color TURQUOISE = Color.web("#1FED92");
+    public static Color YELLOW = Color.web("#EDA813");
+    public static Color DARK_PURPLE = Color.web("#270DA1");
+    public static Color PURPLE = Color.web("#431FED");
+    public static Color GREEN = Color.web("#21ED1F");
+
     public static double lerpValue(final double x, final double y, final double p) {
         return x + p * (y - x);
     }

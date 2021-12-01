@@ -150,10 +150,10 @@ public class TourData extends Observable {
      * Unhighlights every stop.
      */
     public void unHighlightStops() {
-        warehouse.setHighlighted(false);
+        warehouse.setHighlighted(0);
         for (Request request : requestList) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
+            request.getPickup().setHighlighted(0);
+            request.getDelivery().setHighlighted(0);
         }
     }
 

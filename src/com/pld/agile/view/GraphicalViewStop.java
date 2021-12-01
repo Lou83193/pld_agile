@@ -10,11 +10,15 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.scene.Cursor;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Shadow;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -52,15 +56,17 @@ public class GraphicalViewStop extends Pane implements Observer {
     private Color outlineColour;
     private Shape stopGraphic;
     private Shape highlightPointerGraphic;
+    private Text numText;
 
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.
      * @param stop The corresponding Stop model object.
+     * @param parent The GraphicalView instance containing the stop
      * @param graphicSize The size of the pointer.
      * @param num The order number of the stop.
      */
-    public GraphicalViewStop(final Stop stop, final double graphicSize, final int num) {
+    public GraphicalViewStop(Stop stop, GraphicalView parent, double graphicSize, int num, boolean editable) {
 
         stop.addObserver(this);
 
@@ -123,15 +129,15 @@ public class GraphicalViewStop extends Pane implements Observer {
         highlightPointerGraphic = new Circle(pointerSize);
         highlightPointerGraphic.setFill(Color.TRANSPARENT);
         highlightPointerGraphic.relocate(
-                pointerCenterX - pointerSize,
-                pointerCenterY + pointerH - pointerSize
+            pointerCenterX - pointerSize,
+            pointerCenterY + pointerH - pointerSize
         );
 
         this.getChildren().addAll(highlightPointerGraphic, stopGraphic);
 
         if (num > 0) {
             int fontSize = (int) (graphicSize * 0.7);
-            Text numText = new Text(num + "");
+            numText = new Text(num + "");
             numText.setFont(Font.font("Segoe UI", FontWeight.BOLD, fontSize));
             numText.setFill(Color.BLACK);
             numText.setTextAlignment(TextAlignment.CENTER);
@@ -140,6 +146,54 @@ public class GraphicalViewStop extends Pane implements Observer {
                 pointerCenterY - numText.getBoundsInLocal().getHeight() / 2
             );
             this.getChildren().add(numText);
+        }
+
+        if (parent != null) {
+
+            MouseClickNotDragDetector.clickNotDragDetectingOn(this)
+                    .withPressedDurationThreshold(150)
+                    .setOnMouseClickedNotDragged((mouseEvent) -> {
+                        parent.getWindow().getController().clickOnGraphicalStop(stop);
+                    });
+
+            if (editable) {
+                
+                this.setCursor(Cursor.HAND);
+                this.setOnMouseDragEntered((t) -> {
+                    this.toFront();
+                    parent.getWindow().getController().dragOnGraphicalStop(stop);
+                    t.consume();
+                });
+                this.setOnMouseDragged((t) -> {
+                    double offsetX = t.getX() - pointerCenterX;
+                    double offsetY = t.getY() - pointerCenterY;
+                    double viewPortSize = ((ScrollPane) parent.getComponent()).getHeight();
+                    if (this.getBoundsInParent().getMinX() + offsetX >= -viewPortSize*0.05
+                    &&  this.getBoundsInParent().getMaxX() + offsetX <= +viewPortSize*1.05) {
+                        this.setTranslateX(this.getTranslateX() + offsetX);
+                    }
+                    if (this.getBoundsInParent().getMinY() + offsetY >= -viewPortSize*0.05
+                    &&  this.getBoundsInParent().getMaxY() + offsetY <= +viewPortSize*1.05) {
+                        this.setTranslateY(this.getTranslateY() + offsetY);
+                    }
+                    t.consume();
+                });
+                this.setOnMouseDragExited((t) -> {
+                    double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
+                            t.getX() + pointerCenterX,
+                            t.getY() + pointerCenterY + pointerH,
+                            parent.getMapData().getMinLat(),
+                            parent.getMapData().getMaxLat(),
+                            parent.getMapData().getMinLon(),
+                            parent.getMapData().getMaxLon(),
+                            ((ScrollPane) parent.getComponent()).getHeight()
+                    );
+                    parent.getWindow().getController().dragOffGraphicalStop(latLonPos);
+                    t.consume();
+                });
+
+            }
+
         }
 
     }
@@ -161,19 +215,27 @@ public class GraphicalViewStop extends Pane implements Observer {
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
                 Stop stop = (Stop)observed;
-                if (stop.isHighlighted()) {
+                if (stop.getHighlighted() > 0) {
                     DropShadow shadow = new DropShadow();
-                    shadow.setColor(ViewUtilities.mixColours(Color.RED, Color.WHITE, 0.6));
+                    shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));
                     shadow.setRadius(5);
                     this.setEffect(shadow);
-                    stopGraphic.setFill(ViewUtilities.mixColours(fillColour, Color.WHITE, 0.1));
-                    highlightPointerGraphic.setFill(Color.RED);
-                    stopGraphic.setStroke(Color.RED);
+                    stopGraphic.setFill(Color.WHITE);
+                    stopGraphic.setStroke(ViewUtilities.ORANGE);
+                    if (stop.getHighlighted() > 1) {
+                        highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
+                        if (numText != null) {
+                            numText.setFill(ViewUtilities.ORANGE);
+                        }
+                    }
                 } else {
                     this.setEffect(null);
                     stopGraphic.setFill(fillColour);
-                    highlightPointerGraphic.setFill(Color.TRANSPARENT);
                     stopGraphic.setStroke(outlineColour);
+                    highlightPointerGraphic.setFill(Color.TRANSPARENT);
+                    if (numText != null) {
+                        numText.setFill(Color.BLACK);
+                    }
                 }
             }
         }
