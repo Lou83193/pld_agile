@@ -30,9 +30,13 @@ public class GraphicalView implements Observer {
      */
     private Window window;
     /**
-     * Layer containing the map segments, as well as the tour highlights.
+     * Layer containing the map segments
      */
     private GraphicalViewMapLayer graphicalViewMapLayer;
+    /**
+     * Layer containing the tour highlights
+     */
+    private GraphicalViewTourLayer graphicalViewTourLayer;
     /**
      * Layer containing the request stops.
      */
@@ -62,25 +66,31 @@ public class GraphicalView implements Observer {
         component.setId("map");
 
         graphicalViewMapLayer = new GraphicalViewMapLayer(this);
+        graphicalViewTourLayer = new GraphicalViewTourLayer(this);
         graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(this);
 
         DoubleBinding graphicalViewHeight = window.getScene().heightProperty().subtract(50);
         component.prefWidthProperty().bind(graphicalViewHeight);
         component.prefHeightProperty().bind(graphicalViewHeight);
+        graphicalViewTourLayer.prefWidthProperty().bind(component.heightProperty());
+        graphicalViewTourLayer.prefHeightProperty().bind(component.heightProperty());
         graphicalViewMapLayer.prefWidthProperty().bind(component.heightProperty());
         graphicalViewMapLayer.prefHeightProperty().bind(component.heightProperty());
 
         pane.getChildren().addAll(
             graphicalViewMapLayer,
+            graphicalViewTourLayer,
             graphicalViewRequestsLayer
         );
 
         component.widthProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
+            graphicalViewTourLayer.draw();
             graphicalViewRequestsLayer.draw();
         });
         component.heightProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
+            graphicalViewTourLayer.draw();
             graphicalViewRequestsLayer.draw();
         });
 
@@ -112,14 +122,14 @@ public class GraphicalView implements Observer {
     @Override
     public void update(final Observable o, final UpdateType updateType) {
         switch (updateType) {
-            case MAP -> graphicalViewMapLayer.drawMap();
+            case MAP -> {
+                graphicalViewMapLayer.draw();
+            }
             case REQUESTS -> {
-                graphicalViewMapLayer.setDrawTour(false);
                 graphicalViewRequestsLayer.draw();
             }
             case TOUR -> {
-                graphicalViewMapLayer.setDrawTour(true);
-                graphicalViewMapLayer.drawTour();
+                graphicalViewTourLayer.draw();
                 graphicalViewRequestsLayer.draw();
             }
         }

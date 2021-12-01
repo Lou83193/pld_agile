@@ -105,6 +105,7 @@ public class TextualViewStop extends VBox implements Observer {
                         int minute = departureHourInput.hoursProperty().getValue();
                         LocalTime newDepartureTime = LocalTime.of(hour, minute);
                         parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        departureHourInput.requestFocus();
                     }
                 );
                 departureHourInput.minutesProperty().addListener(
@@ -114,6 +115,7 @@ public class TextualViewStop extends VBox implements Observer {
                         int minute = departureHourInput.hoursProperty().getValue();
                         LocalTime newDepartureTime = LocalTime.of(hour, minute);
                         parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        departureHourInput.requestFocus();
                     }
                 );
                 departureHourInput.setPrefWidth(60);
@@ -153,6 +155,7 @@ public class TextualViewStop extends VBox implements Observer {
                     // Update model
                     int duration1 = Integer.parseInt(durationInput.getText());
                     parent.getWindow().getController().changeStopDuration(stop, duration1);
+                    durationInput.requestFocus();
                 }
             );
             infoPane.add(durationText, 0, 1);
