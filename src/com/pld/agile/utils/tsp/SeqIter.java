@@ -6,6 +6,7 @@
 
 package com.pld.agile.utils.tsp;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -28,7 +29,7 @@ public class SeqIter implements Iterator<Integer> {
 			if(canBeVisited(unvisited, s))
 				candidates[nbCandidates++] = s;
 		}
-		this.sortByDist(unvisited,currentVertex);
+		this.sortByDist(currentVertex,g);
 	}
 	
 	@Override
@@ -56,7 +57,17 @@ public class SeqIter implements Iterator<Integer> {
 		}
 	}
 
-	protected void sortByDist(Collection<Integer> unvisited, Integer currentVertex) {
+	protected void sortByDist(Integer currentVertex, Graph g) {
+		// Sort in descending order because we iterate from the end
+		for(int i = 1; i < nbCandidates; i++) {
+			int value = candidates[i];
+			int j = i-1;
+			while((j >= 0) && (g.getCost(currentVertex, value) > g.getCost(currentVertex, candidates[j]))) {
+				candidates[j+1] = candidates[j];
+				j--;
+			}
+			candidates[j+1] = value;
+		}
 	}
 
 }

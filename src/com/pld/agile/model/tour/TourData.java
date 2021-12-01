@@ -303,13 +303,14 @@ public class TourData extends Observable {
 
         }
         //TESTS :
-        System.out.println("stops graph : ");
+/*        System.out.println("stops graph : ");
         for (int i = 0; i< stops.size(); i++) {
             for (int j = 0; j< stops.size(); j++) {
                 System.out.println(stopsGraph.getCost(i,j)+" ");
             }
             System.out.println();
-        }
+        }*/
+
         System.out.println("END Dijkstra");
 
     } // ---- END of dijkstra
@@ -328,17 +329,14 @@ public class TourData extends Observable {
         for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
             Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
             currentStop.setStopNumber(i);
-
             currentStop.setArrivalTime(currentTime);
             currentTime = currentTime.plusSeconds(currentStop.getDuration());
             currentStop.setDepartureTime(currentTime);
             double d = stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)).getLength();
             int t = (int)(d/(15/3.6))+1;
             currentTime = currentTime.plusSeconds(t);
-
-            System.out.println("currentTime : "+currentTime);
-
         }
+
         Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
         currentStop.setArrivalTime(currentTime);
 
