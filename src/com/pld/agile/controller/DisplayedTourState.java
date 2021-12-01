@@ -15,7 +15,7 @@ import java.io.File;
  * State when the map and a list of requests are loaded.
  * User can load another map, load another list of requests or ask the app to compute the tour.
  */
-public class DisplayedRequestsState implements State {
+public class DisplayedTourState implements State {
 
     /**
      * Loads the requests to tourData if map is loaded (default doesn't load).
@@ -51,25 +51,6 @@ public class DisplayedRequestsState implements State {
         return false;
     }
 
-    /**
-     * Computes a tour and displays it (default doesn't do it
-     * since there is no guarantee that requests are loaded).
-     * @param c the controller
-     * @param window the application window
-     * @return boolean success
-     */
-    @Override
-    public boolean doComputeTour(Controller c, Window window) {
-        // Compute TSP
-        window.getTourData().computeTour();
-        window.setMainSceneButton(
-                "Add request",
-                new ButtonListener(c, ButtonEventType.ADD_REQUEST)
-        );
-        c.setCurrState(c.displayedTourState);
-        return true;
-    }
-
     @Override
     public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
@@ -92,6 +73,49 @@ public class DisplayedRequestsState implements State {
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
+    }
+
+    @Override
+    public void doDeleteRequest(Controller c, Window window, Request request) {
+        // look in tour data's list of paths to find the two stops of the request
+        // for both the pickup and the delivery:
+        // once the two corresponding paths have been found, fetch the other ends of the paths
+        // use tourdata's graph to get the path between them
+        // insert that path in tour data's tourPaths instead of the two previous paths
+    }
+
+    @Override
+    public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
+        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
+        // then shift the stop up or down
+        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
+        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
+        // don't forget to change order attribute in stop
+        return false;
+    }
+
+    @Override
+    public boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
+        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
+        // then shift the stop up or down
+        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
+        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
+        // don't forget to change order attribute in stop
+        return false;
+    }
+
+    @Override
+    public void doStartAddRequest(Controller c, Window window) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+        c.setCurrState(c.addingRequestState1);
+    }
+
+    @Override
+    public void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+        c.setCurrState(c.movingStopState);
     }
 
 }

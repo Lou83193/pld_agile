@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.time.LocalTime;
 
 /**
  * Loads requests model entities from an XML file.
@@ -72,9 +73,10 @@ public class RequestLoader {
         HashMap<Integer, Stop> stopMap = new HashMap<>();
 
         Element warehouseElement = (Element) warehouseNode;
-        String departureTime = warehouseElement.attributeValue("departureTime");
-        Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
+        String[] time = warehouseElement.attributeValue("departureTime").split(":");
+        LocalTime departureTime = LocalTime.of(Integer.parseInt(time[0]),Integer.parseInt(time[1]),Integer.parseInt(time[2]));
         tour.setDepartureTime(departureTime);
+        Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
         Stop warehouse = new Stop(null, warehouseLocation, 0, StopType.WAREHOUSE);
         tour.setWarehouse(warehouse);
         stopMap.put(warehouse.getAddress().getId(), warehouse);
@@ -82,9 +84,9 @@ public class RequestLoader {
         for (Node requestNode : requestNodes) {
             Element requestElement = (Element) requestNode;
             Intersection pickupLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("pickupAddress"));
-            double pickupDuration = Double.parseDouble(requestElement.attributeValue("pickupDuration"));
+            long pickupDuration = Long.parseLong(requestElement.attributeValue("pickupDuration"));
             Intersection deliveryLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("deliveryAddress"));
-            double deliveryDuration = Double.parseDouble(requestElement.attributeValue("deliveryDuration"));
+            long deliveryDuration = Long.parseLong(requestElement.attributeValue("deliveryDuration"));
             Request request = new Request();
             Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);
             Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);

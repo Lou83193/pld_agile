@@ -38,6 +38,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
             case LOAD_MAP -> controller.loadMap();
             case LOAD_REQUESTS -> controller.loadTour();
             case COMPUTE_TOUR -> controller.computeTour();
+            case ADD_REQUEST -> controller.startAddRequest();
         }
 
         e.consume();

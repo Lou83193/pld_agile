@@ -44,8 +44,8 @@ public class RequestLoaderTests {
             Stop tmpPickup = null;
             Stop tmpDelivery = null;
             for (int j = offset;j<offset+1 ; j++) {
-                tmpPickup = new Stop(tmpReq, new Intersection((int) array[j], array[j + 1], array[j + 2]), array[j + 3], StopType.PICKUP);
-                tmpDelivery = new Stop(tmpReq, new Intersection((int) array[j + 4], array[j + 5], array[j + 6]), array[j + 7], StopType.PICKUP);
+                tmpPickup = new Stop(tmpReq, new Intersection((int) array[j], array[j + 1], array[j + 2]), (long) array[j + 3], StopType.PICKUP);
+                tmpDelivery = new Stop(tmpReq, new Intersection((int) array[j + 4], array[j + 5], array[j + 6]), (long) array[j + 7], StopType.PICKUP);
             }
             offset += 8;
             tmpReq.setPickup(tmpPickup);

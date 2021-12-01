@@ -26,6 +26,10 @@ public class GraphicalView implements Observer {
      */
     private TourData tourData;
     /**
+     * The application's Window instance.
+     */
+    private Window window;
+    /**
      * Layer containing the map segments, as well as the tour highlights.
      */
     private GraphicalViewMapLayer graphicalViewMapLayer;
@@ -42,28 +46,23 @@ public class GraphicalView implements Observer {
      * GraphicalView constructor.
      * Adds observers on the model objects, populates the graphical components,
      * Sets size bindings and adds resizing listeners.
-     * @param mapData The application's MapData instance.
-     * @param tourData The application's TourData instance.
      * @param window The application's Window instance.
      */
-    public GraphicalView(MapData mapData, TourData tourData, Window window) {
+    public GraphicalView(Window window) {
+
+        this.window = window;
+        this.mapData = window.getMapData();
+        this.tourData = window.getTourData();
 
         mapData.addObserver(this);
         tourData.addObserver(this);
-
-        this.mapData = mapData;
-        this.tourData = tourData;
 
         Pane pane = new Pane();
         component = new ZoomableScrollPane(pane);
         component.setId("map");
 
-        graphicalViewMapLayer = new GraphicalViewMapLayer(
-                this, window
-        );
-        graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(
-                this
-        );
+        graphicalViewMapLayer = new GraphicalViewMapLayer(this);
+        graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(this);
 
         DoubleBinding graphicalViewHeight = window.getScene().heightProperty().subtract(50);
         component.prefWidthProperty().bind(graphicalViewHeight);
@@ -116,14 +115,12 @@ public class GraphicalView implements Observer {
             case MAP -> graphicalViewMapLayer.drawMap();
             case REQUESTS -> {
                 graphicalViewMapLayer.setDrawTour(false);
-                graphicalViewRequestsLayer.setDrawTour(false);
-                graphicalViewRequestsLayer.drawInitial();
+                graphicalViewRequestsLayer.draw();
             }
             case TOUR -> {
                 graphicalViewMapLayer.setDrawTour(true);
-                graphicalViewRequestsLayer.setDrawTour(true);
                 graphicalViewMapLayer.drawTour();
-                graphicalViewRequestsLayer.drawTour();
+                graphicalViewRequestsLayer.draw();
             }
         }
     }
@@ -139,7 +136,7 @@ public class GraphicalView implements Observer {
      * Getter for graphicalViewMapLayer.
      * @return graphicalViewMapLayer
      */
-    public GraphicalViewMapLayer getGraphicalViewMap() {
+    public GraphicalViewMapLayer getGraphicalViewMapLayer() {
         return graphicalViewMapLayer;
     }
     /**
@@ -155,5 +152,12 @@ public class GraphicalView implements Observer {
      */
     public TourData getTourData() {
         return tourData;
+    }
+    /**
+     * Getter for window.
+     * @return window
+     */
+    public Window getWindow() {
+        return window;
     }
 }
