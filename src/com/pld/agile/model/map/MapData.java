@@ -6,8 +6,11 @@
 
 package com.pld.agile.model.map;
 
+import com.pld.agile.controller.Controller;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.ViewUtilities;
+import com.pld.agile.view.Window;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -207,6 +210,35 @@ public class MapData extends Observable {
      */
     public void setMinLon(double minLon) {
         this.minLon = minLon;
+    }
+
+    /**
+     * Search the closest Intersection on the map based on the one selected by user
+     * @param latLonPos latitude and longitude of selected point
+     * @return Intersection closestIntersection
+     */
+    public Intersection findClosestIntersection(double[] latLonPos) {
+        double lat = 0;
+        double lon = 0;
+        ViewUtilities viewUtilities = new ViewUtilities();
+        double shortest = 0;
+        Intersection closestIntersection = null;
+        double tmp = 0;
+        int bound = intersections.size();
+        // loop through all intersections
+        for ( int i = 0; i<bound; i++){
+            lat = intersections.get(i).getLatitude();
+            lon = intersections.get(i).getLongitude();
+            // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
+            tmp = viewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
+            // find the smallest distance
+            if(tmp<shortest){
+                shortest = tmp;
+                closestIntersection = intersections.get(i);
+            }
+        }
+        System.out.println("Latitude/Longitude demandées : "+latLonPos[0]+"/"+latLonPos[1]+" Latitude/Longitude obtenues : "+lat+"/"+lon);
+        return closestIntersection;
     }
 
     @Override

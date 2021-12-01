@@ -106,6 +106,8 @@ public class DisplayedTourState implements State {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
+
+
     }
 
     @Override

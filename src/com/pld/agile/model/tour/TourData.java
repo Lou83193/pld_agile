@@ -51,6 +51,7 @@ public class TourData extends Observable {
 
     private List<Path> tourPaths;
 
+
     /**
      * TourData constructor.
      */
@@ -243,6 +244,10 @@ public class TourData extends Observable {
         setStops();
         dijkstra();
         tsp();
+    }
+
+    public void updateStopsGraph(){
+        dijkstra();
     }
 
     private void dijkstra() {
