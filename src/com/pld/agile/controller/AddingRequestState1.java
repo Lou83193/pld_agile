@@ -1,8 +1,11 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
 
 /**
@@ -12,12 +15,20 @@ import com.pld.agile.view.Window;
  */
 public class AddingRequestState1 implements State {
 
+    /**
+     * Start new request setting and going to addingRequestState2.
+     * @param c the controller
+     * @param window the application window
+     * @param latLonPos latitude and longitude of selected point
+     */
     @Override
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        // loop through all intersections
-        // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-        // find the smallest distance
+        Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
         // create a pickup stop at that position, associated to the request that's in construction
+        Request tmp = new Request();
+        Stop newPickup = new Stop(tmp, intersection, 0, StopType.PICKUP );
+        tmp.setPickup(newPickup);
+        window.getTourData().getRequestList().add(tmp);
         c.setCurrState(c.addingRequestState2);
     }
 

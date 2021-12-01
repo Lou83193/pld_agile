@@ -51,6 +51,7 @@ public class TourData extends Observable {
 
     private List<Path> tourPaths;
 
+
     /**
      * TourData constructor.
      */
