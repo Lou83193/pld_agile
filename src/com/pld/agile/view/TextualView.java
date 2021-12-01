@@ -1,11 +1,8 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.tour.Path;
+import com.pld.agile.model.tour.*;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
-import com.pld.agile.model.tour.Request;
-import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
