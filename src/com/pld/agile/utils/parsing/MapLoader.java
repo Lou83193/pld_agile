@@ -9,6 +9,7 @@ package com.pld.agile.utils.parsing;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
+import com.pld.agile.utils.exception.SyntaxException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
