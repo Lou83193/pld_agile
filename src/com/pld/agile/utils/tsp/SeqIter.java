@@ -28,6 +28,7 @@ public class SeqIter implements Iterator<Integer> {
 			if(canBeVisited(unvisited, s))
 				candidates[nbCandidates++] = s;
 		}
+		this.sortByDist(unvisited,currentVertex);
 	}
 	
 	@Override
@@ -53,6 +54,9 @@ public class SeqIter implements Iterator<Integer> {
 			}
 			return true;
 		}
+	}
+
+	protected void sortByDist(Collection<Integer> unvisited, Integer currentVertex) {
 	}
 
 }

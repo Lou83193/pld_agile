@@ -316,8 +316,6 @@ public class TourData extends Observable {
         }
         System.out.println("END Dijkstra");
 
-
-
     } // ---- END of dijkstra
 
     private void tsp() {
@@ -354,13 +352,10 @@ public class TourData extends Observable {
 
         // Populate model
         tourPaths = new ArrayList<>();
-        int pathLength = computedPath.size();
-        for (int i = 0; i < pathLength - 1; i++) {
-            System.out.println("path added : [" +computedPath.get(i)+','+computedPath.get(i+1)+']');
-            tourPaths.add(stopsGraph.getPath(computedPath.get(i),computedPath.get(i+1)));
+        for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
         }
-        tourPaths.add(stopsGraph.getPath(computedPath.get(pathLength-1),computedPath.get(0)));
-
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
 
         notifyObservers(UpdateType.TOUR);
 
@@ -370,7 +365,10 @@ public class TourData extends Observable {
     /* H1 = 0
     /* H2 = (nbUnvisited+1)*dMin
     /* H3 = l + sum of li
-    /* H4 = Sort unvisited by shortest cost to last visited vertex
+    /* Improvement = Sort unvisited by shortest cost to last visited vertex
+    */
+
+    /* Best Algo -> Limited Discrepancy Search (LDS)
     */
 
     /**
