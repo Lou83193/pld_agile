@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime;
+import java.util.Map;
 
 /**
  * Loads requests model entities from an XML file.
@@ -65,6 +66,8 @@ public class RequestLoader {
         }
         // DOM can be handled
         try {
+            Map<String, Intersection> interectionsByOldId = tour.getAssociatedMap().getIntersectionsByOldID();
+
             List<Node> requestNodes = tourXmlDocument.selectNodes("/planningRequest/request");
             Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
 
@@ -75,33 +78,46 @@ public class RequestLoader {
             String[] time = warehouseElement.attributeValue("departureTime").split(":");
             LocalTime departureTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
             tour.setDepartureTime(departureTime);
-            Intersection warehouseLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(warehouseElement.attributeValue("address"));
+            if (!interectionsByOldId.containsKey(warehouseElement.attributeValue("address"))) {
+                // the warehouse isn't on the map
+                throw new SyntaxException("The warehouse is on an adress that doesn't exist on the loaded map.");
+            }
+            Intersection warehouseLocation = interectionsByOldId.get(warehouseElement.attributeValue("address"));
             Stop warehouse = new Stop(null, warehouseLocation, 0, StopType.WAREHOUSE);
             tour.setWarehouse(warehouse);
             stopMap.put(warehouse.getAddress().getId(), warehouse);
 
             for (Node requestNode : requestNodes) {
                 Element requestElement = (Element) requestNode;
-                Intersection pickupLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("pickupAddress"));
-                long pickupDuration = Long.parseLong(requestElement.attributeValue("pickupDuration"));
-                Intersection deliveryLocation = tour.getAssociatedMap().getIntersectionsByOldID().get(requestElement.attributeValue("deliveryAddress"));
-                long deliveryDuration = Long.parseLong(requestElement.attributeValue("deliveryDuration"));
-                Request request = new Request();
-                Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);
-                Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);
-                stopMap.put(pickup.getAddress().getId(), pickup);
-                stopMap.put(delivery.getAddress().getId(), delivery);
-                request.setPickup(pickup);
-                request.setDelivery(delivery);
-                requestList.add(request);
+                if (interectionsByOldId.containsKey(requestElement.attributeValue("pickupAddress")) && interectionsByOldId.containsKey(requestElement.attributeValue("deliveryAddress"))) {
+                    // we only take a request into account if both its stops are on known intersections
+                    Intersection pickupLocation = interectionsByOldId.get(requestElement.attributeValue("pickupAddress"));
+                    long pickupDuration = Long.parseLong(requestElement.attributeValue("pickupDuration"));
+                    Intersection deliveryLocation = interectionsByOldId.get(requestElement.attributeValue("deliveryAddress"));
+                    long deliveryDuration = Long.parseLong(requestElement.attributeValue("deliveryDuration"));
+                    Request request = new Request();
+                    Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);
+                    Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);
+                    stopMap.put(pickup.getAddress().getId(), pickup);
+                    stopMap.put(delivery.getAddress().getId(), delivery);
+                    request.setPickup(pickup);
+                    request.setDelivery(delivery);
+                    requestList.add(request);
+                }
             }
 
             tour.setRequestList(requestList);
             tour.setStopMap(stopMap);
-
+        } catch(SyntaxException e) {
+            throw e;
         } catch (Exception e) {
             // parsing exception happens when an attribute is missing or invalid
+            e.printStackTrace();
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
+        }
+
+        if (tour.getRequestList().size() == 0 || tour.getStopMap().size() == 0) {
+            throw new SyntaxException("Invalid file - couldn't use it to load a request (all might be out loaded map).");
         }
     }
 
