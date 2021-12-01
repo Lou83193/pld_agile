@@ -32,6 +32,7 @@ public class GraphicalViewRequestsLayer extends Group {
      */
     public GraphicalViewRequestsLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
+        this.setPickOnBounds(false);
     }
 
     /**
