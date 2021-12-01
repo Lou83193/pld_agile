@@ -3,6 +3,7 @@ package com.pld.agile.utils.parsing;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
+import com.pld.agile.utils.exception.SyntaxException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of disconnected intersections from model on parsing is implemented")
+    @Disabled("Disabled until removal of disconnected intersections from mapData on parsing is implemented")
     @Test
     // Test nb 1.2
     public void test4Intersection4Segments() {
@@ -82,7 +83,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until exception throw when no map tag is present is implemented")
     @Test
     // Test nb 1.3
     public void testNoMapNode() {
@@ -90,11 +90,10 @@ public class MapLoaderTests {
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
 
-//        assertThrows(MapSyntaxException.class, mapLoader::load); // TODO: create MapSyntaxException
+        assertThrows(SyntaxException.class, mapLoader::load);
     }
 
 
-    @Disabled("Disabled until IO exception throw when file inaccessible is implemented")
     @Test
     // Test nb 1.4
     public void testIOException() {
@@ -106,7 +105,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of segment with same origin and destination is implemented")
     @Test
     // Test nb 1.5
     public void testSameIntersectionSegment() {
@@ -129,7 +127,6 @@ public class MapLoaderTests {
 
         List<Map<String, Object>> segmentsData = Arrays.asList(
                 Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
-                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 2), Map.entry("destinationId", 2)),
                 Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3)),
                 Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 2), Map.entry("destinationId", 1))
         );
@@ -140,7 +137,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of segment with length zero is implemented")
     @Test
     // Test nb 1.6
     public void testSegmentLengthZero() {
@@ -163,7 +159,6 @@ public class MapLoaderTests {
 
         List<Map<String, Object>> segmentsData = Arrays.asList(
                 Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
-                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 0), Map.entry("originId", 0), Map.entry("destinationId", 2)),
                 Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3)),
                 Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 3), Map.entry("destinationId", 4))
         );
@@ -196,15 +191,209 @@ public class MapLoaderTests {
         );
 
         List<Map<String, Object>> segmentsData = Arrays.asList(
-                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 7), Map.entry("destinationId", 1)),
                 Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
-                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 11)),
                 Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 4))
         );
         MapData expectedMapData = createMapData(intersectionsData, segmentsData);
 
         assertEquals(expectedMapData.toString(), actualMapData.toString());
         assertEquals(2, actualMapData.getSegments().size());
+    }
+
+
+    @Disabled("Disabled until removal of intersection with no id is implemented")
+    @Test
+    // Test nb 1.8
+    public void testIntersectionNoId() {
+        String filePath = "test/resources/loadMap_noId.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 1), Map.entry("latitude", 45.0), Map.entry("longitude", 4.00128)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 1), Map.entry("destinationId", 2))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+    }
+
+
+    @Disabled("Disabled until removal of second intersection with same id is implemented")
+    @Test
+    // Test nb 1.9
+    public void testIntersectionsSameId() {
+        String filePath = "test/resources/loadMap_sameId.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 1), Map.entry("latitude", 45.0), Map.entry("longitude", 4.00128)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+    }
+
+
+    @Disabled("Disabled until removal of intersection with no latitude is implemented")
+    @Test
+    // Test nb 1.10.1
+    public void testNoLatitude() {
+        String filePath = "test/resources/loadMap_noLat.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 1), Map.entry("destinationId", 0)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+    }
+
+
+    @Disabled("Disabled until removal of intersection with no longitude is implemented")
+    @Test
+    // Test 1.10.2
+    public void testNoLongitude() {
+        String filePath = "test/resources/loadMap_noLong.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 1), Map.entry("destinationId", 0)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+    }
+
+
+    @Disabled("Disabled until removal of intersection with invalid id is implemented")
+    @Test
+    // Test 1.11
+    public void testInvalidId() {
+        String filePath = "test/resources/loadMap_invalidId.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 1), Map.entry("destinationId", 0)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+    }
+
+
+    @Disabled("Disabled until removal of intersection with invalid coordinates is implemented")
+    @Test
+    // Test nb 1.12
+    public void testInvalidCoords() {
+        String filePath = "test/resources/loadMap_invalidId.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 1), Map.entry("destinationId", 0)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 3))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(4, actualMapData.getIntersections().size());
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
     }
 
 
