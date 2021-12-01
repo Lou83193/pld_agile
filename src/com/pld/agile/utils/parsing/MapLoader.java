@@ -18,9 +18,7 @@ import org.dom4j.io.SAXReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Loads map model entities from an XML file.
@@ -78,6 +76,35 @@ public class MapLoader {
     }
 
     /**
+     * Checks if an ID is in a valid form.
+     * @param id String
+     * @return boolean validId
+     */
+    private boolean isValidId(String id) {
+        try {
+            Long.parseLong(id); // make sure it is a valid id
+            return true;
+        } catch (NumberFormatException e) {
+            // we don't add the intersection if it has an invalid id
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a geographic coordinate is of valid type.
+     * @param coord String
+     * @return boolean validCoordinate
+     */
+    private boolean isValidCoordinate(String coord) {
+        try {
+            Double.parseDouble(coord);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
      * Coordinates the entire parsing process - only method to call to fill the provided map.
      * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
      */
@@ -100,15 +127,21 @@ public class MapLoader {
             for (Node intersectionNode : intersectionNodes) {
                 Element intersectionElement = (Element) intersectionNode;
                 String id = intersectionElement.attributeValue("id");
-                double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
-                double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
-                map.updateBounds(lat, lon);
-                Intersection i = new Intersection(currId, lat, lon); // override id
-                intersectionsById.put(id, i);
-                intersections.add(i);
-                currId++;
+                if (isValidId(id) && isValidCoordinate(intersectionElement.attributeValue("latitude")) && isValidCoordinate(intersectionElement.attributeValue("longitude"))) { // only added if the id is valid
+                    double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
+                    double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+                    map.updateBounds(lat, lon);
+                    Intersection i = new Intersection(currId, lat, lon); // override id
+                    if (!intersectionsById.containsKey(id)) {
+                        // we don't add an intersection if it has an already existing ID
+                        intersectionsById.put(id, i);
+                        intersections.add(i);
+                        currId++;
+                    }
+                }
             }
 
+            Set<String> intersectionIdsInGraph = new TreeSet<>(); // to remove disconnected intersections
             List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
             List<Segment> segments = new ArrayList<>();
             for (Node segmentNode : segmentNodes) {
@@ -118,8 +151,22 @@ public class MapLoader {
                 double length = Double.parseDouble(segmentElement.attributeValue("length"));
                 String name = segmentElement.attributeValue("name");
 
-                Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
-                addSegmentIfNotRedundant(segments, s);
+                if (intersectionsById.containsKey(idOrigin) && intersectionsById.containsKey(idDest)) {
+                    intersectionIdsInGraph.add(idOrigin);
+                    intersectionIdsInGraph.add(idDest);
+                    Segment s = new Segment(name, length, intersectionsById.get(idOrigin), intersectionsById.get(idDest));
+                    addSegmentIfNotRedundant(segments, s);
+                }
+            }
+
+            // remove intersections that are in no segment
+            for (Intersection intersection : intersections) {
+                String intersectionId = Integer.toString(intersection.getId());
+                if (!intersectionIdsInGraph.contains(intersectionId)) {
+                    // intersection in no segment
+                    intersections.remove(intersectionsById.get(intersectionId));
+                    intersectionsById.remove(intersectionId);
+                }
             }
 
             map.setIntersectionsByOldID(intersectionsById);

@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -54,12 +55,14 @@ public interface State {
 
                 return true;
             } catch (IOException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");
                 alert.showAndWait();
                 return false;
             } catch (SyntaxException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");
@@ -124,6 +127,11 @@ public interface State {
     }
 
     default void doStartAddRequest(Controller c, Window window) {
+    }
+
+    default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
+        // change attribute in stop
+        // loop through all the stops and recompute
     }
 
 }
