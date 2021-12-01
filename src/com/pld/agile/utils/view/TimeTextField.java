@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class TimeTextField extends TextField {
 
     enum Unit {
-        HOURS, MINUTES, SECONDS
+        HOURS, MINUTES
     };
 
     private final Pattern timePattern;
@@ -29,6 +29,7 @@ public class TimeTextField extends TextField {
 
     private final ReadOnlyIntegerWrapper minutes;
 
+    /*
     public TimeTextField() {
         this("00:00");
         this.addEventFilter(KeyEvent.KEY_TYPED, inputevent -> {
@@ -64,11 +65,10 @@ public class TimeTextField extends TextField {
         });
 
     }
+    */
 
     public TimeTextField(String time) {
         super(time);
-        System.out.println(time);
-        // timePattern = Pattern.compile("\\d\\d:\\d\\d:\\d\\d");
         timePattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
         if (!validate(time)) {
             throw new IllegalArgumentException("Invalid time: " + time);
@@ -97,7 +97,7 @@ public class TimeTextField extends TextField {
 
     @Override
     public void appendText(String text) {
-        // Ignore this. Our text is always 8 characters long, we cannot
+        // Ignore this. Our text is always 5 characters long, we cannot
         // append anything
     }
 
@@ -223,7 +223,7 @@ public class TimeTextField extends TextField {
             return false;
         }
         String[] tokens = time.split(":");
-        assert tokens.length == 3;
+        assert tokens.length == 2;
         try {
             int hours = Integer.parseInt(tokens[0]);
             int mins = Integer.parseInt(tokens[1]);

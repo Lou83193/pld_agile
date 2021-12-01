@@ -87,11 +87,8 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
-        // look in tour data's list of paths to find the two stops of the request
-        // for both the pickup and the delivery:
-        // once the two corresponding paths have been found, fetch the other ends of the paths
-        // use tourdata's graph to get the path between them
-        // insert that path in tour data's tourPaths instead of the two previous paths
+        TourData tourData = window.getTourData();
+        tourData.deleteRequest(request);
     }
 
     @Override
@@ -119,6 +116,8 @@ public class DisplayedTourState implements State {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
+
+
     }
 
     @Override
