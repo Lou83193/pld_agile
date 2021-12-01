@@ -281,6 +281,7 @@ public class TourData extends Observable {
                     // Add initial segment
                     Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(i));
                     int predecessor = predecessors[stopIndex][stops.get(i)];
+                    System.out.println("Coucou: "+predecessor);
                     Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
                     pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
 

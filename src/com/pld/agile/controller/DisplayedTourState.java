@@ -164,7 +164,39 @@ public class DisplayedTourState implements State {
         tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
 
+        Request newRequest = tourData.getRequestList().get(tourData.getRequestList().size()-1);
+        Stop pickup = newRequest.getPickup();
+        Stop delivery = newRequest.getDelivery();
+        List<Integer> stops = tourData.getStops();
+        Map<Integer,Stop> stopMap = tourData.getStopMap();
 
+        stops.add(pickup.getAddress().getId());
+        stops.add(delivery.getAddress().getId());
+        stopMap.put(pickup.getAddress().getId(),pickup);
+        stopMap.put(delivery.getAddress().getId(),delivery);
+
+        tourData.updateStopsGraph();
+        List<Path> tourPath = tourData.getTourPaths();
+        tourPath.remove(tourPath.size()-1);
+        Stop lastStop = tourPath.get(tourPath.size()-1).getDestination();
+
+        Integer indexLastStop = -1;
+        for(int i = 0; i < stops.size();i++){
+            if(stops.get(i) == lastStop.getAddress().getId()){
+                indexLastStop = i;
+                break;
+            }
+        }
+
+        Graph stopsGraph = tourData.getStopsGraph();
+        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size()-2);
+        tourPath.add(lastToPickup);
+        Path pickupToDelivery = stopsGraph.getPath(stops.size()-2,stops.size()-1);
+        tourPath.add(pickupToDelivery);
+        Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
+        tourPath.add(deliveryToWarehouse);
+
+        tourData.setStopTimeAndNumber();
     }
 
     @Override
