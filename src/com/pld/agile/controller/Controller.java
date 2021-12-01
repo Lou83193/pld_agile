@@ -10,6 +10,8 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.view.Window;
 
+import java.time.LocalTime;
+
 /**
  * Controller class.
  */
@@ -163,6 +165,12 @@ public class Controller {
      */
     public void dragOffGraphicalStop(double[] latLonPos) {
         currState.doDragOffGraphicalStop(this, window, latLonPos);
+    }
+    /**
+     * Calls method changeWarehouseDepartureTime() of the current state.
+     */
+    public void changeWarehouseDepartureTime(LocalTime time) {
+        currState.doChangeWarehouseDepartureTime(this, window, time);
     }
 
 }
