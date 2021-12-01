@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RequestLoaderTests {
     private final MapData mapData = new MapData();
-    private MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
+    private final MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
     private final TourData tourData = new TourData();
     private RequestLoader requestLoader = null;
 
@@ -29,6 +29,7 @@ public class RequestLoaderTests {
     public void loadMap (){
         try {
             mapLoader.load();
+            tourData.setAssociatedMap(mapData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +58,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.1
     public void test3Requests() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_3Requests.xml", tourData);
         requestLoader.load();
 
@@ -77,7 +77,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.2
     public void testRedundancy() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_redundancy.xml", tourData);
         requestLoader.load();
 
@@ -99,7 +98,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.3
     public void testNotDepotAddress() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notDepotAddress.xml", tourData);
         requestLoader.load();
 
@@ -110,7 +108,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.4
     public void testDepotMissing() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_depotMissing.xml", tourData);
         requestLoader.load();
 
@@ -122,7 +119,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.5
     public void testDepotAddressMissing() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_depotAddressMissing.xml", tourData);
         requestLoader.load();
 
@@ -134,8 +130,8 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.6
     public void testDepartureTimeMissing() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_departureTimeMissing.xml", tourData);
+        requestLoader.load();
 
         Exception e = assertThrows(Exception.class, requestLoader::load);
         //assertEquals(e.getMessage(),"Syntax Error...");
@@ -145,7 +141,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.7
     public void testNotStopAddress() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
         requestLoader.load();
 
@@ -166,7 +161,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.8
     public void testStopAddressMissing() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notStopAddress.xml", tourData);
         requestLoader.load();
 
@@ -188,7 +182,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.9
     public void testStopDurationMissing() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_stopDurationMissing.xml", tourData);
         requestLoader.load();
 
@@ -209,7 +202,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.10
     public void testNotStopDuration() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_notStopDuration.xml", tourData);
         requestLoader.load();
 
@@ -230,7 +222,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.11
     public void testNoPlanningRequestNode() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_noPlanningRequestNode.xml", tourData);
         requestLoader.load();
 
@@ -242,7 +233,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.12
     public void testNoFile() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_noFile.xml", tourData);
         requestLoader.load();
 
@@ -254,7 +244,6 @@ public class RequestLoaderTests {
     @Test
     //Test nb 2.13
     public void testNoRequestNode() {
-        tourData.setAssociatedMap(mapData);
         requestLoader = new RequestLoader("test/resources/loadRequests_noRequestNode.xml", tourData);
         requestLoader.load();
 
