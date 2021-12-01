@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-  ~ loadRequests_stopAddressMissing.xml
-  ~
-  ~ Copyright (c) 2021. Hexanomnom
-  -->
 
 <planningRequest>
     <depot address="1" departureTime="8:0:0"/>
