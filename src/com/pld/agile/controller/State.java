@@ -4,7 +4,7 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
-import com.pld.agile.utils.parsing.SyntaxException;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
@@ -55,12 +55,14 @@ public interface State {
 
                 return true;
             } catch (IOException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");
                 alert.showAndWait();
                 return false;
             } catch (SyntaxException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");

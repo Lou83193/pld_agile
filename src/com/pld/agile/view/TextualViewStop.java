@@ -64,7 +64,7 @@ public class TextualViewStop extends VBox implements Observer {
         }
         LocalTime departureTime = stop.getDepartureTime();
         String departureTimeString = "";
-        if (arrivalTime != null) {
+        if (departureTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             departureTimeString = formatter.format(departureTime);
         }
@@ -98,15 +98,24 @@ public class TextualViewStop extends VBox implements Observer {
             // Hour of departure
             if (type == StopType.WAREHOUSE) {
                 TimeTextField departureHourInput = new TimeTextField(departureTimeString);
-                InvalidationListener updateTime = (observable, oldValue, newValue) -> {
-                    // Update model
-                    int hour = departureHourInput.hoursProperty().getValue();
-                    int minute = departureHourInput.hoursProperty().getValue();
-                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
-                };
-                departureHourInput.hoursProperty().addListener(updateTime);
-                departureHourInput.minutesProperty().addListener(updateTime);
+                departureHourInput.hoursProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        // Update model
+                        int hour = departureHourInput.hoursProperty().getValue();
+                        int minute = departureHourInput.hoursProperty().getValue();
+                        LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                        parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                    }
+                );
+                departureHourInput.minutesProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        // Update model
+                        int hour = departureHourInput.hoursProperty().getValue();
+                        int minute = departureHourInput.hoursProperty().getValue();
+                        LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                        parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                    }
+                );
                 departureHourInput.setPrefWidth(60);
                 departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
                 Text hourSeparatorText = new Text("→");

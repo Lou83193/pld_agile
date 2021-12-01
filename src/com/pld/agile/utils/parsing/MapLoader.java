@@ -77,6 +77,21 @@ public class MapLoader {
     }
 
     /**
+     * Checks if an ID is in a valid form.
+     * @param id String
+     * @return boolean validId
+     */
+    private boolean isValidId(String id) {
+        try {
+            Long.parseLong(id); // make sure it is a valid id
+            return true;
+        } catch (NumberFormatException e) {
+            // we don't add the intersection if it has an invalid id
+            return false;
+        }
+    }
+
+    /**
      * Coordinates the entire parsing process - only method to call to fill the provided map.
      * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
      */
@@ -99,13 +114,18 @@ public class MapLoader {
             for (Node intersectionNode : intersectionNodes) {
                 Element intersectionElement = (Element) intersectionNode;
                 String id = intersectionElement.attributeValue("id");
-                double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
-                double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
-                map.updateBounds(lat, lon);
-                Intersection i = new Intersection(currId, lat, lon); // override id
-                intersectionsById.put(id, i);
-                intersections.add(i);
-                currId++;
+                if (isValidId(id)) { // only added if the id is valid
+                    double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
+                    double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
+                    map.updateBounds(lat, lon);
+                    Intersection i = new Intersection(currId, lat, lon); // override id
+                    if (!intersectionsById.containsKey(id)) {
+                        // we don't add an intersection if it has an already existing ID
+                        intersectionsById.put(id, i);
+                        intersections.add(i);
+                        currId++;
+                    }
+                }
             }
 
             List<Node> segmentNodes = mapXmlDocument.selectNodes("/map/segment");
