@@ -338,6 +338,7 @@ public class TourData extends Observable {
         }
 
         Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
+        currentStop.setStopNumber(stopsGraph.getNbVertices()-1);
         currentStop.setArrivalTime(currentTime);
 
         // Populate model
