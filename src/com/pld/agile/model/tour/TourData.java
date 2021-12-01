@@ -314,42 +314,46 @@ public class TourData extends Observable {
 
     } // ---- END of dijkstra
 
+    public void setStopTimeAndNumber(){
+
+        LocalTime currentTime = departureTime;
+        for(int i = 0; i < tourPaths.size(); i++) {
+
+            Stop currentStop = tourPaths.get(i).getOrigin();
+
+            currentStop.setStopNumber(i);
+            currentStop.setArrivalTime(currentTime);
+            currentTime = currentTime.plusSeconds(currentStop.getDuration());
+            currentStop.setDepartureTime(currentTime);
+
+            double d = tourPaths.get(i).getLength();
+            int t = (int)(d/(15/3.6))+1;
+            currentTime = currentTime.plusSeconds(t);
+
+        }
+        Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
+        currentStop.setStopNumber(tourPaths.size()-1);
+        currentStop.setArrivalTime(currentTime);
+
+        notifyObservers(UpdateType.TOUR);
+    }
+
     private void tsp() {
 
         // Compute TSP
-        System.out.println("TSP INIT...");
         TSP tsp = new TSP3();
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
 
-        LocalTime currentTime = departureTime;
-        for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
-            Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
-            currentStop.setStopNumber(i);
-
-            currentStop.setArrivalTime(currentTime);
-            currentTime = currentTime.plusSeconds(currentStop.getDuration());
-            currentStop.setDepartureTime(currentTime);
-            double d = stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)).getLength();
-            int t = (int)(d/(15/3.6))+1;
-            currentTime = currentTime.plusSeconds(t);
-
-            System.out.println("currentTime : "+currentTime);
-
-        }
-        Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
-        currentStop.setStopNumber(stopsGraph.getNbVertices()-1);
-        currentStop.setArrivalTime(currentTime);
-
-        // Populate model
         tourPaths = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
             tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
         }
         tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
 
+        setStopTimeAndNumber();
         notifyObservers(UpdateType.TOUR);
 
     } // ---- END of TSP

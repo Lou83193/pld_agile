@@ -119,6 +119,9 @@ public interface State {
     }
 
     default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
+        stop.setDuration(newDuration);
+        TourData td = window.getTourData();
+        td.setStopTimeAndNumber();
         // change the attribute in stop
         // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
     }
