@@ -1,0 +1,14 @@
+<!--
+  ~ loadMap_invalidId.xml
+  ~
+  ~ Copyright (c) 2021. Hexanomnom
+  -->
+
+<map>
+    <intersection id="1" latitude="45.100" longitude="4.001"/>
+    <intersection id="2" latitude="45.101" longitude="metaverse"/>
+    <intersection id="3" latitude="45.102" longitude="4.003"/>
+    <intersection id="4" latitude="45.103" longitude="4.004"/>
+    <segment destination="3" length="100" name="Boulevard Général Frère" origin="1"/>
+    <segment destination="4" length="100" name="Rue de la Meuse" origin="1"/>
+</map>
