@@ -43,7 +43,7 @@ class MapDataTest {
 
     }
     @Test
-    void testUpdateBounds() {
+    public void testUpdateBounds() {
         MapData mapData = new MapData();
         double lat = 42;
         double lon = 89;
@@ -55,7 +55,7 @@ class MapDataTest {
     }
 
     @Test
-    void testResetBounds() {
+    public void testResetBounds() {
         MapData mapData = new MapData();
         mapData.updateBounds(42,96);
         mapData.resetBounds();
