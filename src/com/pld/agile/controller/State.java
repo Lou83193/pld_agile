@@ -1,12 +1,19 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Request;
+import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
+import com.pld.agile.utils.parsing.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -30,9 +37,8 @@ public interface State {
         if (mapFile != null) {
 
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
-            boolean success = mapLoader.load();
-
-            if (success) {
+            try {
+                mapLoader.load();
                 window.getTourData().setRequestList(new ArrayList<>());
                 window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchToMainPane();
@@ -45,8 +51,21 @@ public interface State {
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
                 c.setCurrState(c.awaitRequestsState);
+
+                return true;
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Map loading error");
+                alert.showAndWait();
+                return false;
+            } catch (SyntaxException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Map loading error");
+                alert.showAndWait();
+                return false;
             }
-            return success;
         }
         return false;
     }
@@ -71,4 +90,51 @@ public interface State {
     default boolean doComputeTour(Controller c, Window window) {
         return false;
     }
+
+    default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.getWarehouse().setHighlighted(false);
+        for (Request request : tourData.getRequestList()) {
+            request.getPickup().setHighlighted(false);
+            request.getDelivery().setHighlighted(false);
+        }
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnTextualStop(Controller c, Window window, Stop stop) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+        stop.setHighlighted(true);
+    }
+
+    default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
+        TourData tourData = window.getTourData();
+        tourData.unHighlightStops();
+    }
+
+    default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+    }
+
+    default void doDragOffGraphicalStop(Controller c, Window window, double[] latLonPos) {
+    }
+
+    default void doDeleteRequest(Controller c, Window window, Request request) {
+    }
+
+    default boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
+        return false;
+    }
+
+    default boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
+        return false;
+    }
+
+    default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
+        // change the attribute in stop
+        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+    }
+
+    default void doStartAddRequest(Controller c, Window window) {
+    }
+
 }

@@ -106,6 +106,7 @@ public class Window extends Application {
 
         stage.setScene(scene);
         stage.setTitle("COLIFFIMO - Route Planner");
+        stage.getIcons().add(new Image("icon.png"));
         stage.show();
 
     }
@@ -125,7 +126,7 @@ public class Window extends Application {
         logo.setFitWidth(600);
         // Button
         Button button = new Button("Load Map");
-        button.getStyleClass().add("button");
+        button.getStyleClass().add("main-button");
         button.setOnAction(
             new ButtonListener(controller, ButtonEventType.LOAD_MAP)
         );
@@ -165,24 +166,22 @@ public class Window extends Application {
         streetNameLabel.setId("street-name");
         centerPanel.setBottom(streetNameLabel);
         // Graphical view
-        GraphicalView graphicalView = new GraphicalView(
-                mapData, tourData, this
-        );
+        GraphicalView graphicalView = new GraphicalView(this);
         centerPanel.setCenter(graphicalView.getComponent());
         mainPane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
-        DoubleBinding sidePanelWidth = mainPane.widthProperty().subtract(graphicalView.getGraphicalViewMap().widthProperty());
+        DoubleBinding sidePanelWidth = mainPane.widthProperty().subtract(graphicalView.getGraphicalViewMapLayer().widthProperty());
         sidePanel.prefWidthProperty().bind(sidePanelWidth);
         // Textual view
-        TextualView textualView = new TextualView(tourData);
+        TextualView textualView = new TextualView(this);
         sidePanel.setCenter(textualView.getComponent());
         // Side panel button
         HBox buttonWrapper = new HBox();
         buttonWrapper.setAlignment(Pos.CENTER);
         buttonWrapper.setPadding(new Insets(0, 20, 20, 20));
         mainSceneButton = new Button("Compute Tour");
-        mainSceneButton.getStyleClass().add("button");
+        mainSceneButton.getStyleClass().add("main-button");
         mainSceneButton.setOnAction(
             new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR)
         );
@@ -255,14 +254,14 @@ public class Window extends Application {
     }
 
     /**
-     * Sets the label and the listener of the main page's action button.
+     * Sets the label and the buttonListener of the main page's action button.
      * @param label The label of the button.
-     * @param listener The listener of the button.
+     * @param buttonListener The buttonListener of the button.
      */
     public void setMainSceneButton(final String label,
-                                   final ButtonListener listener) {
+                                   final ButtonListener buttonListener) {
         mainSceneButton.setText(label);
-        mainSceneButton.setOnAction(listener);
+        mainSceneButton.setOnAction(buttonListener);
     }
 
     /**
@@ -322,6 +321,13 @@ public class Window extends Application {
      */
     public TextField getStreetNameLabel() {
         return streetNameLabel;
+    }
+    /**
+     * Getter for controller.
+     * @return controller
+     */
+    public Controller getController() {
+        return controller;
     }
 
     /**

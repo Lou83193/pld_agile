@@ -7,14 +7,18 @@
 package com.pld.agile.model.tour;
 
 import com.pld.agile.model.map.Intersection;
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.UpdateType;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Represents a stop in a tour.
  */
-public class Stop {
+public class Stop extends Observable {
+
     /**
      * Intersection where the Stop is located.
      */
@@ -22,7 +26,7 @@ public class Stop {
     /**
      * The pickup or delivery duration at the stop.
      */
-    private double duration;
+    private long duration;
     /**
      * The stop type (pickup, delivery, or warehouse)
      */
@@ -32,24 +36,33 @@ public class Stop {
      */
     private Request request;
     /**
+     * Whether the stop is highlighted in the view or not.
+     */
+    private boolean highlighted;
+    /**
      * The time of arrival at the stop
      */
-    private Date arrivalTime;
+    private LocalTime arrivalTime;
     /**
      * The time of departure at the stop
      */
-    private Date departureTime;
+    private LocalTime departureTime;
+    /**
+     * The stop is visited in stopNumber position
+     */
+    private int stopNumber;
 
     /**
      * Stop constructor.
      * @param address the address
      * @param duration the duration
      */
-    public Stop(Request request, Intersection address, double duration, StopType type) {
+    public Stop(Request request, Intersection address, long duration, StopType type) {
         this.request = request;
         this.type = type;
         this.address = address;
         this.duration = duration;
+        this.highlighted = false;
     }
 
     /**
@@ -72,7 +85,7 @@ public class Stop {
      * Getter for attribute duration.
      * @return duration
      */
-    public double getDuration() {
+    public long getDuration() {
         return duration;
     }
 
@@ -80,7 +93,7 @@ public class Stop {
      * Setter for attribute duration.
      * @param duration the pickup or delivery duration at the stop
      */
-    public void setDuration(double duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -100,11 +113,41 @@ public class Stop {
         this.type = type;
     }
 
-    public void setArrivalTime(Date arrivalTime){ this.arrivalTime=arrivalTime; }
+    /**
+     * Getter for attribute address.
+     * @return arrivalTime
+     */
+    public LocalTime getArrivalTime() { return arrivalTime; }
 
-    public void setDepartureTime(Date departureTime){ this.departureTime=departureTime; }
+    /**
+     * Setter for attribute type.
+     * @param arrivalTime the time of arrival of the stop
+     */
+    public void setArrivalTime(LocalTime arrivalTime){ this.arrivalTime=arrivalTime; }
 
+    /**
+     * Getter for attribute address.
+     * @return departureTime
+     */
+    public LocalTime getDepartureTime() { return departureTime; }
 
+    /**
+     * Setter for attribute type.
+     * @param departureTime the time of departure of the stop
+     */
+    public void setDepartureTime(LocalTime departureTime){ this.departureTime=departureTime; }
+
+    /**
+     * Getter for attribute address.
+     * @return stopNumber
+     */
+    public int getStopNumber() { return stopNumber; }
+
+    /**
+     * Setter for attribute type.
+     * @param stopNumber the number of visit of the stop
+     */
+    public void setStopNumber(int stopNumber){ this.stopNumber=stopNumber; }
 
     /**
      * Getter for attribute request.
@@ -112,6 +155,15 @@ public class Stop {
      */
     public Request getRequest() {
         return request;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+        notifyObservers(UpdateType.STOP_HIGHLIGHT);
     }
 
     /**

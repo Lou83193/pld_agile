@@ -5,6 +5,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
@@ -22,10 +23,6 @@ public class GraphicalViewMapLayer extends Pane {
      */
     private GraphicalView graphicalView;
     /**
-     * The application's Window instance.
-     */
-    private Window window;
-    /**
      * Boolean switch instructing whether to draw the tour's trace or not.
      */
     private boolean drawTour = false;
@@ -33,12 +30,17 @@ public class GraphicalViewMapLayer extends Pane {
     /**
      * GraphicalViewMapLayer constructor.
      * @param graphicalView The parent GraphicalView instance
-     * @param window The application's Window instance
      */
-    public GraphicalViewMapLayer(GraphicalView graphicalView, Window window) {
+    public GraphicalViewMapLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
-        this.window = window;
         this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        MouseClickNotDragDetector.clickNotDragDetectingOn(this)
+                .withPressedDurationThreshold(150)
+                .setOnMouseClickedNotDragged((mouseEvent) -> {
+                    graphicalView.getWindow().getController().clickOnGraphicalView(new double[] {0, 0});
+                });
+
     }
 
     /**
@@ -80,7 +82,7 @@ public class GraphicalViewMapLayer extends Pane {
                     segment,
                     2 * screenScale * mapScale,
                     Color.web("#545454"),
-                    window.getStreetNameLabel()
+                    graphicalView.getWindow().getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);
 
