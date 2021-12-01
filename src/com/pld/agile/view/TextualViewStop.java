@@ -51,11 +51,11 @@ public class TextualViewStop extends VBox implements Observer {
         double lon = stop.getAddress().getLongitude();
         double duration = stop.getDuration();
         StopType type = stop.getType();
-        LocalTime departureTime = stop.getDepartureTime();
+        LocalTime arrivalTime = stop.getArrivalTime();
         String hour = "";
-        if (departureTime != null) {
+        if (arrivalTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            hour = formatter.format(departureTime);
+            hour = formatter.format(arrivalTime);
         }
         int stopNumber = stop.getStopNumber();
 

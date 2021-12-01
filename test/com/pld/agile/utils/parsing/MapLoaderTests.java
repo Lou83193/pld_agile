@@ -22,8 +22,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_5Inter4Seg.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
@@ -52,8 +55,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_4Inter4Seg.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
@@ -107,8 +113,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_sameIntersectionsSegment.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
@@ -138,8 +147,11 @@ public class MapLoaderTests {
         String filePath = "test/resources/loadMap_segmentLength0.xml";
         MapData actualMapData = new MapData();
         MapLoader mapLoader = new MapLoader(filePath, actualMapData);
-        boolean res = mapLoader.load();
-        assertTrue(res);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, Object>> intersectionsData = Arrays.asList(
                 Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.100), Map.entry("longitude", 4.001)),
@@ -159,6 +171,40 @@ public class MapLoaderTests {
 
         assertEquals(expectedMapData.toString(), actualMapData.toString());
         assertEquals(3, actualMapData.getSegments().size());
+    }
+
+
+    @Disabled("Disabled until removal of segment with nonexistent origin or destination is implemented")
+    @Test
+    // Test nb 1.7
+    public void testNonexistentOrigin() {
+        String filePath = "test/resources/loadMap_noOriginSegment.xml";
+        MapData actualMapData = new MapData();
+        MapLoader mapLoader = new MapLoader(filePath, actualMapData);
+        try {
+            mapLoader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, Object>> intersectionsData = Arrays.asList(
+                Map.ofEntries(Map.entry("id", 0), Map.entry("latitude", 45.0), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 1), Map.entry("latitude", 45.0), Map.entry("longitude", 4.00128)),
+                Map.ofEntries(Map.entry("id", 2), Map.entry("latitude", 45.0009), Map.entry("longitude", 4.0)),
+                Map.ofEntries(Map.entry("id", 3), Map.entry("latitude", 45.0), Map.entry("longitude", 3.99872)),
+                Map.ofEntries(Map.entry("id", 4), Map.entry("latitude", 44.9991), Map.entry("longitude", 4.0))
+        );
+
+        List<Map<String, Object>> segmentsData = Arrays.asList(
+                Map.ofEntries(Map.entry("name", "Avenue Général Frère"), Map.entry("length", 100), Map.entry("originId", 7), Map.entry("destinationId", 1)),
+                Map.ofEntries(Map.entry("name", "Boulevard Général Frère"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 2)),
+                Map.ofEntries(Map.entry("name", "Rue de la Meuse"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 11)),
+                Map.ofEntries(Map.entry("name", "Rue de la Moselle"), Map.entry("length", 100), Map.entry("originId", 0), Map.entry("destinationId", 4))
+        );
+        MapData expectedMapData = createMapData(intersectionsData, segmentsData);
+
+        assertEquals(expectedMapData.toString(), actualMapData.toString());
+        assertEquals(2, actualMapData.getSegments().size());
     }
 
 
