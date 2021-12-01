@@ -203,17 +203,18 @@ public class TourData extends Observable {
              * we store the origin of that stop and
              * remove the path to it
              */
-            if (path.getDestination() == pickup || path.getDestination() == delivery) {
+            if (path.getDestination().equals(pickup) || path.getDestination().equals(delivery)) {
                 currentOrigin = path.getOrigin();
                 tourPaths.remove(path);
                 i--;
             }
 
-            /**
-             * Remove from request list
-             */
-            requestList.removeIf(request::equals);
         }
+
+        /**
+         * Remove from request list
+         */
+        requestList.removeIf(request::equals);
 
         setStopTimeAndNumber();
 
