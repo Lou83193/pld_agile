@@ -3,7 +3,6 @@ package com.pld.agile.view;
 import com.pld.agile.controller.Controller;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.view.SceneSizeChangeListener;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
