@@ -1,17 +1,13 @@
-<!--
-  ~ loadMap_invalidId.xml
-  ~
-  ~ Copyright (c) 2021. Hexanomnom
-  -->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <map>
-    <intersection id="1" latitude="45.100" longitude="4.001"/>
-    <intersection id="2" latitude="45.101" longitude="4.002"/>
-    <intersection id="3" latitude="45.102" longitude="4.003"/>
-    <intersection id="4" latitude="45.103" longitude="4.004"/>
-    <intersection id="metaverse" latitude="45.104" longitude="4.005"/>
-    <segment destination="2" length="100" name="Avenue Général Frère" origin="1"/>
+    <intersection id="1" latitude="45.0" longitude="4.0"/>
+    <intersection id="b" latitude="45.0" longitude="4.00128"/>
+    <intersection id="3" latitude="45.0009" longitude="4.0"/>
+    <intersection id="4" latitude="45.0" longitude="3.99872"/>
+    <intersection id="5" latitude="44.9991" longitude="4.0"/>
+    <segment destination="1" length="100" name="Avenue Général Frère" origin="3"/>
     <segment destination="3" length="100" name="Boulevard Général Frère" origin="1"/>
     <segment destination="4" length="100" name="Rue de la Meuse" origin="1"/>
-    <segment destination="2" length="100" name="Rue de la Moselle" origin="3"/>
+    <segment destination="5" length="100" name="Rue de la Moselle" origin="1"/>
 </map>
