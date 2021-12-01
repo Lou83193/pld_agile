@@ -5,12 +5,16 @@ import com.pld.agile.model.tour.StopType;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
@@ -25,6 +29,7 @@ import javafx.scene.text.Text;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.function.Consumer;
 
 /**
  * Graphical object representing a Stop in the textual view.
@@ -51,11 +56,17 @@ public class TextualViewStop extends VBox implements Observer {
         double lon = stop.getAddress().getLongitude();
         double duration = stop.getDuration();
         StopType type = stop.getType();
-        LocalTime departureTime = stop.getDepartureTime();
-        String hour = "";
-        if (departureTime != null) {
+        LocalTime arrivalTime = stop.getArrivalTime();
+        String arrivalTimeString = "";
+        if (arrivalTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            hour = formatter.format(departureTime);
+            arrivalTimeString = formatter.format(arrivalTime);
+        }
+        LocalTime departureTime = stop.getDepartureTime();
+        String departureTimeString = "";
+        if (arrivalTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            departureTimeString = formatter.format(departureTime);
         }
         int stopNumber = stop.getStopNumber();
 
@@ -78,14 +89,36 @@ public class TextualViewStop extends VBox implements Observer {
         }
         Text labelText = new Text(labelTextString);
         labelText.getStyleClass().add("textual-view-stop-panel-label");
-        // Separator
-        Text separatorText = new Text("-");
-        separatorText.getStyleClass().add("textual-view-stop-panel-label");
-        // Hour of passage
-        Text hourText = new Text(hour);
-        hourText.getStyleClass().add("textual-view-stop-panel-hour");
-        labelPanel.setAlignment(Pos.CENTER_LEFT);
-        labelPanel.getChildren().addAll(labelGraphic, labelText, separatorText, hourText);
+        labelPanel.getChildren().addAll(labelGraphic, labelText);
+        if (editable) {
+            // Separator
+            Text separatorText = new Text("•");
+            separatorText.getStyleClass().add("textual-view-stop-panel-label");
+            labelPanel.getChildren().addAll(separatorText);
+            // Hour of departure
+            if (type == StopType.WAREHOUSE) {
+                TimeTextField departureHourInput = new TimeTextField(departureTimeString);
+                InvalidationListener updateTime = (observable, oldValue, newValue) -> {
+                    // Update model
+                    int hour = departureHourInput.hoursProperty().getValue();
+                    int minute = departureHourInput.hoursProperty().getValue();
+                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                };
+                departureHourInput.hoursProperty().addListener(updateTime);
+                departureHourInput.minutesProperty().addListener(updateTime);
+                departureHourInput.setPrefWidth(60);
+                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                Text hourSeparatorText = new Text("→");
+                hourSeparatorText.getStyleClass().add("textual-view-stop-panel-label");
+                labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText);
+            }
+            // Hour of passage
+            Text arrivalHourText = new Text(arrivalTimeString);
+            arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
+            labelPanel.setAlignment(Pos.CENTER_LEFT);
+            labelPanel.getChildren().addAll(arrivalHourText);
+        }
         contentPane.setTop(labelPanel);
 
         // Position
@@ -119,7 +152,7 @@ public class TextualViewStop extends VBox implements Observer {
         contentPane.setCenter(infoPane);
         panel.setLeft(contentPane);
 
-        if (editable) {
+        if (editable && type != StopType.WAREHOUSE) {
 
             VBox controls = new VBox(6);
             // Delete button
