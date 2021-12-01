@@ -57,6 +57,7 @@ public class TourData extends Observable {
     public TourData() {
         super();
         requestList = new ArrayList<>();
+        tourPaths = new ArrayList<>();
         associatedMap = null;
         departureTime = null;
         warehouse = null;

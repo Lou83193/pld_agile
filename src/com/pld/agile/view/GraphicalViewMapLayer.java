@@ -23,10 +23,6 @@ public class GraphicalViewMapLayer extends Pane {
      * The parent GraphicalView instance.
      */
     private GraphicalView graphicalView;
-    /**
-     * Boolean switch instructing whether to draw the tour's trace or not.
-     */
-    private boolean drawTour = false;
 
     /**
      * GraphicalViewMapLayer constructor.
@@ -54,19 +50,9 @@ public class GraphicalViewMapLayer extends Pane {
     }
 
     /**
-     * Draws the map, and (if needed) the tour's trace on it.
-     */
-    public void draw() {
-        drawMap();
-        if (drawTour) {
-            drawTour();
-        }
-    }
-
-    /**
      * Draws the map, by populating the pane with graphical segments.
      */
-    public void drawMap() {
+    public void draw() {
 
         MapData mapData = graphicalView.getMapData();
 
@@ -98,48 +84,6 @@ public class GraphicalViewMapLayer extends Pane {
 
         }
 
-    }
-
-    /**
-     * Draws the tour trace, by populating the pane with graphical segments.
-     */
-    public void drawTour() {
-
-        MapData mapData = graphicalView.getMapData();
-        TourData tourData = graphicalView.getTourData();
-
-        double screenScale = ViewUtilities.mapValue(
-                getHeight(),
-                0, 720,
-                0, 1
-        );
-        double mapScale = ViewUtilities.mapValue(
-                mapData.getMaxLon() - mapData.getMinLon(),
-                0.02235, 0.07610,
-                1.25, 0.75
-        );
-
-        List<Path> tourPaths = tourData.getTourPaths();
-        for (Path path : tourPaths) {
-
-            GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
-                    graphicalView,
-                    path,
-                    4 * screenScale * mapScale,
-                    Color.web("#ED6A08")
-            );
-            this.getChildren().add(graphicalViewPath);
-
-        }
-
-    }
-
-    /**
-     * Setter for attribute drawTour.
-     * @param drawTour Whether to draw the tour's trace or not
-     */
-    public void setDrawTour(final boolean drawTour) {
-        this.drawTour = drawTour;
     }
 
     /**
