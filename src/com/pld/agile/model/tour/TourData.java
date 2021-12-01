@@ -182,6 +182,10 @@ public class TourData extends Observable {
         tsp();
     }
 
+    public void updateStopsGraph(){
+        dijkstra();
+    }
+
     private void dijkstra() {
         int nbIntersections = associatedMap.getIntersections().size();
         int[][] predecessors = new int[stops.size()][nbIntersections];
