@@ -3,6 +3,7 @@ package com.pld.agile.view;
 import com.pld.agile.controller.Controller;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.view.SceneSizeChangeListener;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
@@ -103,6 +104,9 @@ public class Window extends Application {
 
         wrapperPane.setTop(menuBar);
         wrapperPane.setCenter(homePane);
+
+        //wrapperPane.maxHeightProperty().bind(scene.heightProperty());
+        //wrapperPane.maxWidthProperty().bind(scene.heightProperty().multiply(1020/720));
 
         stage.setScene(scene);
         stage.setTitle("COLIFFIMO - Route Planner");
@@ -285,6 +289,13 @@ public class Window extends Application {
                 topNode.setPadding(new Insets(0, 20, 20, 20));
             }
         }
+    }
+
+    /**
+     * Deactivates the main scene's button
+     */
+    public void toggleMainSceneButton(boolean enabled) {
+        mainSceneButton.setDisable(!enabled);
     }
 
     /**

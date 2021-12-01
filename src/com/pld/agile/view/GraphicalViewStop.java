@@ -157,7 +157,7 @@ public class GraphicalViewStop extends Pane implements Observer {
                     });
 
             if (editable) {
-                
+
                 this.setCursor(Cursor.HAND);
                 this.setOnMouseDragEntered((t) -> {
                     this.toFront();

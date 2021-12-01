@@ -6,6 +6,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -27,6 +28,8 @@ public class AddingRequestState2 implements State {
         Request tmp = window.getTourData().getRequestList().get(window.getTourData().getRequestList().size()-1);
         Stop newDelivery = new Stop(tmp, intersection, 0, StopType.DELIVERY );
         tmp.setDelivery(newDelivery);
+        window.getScene().setCursor(Cursor.DEFAULT);
+        window.toggleMainSceneButton(true);
         c.setCurrState(c.displayedTourState);
     }
 

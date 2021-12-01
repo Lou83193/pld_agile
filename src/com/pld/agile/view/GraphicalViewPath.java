@@ -10,7 +10,6 @@ import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
@@ -46,7 +45,7 @@ public class GraphicalViewPath extends Polyline {
         this.setStrokeLineJoin(StrokeLineJoin.ROUND);
         this.addEventHandler(MouseEvent.MOUSE_ENTERED,
             e -> {
-                this.setStroke(ViewUtilities.DARK_PURPLE);
+                this.setStroke(ViewUtilities.BLUE);
                 this.toFront();
             }
         );

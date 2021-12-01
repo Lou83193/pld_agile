@@ -9,6 +9,7 @@ import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -128,9 +129,9 @@ public class DisplayedTourState implements State {
     public void doStartAddRequest(Controller c, Window window) {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
+        window.getScene().setCursor(Cursor.CROSSHAIR);
+        window.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
-
-
     }
 
     @Override
