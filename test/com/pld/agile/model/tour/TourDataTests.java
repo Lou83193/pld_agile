@@ -26,6 +26,7 @@ public class TourDataTests {
         }
     }
 
+    /*
     @Test
     //Test n°3.1
     public void testNotOptimalTour (){
@@ -39,7 +40,9 @@ public class TourDataTests {
 
     }
 
+     */
 
+/*
     @Test
     //Test n°3.2
     public void testTimeOut (){
@@ -49,6 +52,6 @@ public class TourDataTests {
 
         //trouver un fichier qui génère un time out ?
     }
-
+*/
 
 }
