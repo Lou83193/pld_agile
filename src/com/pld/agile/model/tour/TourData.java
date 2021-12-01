@@ -248,7 +248,7 @@ public class TourData extends Observable {
         tsp();
     }
 
-    public void updateStopsGraph(){
+    public void updateStopsGraph() {
         dijkstra();
     }
 

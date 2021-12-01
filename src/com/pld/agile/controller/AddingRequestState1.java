@@ -24,9 +24,8 @@ public class AddingRequestState1 implements State {
     @Override
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
         Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
-        // create a pickup stop at that position, associated to the request that's in construction
         Request tmp = new Request();
-        Stop newPickup = new Stop(tmp, intersection, 0, StopType.PICKUP );
+        Stop newPickup = new Stop(tmp, intersection, 0, StopType.PICKUP);
         tmp.setPickup(newPickup);
         window.getTourData().getRequestList().add(tmp);
         c.setCurrState(c.addingRequestState2);
