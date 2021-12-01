@@ -103,4 +103,12 @@ public class Path {
     public void setDestination(Stop destination) {
         this.destination = destination;
     }
+
+    @Override
+    public String toString() {
+        return "Path {"
+                + "origin =" + origin.getAddress().getId()
+                + ", destination=" + destination.getAddress().getId() + '\''
+                + '}';
+    }
 }

@@ -10,6 +10,7 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.tsp.*;
 import javafx.scene.paint.Color;
@@ -23,7 +24,7 @@ import java.util.*;
 /**
  * Stores the data of a loaded requests list.
  */
-public class TourData extends Observable {
+public class TourData extends Observable implements Observer {
     /**
      * List of requests composing the tour.
      */
@@ -319,12 +320,13 @@ public class TourData extends Observable {
 
         // Compute TSP
         System.out.println("TSP INIT...");
-        TSP tsp = new TSP3();
+        TSP tsp = new TSP3(this);
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
 
+        // In a method
         LocalTime currentTime = departureTime;
         for(int i = 0; i < stopsGraph.getNbVertices()-1; i++) {
             Stop currentStop = stopMap.get(stops.get(tsp.getSolution(i)));
@@ -336,10 +338,10 @@ public class TourData extends Observable {
             int t = (int)(d/(15/3.6))+1;
             currentTime = currentTime.plusSeconds(t);
         }
-
         Stop currentStop = stopMap.get(stops.get(tsp.getSolution(stopsGraph.getNbVertices()-1)));
         currentStop.setStopNumber(stopsGraph.getNbVertices()-1);
         currentStop.setArrivalTime(currentTime);
+        // ----
 
         // Populate model
         tourPaths = new ArrayList<>();
@@ -374,5 +376,18 @@ public class TourData extends Observable {
                 + ", warehouse=" + warehouse
                 + ", departureTime='" + departureTime + '\''
                 + '}';
+    }
+
+    @Override
+    public void update(Observable observed, UpdateType updateType) {
+        if(updateType == UpdateType.TSP_COMPUTED) {
+            tourPaths = new ArrayList<>();
+            TSP tsp = (TemplateTSP) observed;
+            for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
+                tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+            }
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
+            notifyObservers(UpdateType.TOUR);
+        }
     }
 }

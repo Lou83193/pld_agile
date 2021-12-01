@@ -7,11 +7,16 @@
 package com.pld.agile.utils.tsp;
 
 
+import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.UpdateType;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-public abstract class TemplateTSP implements TSP {
+public abstract class TemplateTSP extends Observable implements TSP {
 	private Integer[] bestSol;
 	protected Graph g;
 	private double bestSolCost;
@@ -79,6 +84,7 @@ public abstract class TemplateTSP implements TSP {
 	    		if (currentCost+g.getPath(currentVertex,0).getLength() < bestSolCost){
 	    			visited.toArray(bestSol);
 	    			bestSolCost = currentCost+g.getPath(currentVertex,0).getLength();
+					notifyObservers(UpdateType.TSP_COMPUTED);
 	    		}
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
