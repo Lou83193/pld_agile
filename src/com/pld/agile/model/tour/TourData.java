@@ -333,55 +333,13 @@ public class TourData extends Observable {
         System.out.println("TSP START");
         tsp.searchSolution(20000, stopsGraph);
         System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
-        List<Integer> computedPath = new ArrayList<>();
-        for(int i = 0; i < stopsGraph.getNbVertices(); i++) {
-            computedPath.add(tsp.getSolution(i));
-        }
-        System.out.println("Computed path : "+computedPath);
 
         // Populate model
         tourPaths = new ArrayList<>();
-        int pathLength = computedPath.size();
-        for (int i = 0; i < pathLength - 1; i++) {
-            System.out.println("path added : [" +computedPath.get(i)+','+computedPath.get(i+1)+']');
-            tourPaths.add(stopsGraph.getPath(computedPath.get(i),computedPath.get(i+1)));
+        for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
         }
-        tourPaths.add(stopsGraph.getPath(computedPath.get(pathLength-1),computedPath.get(0)));
-
-        /*int pathLength = computedPath.size();
-        for (int i = 0; i < pathLength; i++) {
-
-            // Get current and next stop
-            Integer currStopId = computedPath.get(i);
-            Integer nextStopId = computedPath.get((i + 1) % pathLength);
-            Stop currStop = stopMap.get(stops.get(currStopId));
-            Stop nextStop = stopMap.get(stops.get(nextStopId));
-
-            // Create path
-            Path path = new Path(currStop, nextStop);
-            List<Segment> pathSegments = new ArrayList<>();
-
-            // Add initial segment
-            Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(nextStopId));
-            int predecessor = predecessors[currStopId][stops.get(nextStopId)];
-            Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
-            pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
-
-            // Get intermediary segments
-            while (predecessor != stops.get(currStopId)) {
-                predecessor = predecessors[currStopId][predecessor];
-                Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
-                pathSegments.add(nextIntersection.findSegmentTo(currIntersection));
-                currIntersection = associatedMap.getIntersections().get(predecessor);
-            }
-
-            // Store info in path and save it
-            Collections.reverse(pathSegments);
-            path.setSegments(pathSegments);
-            path.setLength(stopsGraph.getCost(currStopId, nextStopId));
-            tourPaths.add(path);
-
-        }*/
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
 
         notifyObservers(UpdateType.TOUR);
 
@@ -391,7 +349,10 @@ public class TourData extends Observable {
     /* H1 = 0
     /* H2 = (nbUnvisited+1)*dMin
     /* H3 = l + sum of li
-    /* H4 = Sort unvisited by shortest cost to last visited vertex
+    /* Improvement = Sort unvisited by shortest cost to last visited vertex
+    */
+
+    /* Best Algo -> Limited Discrepancy Search (LDS)
     */
 
     /**
