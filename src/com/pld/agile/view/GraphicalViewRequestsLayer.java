@@ -65,29 +65,32 @@ public class GraphicalViewRequestsLayer extends Group {
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
-            GraphicalViewStop pickupGraphic = new GraphicalViewStop(
-                pickup,
-                graphicalView,
-                graphicSize,
-                pickup.getStopNumber(),
-                pickup.getStopNumber() > 0
-            );
-            double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
-            pickupGraphic.place(pickupPos);
-            this.getChildren().add(pickupGraphic);
+            if (pickup != null) {
+                GraphicalViewStop pickupGraphic = new GraphicalViewStop(
+                        pickup,
+                        graphicalView,
+                        graphicSize,
+                        pickup.getStopNumber(),
+                        pickup.getStopNumber() > 0
+                );
+                double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
+                pickupGraphic.place(pickupPos);
+                this.getChildren().add(pickupGraphic);
+            }
 
             Stop delivery = request.getDelivery();
-            GraphicalViewStop deliveryGraphic = new GraphicalViewStop(
-                delivery,
-                graphicalView,
-                graphicSize,
-                delivery.getStopNumber(),
-                pickup.getStopNumber() > 0
-            );
-            double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
-            deliveryGraphic.place(deliveryPos);
-            this.getChildren().add(deliveryGraphic);
-
+            if (delivery != null) {
+                GraphicalViewStop deliveryGraphic = new GraphicalViewStop(
+                        delivery,
+                        graphicalView,
+                        graphicSize,
+                        delivery.getStopNumber(),
+                        pickup.getStopNumber() > 0
+                );
+                double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
+                deliveryGraphic.place(deliveryPos);
+                this.getChildren().add(deliveryGraphic);
+            }
         }
 
     }

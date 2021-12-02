@@ -20,6 +20,8 @@ import javafx.util.Pair;
 import java.time.LocalTime;
 import java.util.*;
 
+import static com.pld.agile.model.tour.StopType.DELIVERY;
+
 /**
  * Stores the data of a loaded requests list.
  */
@@ -157,6 +159,62 @@ public class TourData extends Observable {
         }
     }
 
+
+    public void constructNewRequest1(Intersection intersection) {
+        Request newRequest = new Request();
+        Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
+        newRequest.setPickup(newPickup);
+        requestList.add(newRequest);
+        notifyObservers(UpdateType.TOUR);
+    }
+
+    public void constructNewRequest2(Intersection intersection) {
+        Request newRequest = requestList.get(requestList.size()-1);
+        Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
+        newRequest.setDelivery(newDelivery);
+        addRequest(newRequest);
+        System.out.println("Request added : " + newRequest);
+    }
+
+    public void addRequest(Request newRequest) {
+        Stop pickup = newRequest.getPickup();
+        Stop delivery = newRequest.getDelivery();
+
+        stops.add(pickup.getAddress().getId());
+        stops.add(delivery.getAddress().getId());
+        stopMap.put(pickup.getAddress().getId(),pickup);
+        stopMap.put(delivery.getAddress().getId(),delivery);
+
+        dijkstra();
+        tourPaths.remove(tourPaths.size()-1);
+        Stop lastStop = tourPaths.get(tourPaths.size()-1).getDestination();
+
+        Integer indexLastStop = -1;
+        for(int i = 0; i < stops.size();i++){
+            if(stops.get(i) == lastStop.getAddress().getId()){
+                indexLastStop = i;
+                break;
+            }
+        }
+
+        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size()-2);
+        tourPaths.add(lastToPickup);
+
+        //tests :
+        System.out.println("path1 "+  lastToPickup);
+        System.out.println("origin  : "+lastToPickup.getOrigin()+" destination : "+lastToPickup.getDestination());
+        for(int i=0; i<lastToPickup.getSegments().size();i++){
+            System.out.println(lastToPickup.getSegments().get(i));
+        }
+
+        Path pickupToDelivery = stopsGraph.getPath(stops.size()-2,stops.size()-1);
+        tourPaths.add(pickupToDelivery);
+        Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
+        tourPaths.add(deliveryToWarehouse);
+        setStopTimeAndNumber();
+
+    }
+
     public void deleteRequest(Request request) {
 
         Stop pickup = request.getPickup();
@@ -225,6 +283,75 @@ public class TourData extends Observable {
 
         setStopTimeAndNumber();
 
+    }
+
+    public boolean shiftStopOrder(Stop stop, int dir) {
+
+        ArrayList<Stop> listStops = new ArrayList<>();
+        listStops.add(tourPaths.get(0).getOrigin());
+        int indexStop = 0;
+
+        //Build a list of all the stops in the tour in order
+        for (int i = 0; i < tourPaths.size(); i++) {
+            Stop currStop = tourPaths.get(i).getDestination();
+            listStops.add(currStop);
+            if (currStop.equals(stop)) { indexStop = i; }
+        }
+
+        //Check if the stop is allowed to move up
+        boolean canMove = true;
+        Stop stopAbove = null;
+        if (indexStop < 1) {
+            canMove = false;
+        } else {
+            stopAbove = listStops.get(indexStop - 2);
+            if (stop.getType() == DELIVERY) {
+                System.out.println("delivery");
+                //todo : check if delivery above pickup
+                if (stop.getRequest().equals(stopAbove.getRequest())) { System.out.println("cannot move"); canMove = false; }
+            }
+        }
+        System.out.println("check done :" + canMove);
+
+        if (canMove) {
+
+            //Shift the stop up one place
+            listStops.add(indexStop, stopAbove);
+            listStops.add(indexStop - 1, stop);
+            System.out.println("stop moved");
+
+            //Reconstruct tourData
+            tourPaths.clear();
+            for (int i = 0; i < listStops.size() - 1; i++) {
+
+                //Update stopNumber
+                listStops.get(i).setStopNumber(i);
+
+                //Get index of stops
+                int indexOrigin = -1, indexDestination = -1;
+                for (int j = 0; j < stops.size(); j++) {
+                    if (stops.get(j) == listStops.get(i).getAddress().getId()) {
+                        indexOrigin = j;
+                    } else if (stops.get(j) == listStops.get(i + 1).getAddress().getId()) {
+                        indexDestination = j;
+                    }
+                    if (indexOrigin != -1 && indexDestination != -1) {
+                        break;
+                    }
+                }
+
+                //Add path to tourPath
+                tourPaths.add(stopsGraph.getPath(indexOrigin, indexDestination));
+                System.out.println("path added");
+
+            }
+
+            notifyObservers(UpdateType.TOUR);
+            System.out.println("DONE");
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -440,49 +567,6 @@ public class TourData extends Observable {
 
     /* Best Algo -> Limited Discrepancy Search (LDS)
     */
-
-
-    public void addRequest() {
-        Request newRequest = getRequestList().get(getRequestList().size()-1);
-        Stop pickup = newRequest.getPickup();
-        Stop delivery = newRequest.getDelivery();
-
-        stops.add(pickup.getAddress().getId());
-        stops.add(delivery.getAddress().getId());
-        stopMap.put(pickup.getAddress().getId(),pickup);
-        stopMap.put(delivery.getAddress().getId(),delivery);
-
-        dijkstra();
-        tourPaths.remove(tourPaths.size()-1);
-        Stop lastStop = tourPaths.get(tourPaths.size()-1).getDestination();
-
-        Integer indexLastStop = -1;
-        for(int i = 0; i < stops.size();i++){
-            if(stops.get(i) == lastStop.getAddress().getId()){
-                indexLastStop = i;
-                break;
-            }
-        }
-
-        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size()-2);
-        tourPaths.add(lastToPickup);
-
-        //tests :
-        System.out.println("path1 "+  lastToPickup);
-        System.out.println("origin  : "+lastToPickup.getOrigin()+" destination : "+lastToPickup.getDestination());
-        for(int i=0; i<lastToPickup.getSegments().size();i++){
-            System.out.println(lastToPickup.getSegments().get(i));
-        }
-
-
-        Path pickupToDelivery = stopsGraph.getPath(stops.size()-2,stops.size()-1);
-        tourPaths.add(pickupToDelivery);
-        Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
-        tourPaths.add(deliveryToWarehouse);
-        setStopTimeAndNumber();
-    }
-
-
 
     /**
      * Generates a String which describes the object

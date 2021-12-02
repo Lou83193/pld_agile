@@ -114,82 +114,16 @@ public class DisplayedTourState implements State {
 
     @Override
     public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
-        ArrayList<Stop> listStops = new ArrayList<>();
-        List<Path> tourPath = window.getTourData().getTourPaths();
-
-        listStops.add(tourPath.get(0).getOrigin());
-        int indexStop = 0;
-
-        //Build a list of all the stops in the tour in order
-        for(int i = 0; i < tourPath.size(); i++) {
-            Stop currStop = tourPath.get(i).getDestination();
-            listStops.add(currStop);
-            if (currStop == stop) { indexStop = i; }
-        }
-
-        //Check if the stop is allowed to move up
-        boolean canMove = true;
-        Stop stopAbove = null;
-        if (indexStop < 1) {
-            canMove = false;
-        } else {
-            stopAbove = listStops.get(indexStop - 2);
-            if (stop.getType() == DELIVERY) {
-                System.out.println("delivery");
-                //todo : check if delivery above pickup
-                if (stop.getRequest().equals(stopAbove.getRequest())) { System.out.println("cannot move"); canMove = false; }
-            }
-        }
-        System.out.println("check done :" + canMove);
-
-        if (canMove) {
-            //Shift the stop up one place
-            listStops.add(indexStop, stopAbove);
-            listStops.add(indexStop - 1, stop);
-            System.out.println("stop moved");
-
-            //Reconstruct tourData
-            for (int i = 0; i < listStops.size() - 1; i++) {
-                //Update stopNumber
-                listStops.get(i).setStopNumber(i);
-
-                //Get index of stops
-
-                List<Integer> stops = window.getTourData().getStops();
-                int indexOrigin = -1, indexDestination = -1;
-                for (int j = 0; j < stops.size(); j++) {
-                    if (stops.get(j) == listStops.get(i).getAddress().getId()) {
-                        indexOrigin = j;
-                    } else if (stops.get(j) == listStops.get(i + 1).getAddress().getId()) {
-                        indexDestination = j;
-                    }
-                    if (indexOrigin != -1 && indexDestination != -1) {
-                        break;
-                    }
-                }
-
-                //Add path to tourPath
-                Graph stopsGraph = window.getTourData().getStopsGraph();
-                tourPath.clear();
-                tourPath.add(stopsGraph.getPath(indexOrigin, indexDestination));
-                System.out.println("path added");
-            }
-
-            System.out.println("DONE");
-            return true;
-        }
-
-        return false;
+        TourData tourData = window.getTourData();
+        boolean success = tourData.shiftStopOrder(stop, -1);
+        return success;
     }
 
     @Override
     public boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
-        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
-        // then shift the stop up or down
-        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
-        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
-        // don't forget to change order attribute in stop
-        return false;
+        TourData tourData = window.getTourData();
+        boolean success = tourData.shiftStopOrder(stop, +1);
+        return success;
     }
 
     @Override

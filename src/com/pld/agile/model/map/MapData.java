@@ -221,7 +221,6 @@ public class MapData extends Observable {
     public Intersection findClosestIntersection(double[] latLonPos) {
         double lat = 0;
         double lon = 0;
-        ViewUtilities viewUtilities = new ViewUtilities();
         double shortest = Double.MAX_VALUE;
         Intersection closestIntersection = null;
         double distanceToIntersection = 0;
@@ -232,7 +231,7 @@ public class MapData extends Observable {
             lat = intersections.get(i).getLatitude();
             lon = intersections.get(i).getLongitude();
             // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-            distanceToIntersection = viewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
+            distanceToIntersection = ViewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
             // find the smallest distance
             if(distanceToIntersection<shortest){
                 shortest = distanceToIntersection;
