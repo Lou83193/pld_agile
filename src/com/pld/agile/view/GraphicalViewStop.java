@@ -158,7 +158,7 @@ public class GraphicalViewStop extends Pane implements Observer {
                         parent.getWindow().getController().clickOnGraphicalStop(stop);
                     });
             */
-            this.setOnMouseClicked((t) -> {
+            this.setOnMousePressed((t) -> {
                 parent.getWindow().getController().clickOnGraphicalStop(stop);
             });
 
