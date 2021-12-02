@@ -39,8 +39,8 @@ import java.util.function.Consumer;
  */
 public class TextualViewStop extends VBox implements Observer {
 
-    ScrollPane scrollPane;
-    String inputValueTracker;
+    private ScrollPane scrollPane;
+    private String inputValueTracker;
 
     /**
      * TextualViewStop constructor.
