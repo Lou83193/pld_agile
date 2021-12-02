@@ -231,7 +231,7 @@ public class GraphicalViewStop extends Pane implements Observer {
                     if (stop.getHighlighted() > 1) {
                         highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
                         if (numText != null) {
-                            numText.setFill(ViewUtilities.ORANGE);
+                            numText.setFill(ViewUtilities.DARK_ORANGE);
                         }
                     }
                 } else {

@@ -402,7 +402,7 @@ public class TourData extends Observable {
 
         }
         Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
-        currentStop.setStopNumber(tourPaths.size()-1);
+        currentStop.setStopNumber(0);
         currentStop.setArrivalTime(currentTime);
 
         notifyObservers(UpdateType.TOUR);

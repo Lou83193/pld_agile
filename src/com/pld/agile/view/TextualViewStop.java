@@ -165,10 +165,10 @@ public class TextualViewStop extends VBox implements Observer {
                 labelPanel.getChildren().addAll(separatorText);
                 Text arrivalHourText = new Text(arrivalTimeString);
                 arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
-                labelPanel.setAlignment(Pos.CENTER_LEFT);
                 labelPanel.getChildren().addAll(arrivalHourText);
             }
         }
+        labelPanel.setAlignment(Pos.CENTER_LEFT);
         contentPane.setTop(labelPanel);
 
         // Position
