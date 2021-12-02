@@ -4,8 +4,6 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
-import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
 
 /**
@@ -25,6 +23,10 @@ public class AddingRequestState1 implements State {
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
         Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
         // create a pickup stop at that position, associated to the request that's in construction
+
+        //Test :
+        //Intersection intersection = window.getMapData().getIntersections().get(506);
+
         Request tmp = new Request();
         Stop newPickup = new Stop(tmp, intersection, 0, StopType.PICKUP );
         tmp.setPickup(newPickup);

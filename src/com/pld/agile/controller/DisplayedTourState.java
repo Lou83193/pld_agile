@@ -12,9 +12,7 @@ import com.pld.agile.view.Window;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * State when the map and a list of requests are loaded.
@@ -160,43 +158,11 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doStartAddRequest(Controller c, Window window) {
+        System.out.println("DoSstartAddRequest");
         TourData tourData = window.getTourData();
+        int nbRequests = tourData.getRequestList().size();
         tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
-
-        Request newRequest = tourData.getRequestList().get(tourData.getRequestList().size()-1);
-        Stop pickup = newRequest.getPickup();
-        Stop delivery = newRequest.getDelivery();
-        List<Integer> stops = tourData.getStops();
-        Map<Integer,Stop> stopMap = tourData.getStopMap();
-
-        stops.add(pickup.getAddress().getId());
-        stops.add(delivery.getAddress().getId());
-        stopMap.put(pickup.getAddress().getId(),pickup);
-        stopMap.put(delivery.getAddress().getId(),delivery);
-
-        tourData.updateStopsGraph();
-        List<Path> tourPath = tourData.getTourPaths();
-        tourPath.remove(tourPath.size()-1);
-        Stop lastStop = tourPath.get(tourPath.size()-1).getDestination();
-
-        Integer indexLastStop = -1;
-        for(int i = 0; i < stops.size();i++){
-            if(stops.get(i) == lastStop.getAddress().getId()){
-                indexLastStop = i;
-                break;
-            }
-        }
-
-        Graph stopsGraph = tourData.getStopsGraph();
-        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size()-2);
-        tourPath.add(lastToPickup);
-        Path pickupToDelivery = stopsGraph.getPath(stops.size()-2,stops.size()-1);
-        tourPath.add(pickupToDelivery);
-        Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
-        tourPath.add(deliveryToWarehouse);
-
-        tourData.setStopTimeAndNumber();
     }
 
     @Override
