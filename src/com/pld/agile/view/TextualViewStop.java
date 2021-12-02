@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 public class TextualViewStop extends VBox implements Observer {
 
     ScrollPane scrollPane;
+    String inputValueTracker;
 
     /**
      * TextualViewStop constructor.
@@ -91,45 +92,68 @@ public class TextualViewStop extends VBox implements Observer {
         Text labelText = new Text(labelTextString);
         labelText.getStyleClass().add("textual-view-stop-panel-label");
         labelPanel.getChildren().addAll(labelGraphic, labelText);
-        if (editable) {
-            // Separator
-            Text separatorText = new Text("•");
-            separatorText.getStyleClass().add("textual-view-stop-panel-label");
+
+        // Separators
+        Text separatorText = new Text("•");
+        separatorText.getStyleClass().add("textual-view-stop-panel-label");
+        Text hourSeparatorText = new Text("→");
+        hourSeparatorText.getStyleClass().add("textual-view-stop-panel-label");
+
+        // Hours of departure / arrival
+        if (type == StopType.WAREHOUSE) {
             labelPanel.getChildren().addAll(separatorText);
-            // Hour of departure
-            if (type == StopType.WAREHOUSE) {
-                TimeTextField departureHourInput = new TimeTextField(departureTimeString);
+            // Departure hour of warehouse
+            TimeTextField departureHourInput = new TimeTextField(departureTimeString);
+            departureHourInput.setFocusTraversable(false);
+            if (editable) {
                 departureHourInput.setOnKeyPressed(
-                    (event) -> {
-                        if (event.getCode() == KeyCode.ENTER) {
-                            int hour = departureHourInput.hoursProperty().getValue();
-                            int minute = departureHourInput.minutesProperty().getValue();
-                            LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                            parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        (event) -> {
+                            if (event.getCode() == KeyCode.ENTER) {
+                                if (!departureHourInput.getText().equals(inputValueTracker)) {
+                                    int hour = departureHourInput.hoursProperty().getValue();
+                                    int minute = departureHourInput.minutesProperty().getValue();
+                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                }
+                            }
                         }
-                    }
                 );
                 departureHourInput.focusedProperty().addListener(
-                    (observable, oldValue, newValue) -> {
-                        if (!newValue) {
-                            int hour = departureHourInput.hoursProperty().getValue();
-                            int minute = departureHourInput.minutesProperty().getValue();
-                            LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                            parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                        (observable, oldValue, newValue) -> {
+                            if (!newValue) {
+                                if (!departureHourInput.getText().equals(inputValueTracker)) {
+                                    int hour = departureHourInput.hoursProperty().getValue();
+                                    int minute = departureHourInput.minutesProperty().getValue();
+                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                }
+                            } else {
+                                inputValueTracker = departureHourInput.getText();
+                            }
                         }
-                    }
                 );
+                // Arrival hour back at warehouse
+                TimeTextField arrivalHourInput = new TimeTextField(arrivalTimeString);
+                arrivalHourInput.setFocusTraversable(false);
+                arrivalHourInput.setEditable(false);
+                arrivalHourInput.setMouseTransparent(true);
                 departureHourInput.setPrefWidth(60);
                 departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
-                Text hourSeparatorText = new Text("→");
-                hourSeparatorText.getStyleClass().add("textual-view-stop-panel-label");
-                labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText);
+                // Adding them together
+                labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText, arrivalHourInput);
+            } else {
+                departureHourInput.setEditable(false);
             }
-            // Hour of passage
-            Text arrivalHourText = new Text(arrivalTimeString);
-            arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
-            labelPanel.setAlignment(Pos.CENTER_LEFT);
-            labelPanel.getChildren().addAll(arrivalHourText);
+            departureHourInput.setPrefWidth(60);
+            departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+        } else {
+            // Arrival hour at stop
+            if (editable) {
+                Text arrivalHourText = new Text(arrivalTimeString);
+                arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
+                labelPanel.setAlignment(Pos.CENTER_LEFT);
+                labelPanel.getChildren().addAll(arrivalHourText);
+            }
         }
         contentPane.setTop(labelPanel);
 
@@ -145,33 +169,44 @@ public class TextualViewStop extends VBox implements Observer {
 
         // Duration
         if (type != StopType.WAREHOUSE) {
-            Text durationText = new Text(" Duration:");
+            Text durationText = new Text("Duration:");
             TextField durationInput = new TextField((int)duration + "");
-            durationInput.textProperty().addListener(
-                    (observable, oldValue, newValue) -> {
-                        // Replace with only numberical numbers
-                        if (!newValue.matches("\\d*")) {
-                            durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+            durationInput.setFocusTraversable(false);
+            if (editable) {
+                durationInput.textProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            // Replace with only numberical numbers
+                            if (!newValue.matches("\\d*")) {
+                                durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+                            }
                         }
-                    }
-            );
-            durationInput.setOnKeyPressed(
-                    (event) -> {
-                        if (event.getCode() == KeyCode.ENTER) {
-                            int durationValue = Integer.parseInt(durationInput.getText());
-                            parent.getWindow().getController().changeStopDuration(stop, durationValue);
-                            this.requestFocus();
+                );
+                durationInput.setOnKeyPressed(
+                        (event) -> {
+                            if (event.getCode() == KeyCode.ENTER) {
+                                if (!durationInput.getText().equals(inputValueTracker)) {
+                                    int durationValue = Integer.parseInt(durationInput.getText());
+                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                }
+                            }
                         }
-                    }
-            );
-            durationInput.focusedProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (!newValue) {
-                        int durationValue = Integer.parseInt(durationInput.getText());
-                        parent.getWindow().getController().changeStopDuration(stop, durationValue);
-                    }
-                }
-            );
+                );
+                durationInput.focusedProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            if (!newValue) {
+                                if (!durationInput.getText().equals(inputValueTracker)) {
+                                    int durationValue = Integer.parseInt(durationInput.getText());
+                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                }
+                            } else {
+                                inputValueTracker = durationInput.getText();
+                            }
+                        }
+                );
+            } else {
+                durationInput.setEditable(false);
+                durationInput.setMouseTransparent(true);
+            }
             infoPane.add(durationText, 0, 1);
             infoPane.add(durationInput, 1, 1);
         }

@@ -104,9 +104,6 @@ public class Window extends Application {
         wrapperPane.setTop(menuBar);
         wrapperPane.setCenter(homePane);
 
-        //wrapperPane.maxHeightProperty().bind(scene.heightProperty());
-        //wrapperPane.maxWidthProperty().bind(scene.heightProperty().multiply(1020/720));
-
         stage.setScene(scene);
         stage.setTitle("COLIFFIMO - Route Planner");
         stage.getIcons().add(new Image("icon.png"));
@@ -122,6 +119,8 @@ public class Window extends Application {
 
         homePane = new BorderPane();
         homePane.setId("home-pane");
+        homePane.maxHeightProperty().bind(scene.heightProperty());
+        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1020/720.0));
 
         // Logo
         ImageView logo = new ImageView(new Image("logo.png"));
@@ -158,6 +157,8 @@ public class Window extends Application {
 
         mainPane = new BorderPane();
         mainPane.getStyleClass().add("white-background");
+        mainPane.maxHeightProperty().bind(scene.heightProperty());
+        mainPane.maxWidthProperty().bind(scene.heightProperty().add(300));
 
         BorderPane centerPanel = new BorderPane();
         // Street name label

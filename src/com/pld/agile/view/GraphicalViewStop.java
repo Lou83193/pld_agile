@@ -150,11 +150,17 @@ public class GraphicalViewStop extends Pane implements Observer {
 
         if (parent != null) {
 
+            /*
             MouseClickNotDragDetector.clickNotDragDetectingOn(this)
+
                     .withPressedDurationThreshold(150)
-                    .setOnMouseClickedNotDragged((mouseEvent) -> {
+                    .setOnMouseClickedNotDragged((t) -> {
                         parent.getWindow().getController().clickOnGraphicalStop(stop);
                     });
+            */
+            this.setOnMouseClicked((t) -> {
+                parent.getWindow().getController().clickOnGraphicalStop(stop);
+            });
 
             if (editable) {
 
