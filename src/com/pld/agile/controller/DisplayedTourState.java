@@ -2,12 +2,14 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -64,19 +66,31 @@ public class DisplayedTourState implements State {
     @Override
     public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
-        tourData.getWarehouse().setHighlighted(false);
-        for (Request request : tourData.getRequestList()) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
+        tourData.unHighlightStops();
+        stop.setHighlighted(2);
+        if (stop.getType() != StopType.WAREHOUSE) {
+            if (stop.getRequest().getPickup().equals(stop)) {
+                stop.getRequest().getDelivery().setHighlighted(1);
+            }
+            else {
+                stop.getRequest().getPickup().setHighlighted(1);
+            }
         }
-        stop.setHighlighted(true);
     }
 
     @Override
     public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
-        stop.setHighlighted(true);
+        stop.setHighlighted(2);
+        if (stop.getType() != StopType.WAREHOUSE) {
+            if (stop.getRequest().getPickup().equals(stop)) {
+                stop.getRequest().getDelivery().setHighlighted(1);
+            }
+            else {
+                stop.getRequest().getPickup().setHighlighted(1);
+            }
+        }
     }
 
     @Override
@@ -115,9 +129,9 @@ public class DisplayedTourState implements State {
     public void doStartAddRequest(Controller c, Window window) {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
+        window.getScene().setCursor(Cursor.CROSSHAIR);
+        window.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
-
-
     }
 
     @Override
