@@ -1,11 +1,8 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.tour.Path;
+import com.pld.agile.model.tour.*;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
-import com.pld.agile.model.tour.Request;
-import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -76,13 +73,13 @@ public class TextualView implements Observer {
 
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
-            requestPanel1.setOnMouseClicked(
+            /*requestPanel1.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(request.getPickup())
-            );
+            );*/
             VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
-            requestPanel2.setOnMouseClicked(
+            /*requestPanel2.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(request.getDelivery())
-            );
+            );*/
             requestListContainer.getChildren().addAll(
                     requestPanel1,
                     requestPanel2
@@ -113,9 +110,9 @@ public class TextualView implements Observer {
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();
             VBox requestPanel = new TextualViewStop(stop, this, true);
-            requestPanel.setOnMouseClicked(
+            /*requestPanel.setOnMouseClicked(
                 e -> window.getController().clickOnTextualStop(stop)
-            );
+            );*/
             requestListContainer.getChildren().add(requestPanel);
         }
 

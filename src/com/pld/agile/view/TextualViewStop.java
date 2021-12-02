@@ -5,12 +5,16 @@ import com.pld.agile.model.tour.StopType;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
@@ -18,6 +22,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -25,6 +30,7 @@ import javafx.scene.text.Text;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.function.Consumer;
 
 /**
  * Graphical object representing a Stop in the textual view.
@@ -34,6 +40,7 @@ import java.util.Date;
 public class TextualViewStop extends VBox implements Observer {
 
     ScrollPane scrollPane;
+    String inputValueTracker;
 
     /**
      * TextualViewStop constructor.
@@ -52,10 +59,16 @@ public class TextualViewStop extends VBox implements Observer {
         double duration = stop.getDuration();
         StopType type = stop.getType();
         LocalTime arrivalTime = stop.getArrivalTime();
-        String hour = "";
+        String arrivalTimeString = "00:00";
         if (arrivalTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            hour = formatter.format(arrivalTime);
+            arrivalTimeString = formatter.format(arrivalTime);
+        }
+        LocalTime departureTime = stop.getDepartureTime();
+        String departureTimeString = "00:00";
+        if (departureTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            departureTimeString = formatter.format(departureTime);
         }
         int stopNumber = stop.getStopNumber();
 
@@ -68,7 +81,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, 14, stopNumber);
+        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -78,14 +91,84 @@ public class TextualViewStop extends VBox implements Observer {
         }
         Text labelText = new Text(labelTextString);
         labelText.getStyleClass().add("textual-view-stop-panel-label");
-        // Separator
-        Text separatorText = new Text("-");
+        labelPanel.getChildren().addAll(labelGraphic, labelText);
+
+        // Separators
+        Text separatorText = new Text("•");
         separatorText.getStyleClass().add("textual-view-stop-panel-label");
-        // Hour of passage
-        Text hourText = new Text(hour);
-        hourText.getStyleClass().add("textual-view-stop-panel-hour");
-        labelPanel.setAlignment(Pos.CENTER_LEFT);
-        labelPanel.getChildren().addAll(labelGraphic, labelText, separatorText, hourText);
+        Text hourSeparatorText = new Text("→");
+        hourSeparatorText.getStyleClass().add("textual-view-stop-panel-label");
+
+        // Hours of departure / arrival
+        if (type == StopType.WAREHOUSE) {
+            labelPanel.getChildren().addAll(separatorText);
+            if (editable) {
+                // Departure hour of warehouse
+                TimeTextField departureHourInput = new TimeTextField(departureTimeString);
+                departureHourInput.setFocusTraversable(false);
+                departureHourInput.setOnKeyPressed(
+                        (event) -> {
+                            if (event.getCode() == KeyCode.ENTER) {
+                                if (!departureHourInput.getText().equals(inputValueTracker)) {
+                                    int hour = departureHourInput.hoursProperty().getValue();
+                                    int minute = departureHourInput.minutesProperty().getValue();
+                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                }
+                            }
+                        }
+                );
+                departureHourInput.focusedProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            if (!newValue) {
+                                if (!departureHourInput.getText().equals(inputValueTracker)) {
+                                    int hour = departureHourInput.hoursProperty().getValue();
+                                    int minute = departureHourInput.minutesProperty().getValue();
+                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
+                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                }
+                            } else {
+                                inputValueTracker = departureHourInput.getText();
+                            }
+                        }
+                );
+                departureHourInput.setPrefWidth(60);
+                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                // Arrival hour back at warehouse
+                TimeTextField arrivalHourInput = new TimeTextField(arrivalTimeString);
+                arrivalHourInput.setFocusTraversable(false);
+                arrivalHourInput.setEditable(false);
+                arrivalHourInput.setMouseTransparent(true);
+                arrivalHourInput.setPrefWidth(60);
+                arrivalHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                // Adding them together
+                labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText, arrivalHourInput);
+            } else {
+                LocalTime warehouseDepartureTime = parent.getWindow().getTourData().getDepartureTime();
+                String warehouseDepartureTimeString = "00:00";
+                if (warehouseDepartureTime != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                    warehouseDepartureTimeString = formatter.format(warehouseDepartureTime);
+                }
+                TimeTextField departureHourInput = new TimeTextField(warehouseDepartureTimeString);
+                departureHourInput.setFocusTraversable(false);
+                departureHourInput.setEditable(false);
+                departureHourInput.setMouseTransparent(true);
+                departureHourInput.setPrefWidth(60);
+                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                // Adding them together
+                labelPanel.getChildren().addAll(departureHourInput);
+            }
+        } else {
+            // Arrival hour at stop
+            if (editable) {
+                labelPanel.getChildren().addAll(separatorText);
+                Text arrivalHourText = new Text(arrivalTimeString);
+                arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
+                labelPanel.setAlignment(Pos.CENTER_LEFT);
+                labelPanel.getChildren().addAll(arrivalHourText);
+            }
+        }
         contentPane.setTop(labelPanel);
 
         // Position
@@ -100,26 +183,51 @@ public class TextualViewStop extends VBox implements Observer {
 
         // Duration
         if (type != StopType.WAREHOUSE) {
-            Text durationText = new Text(" Duration:");
+            Text durationText = new Text("Duration:");
             TextField durationInput = new TextField((int)duration + "");
-            durationInput.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    // Replace with only numberical numbers
-                    if (!newValue.matches("\\d*")) {
-                        durationInput.setText(newValue.replaceAll("[^\\d]", ""));
-                    }
-                    // Update model
-                    int duration1 = Integer.parseInt(durationInput.getText());
-                    parent.getWindow().getController().changeStopDuration(stop, duration1);
-                }
-            );
+            durationInput.setFocusTraversable(false);
+            if (editable) {
+                durationInput.textProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            // Replace with only numberical numbers
+                            if (!newValue.matches("\\d*")) {
+                                durationInput.setText(newValue.replaceAll("[^\\d]", ""));
+                            }
+                        }
+                );
+                durationInput.setOnKeyPressed(
+                        (event) -> {
+                            if (event.getCode() == KeyCode.ENTER) {
+                                if (!durationInput.getText().equals(inputValueTracker)) {
+                                    int durationValue = Integer.parseInt(durationInput.getText());
+                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                }
+                            }
+                        }
+                );
+                durationInput.focusedProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            if (!newValue) {
+                                if (!durationInput.getText().equals(inputValueTracker)) {
+                                    int durationValue = Integer.parseInt(durationInput.getText());
+                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                }
+                            } else {
+                                inputValueTracker = durationInput.getText();
+                            }
+                        }
+                );
+            } else {
+                durationInput.setEditable(false);
+                durationInput.setMouseTransparent(true);
+            }
             infoPane.add(durationText, 0, 1);
             infoPane.add(durationInput, 1, 1);
         }
         contentPane.setCenter(infoPane);
         panel.setLeft(contentPane);
 
-        if (editable) {
+        if (editable && type != StopType.WAREHOUSE) {
 
             VBox controls = new VBox(6);
             // Delete button
@@ -160,11 +268,14 @@ public class TextualViewStop extends VBox implements Observer {
         this.setSpacing(10);
         this.getStyleClass().add("textual-view-stop-panel");
         this.setBorder(new Border(new BorderStroke(
-                Color.TRANSPARENT,
-                BorderStrokeStyle.SOLID,
-                new CornerRadii(10),
-                new BorderWidths(2)
+            Color.TRANSPARENT,
+            BorderStrokeStyle.SOLID,
+            new CornerRadii(10),
+            new BorderWidths(2)
         )));
+        this.setOnMouseClicked(
+            e -> parent.getWindow().getController().clickOnTextualStop(stop)
+        );
 
     }
 
@@ -174,20 +285,20 @@ public class TextualViewStop extends VBox implements Observer {
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
                 Stop stop = (Stop)observed;
-                if (stop.isHighlighted()) {
+                if (stop.getHighlighted() > 0) {
                     this.setBorder(new Border(new BorderStroke(
-                            Color.RED,
-                            BorderStrokeStyle.SOLID,
-                            new CornerRadii(10),
-                            new BorderWidths(2)
+                        ViewUtilities.ORANGE,
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(10),
+                        new BorderWidths(2)
                     )));
                     //ViewUtilities.ensureVisible(scrollPane, this);
                 } else {
                     this.setBorder(new Border(new BorderStroke(
-                            Color.TRANSPARENT,
-                            BorderStrokeStyle.SOLID,
-                            new CornerRadii(10),
-                            new BorderWidths(2)
+                        Color.TRANSPARENT,
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(10),
+                        new BorderWidths(2)
                     )));
                 }
             }

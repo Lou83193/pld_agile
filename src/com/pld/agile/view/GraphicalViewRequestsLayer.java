@@ -1,15 +1,11 @@
 package com.pld.agile.view;
 
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
-
 import java.util.List;
 
 /**
@@ -28,6 +24,7 @@ public class GraphicalViewRequestsLayer extends Group {
      */
     public GraphicalViewRequestsLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
+        this.setPickOnBounds(false);
     }
 
     /**
@@ -60,26 +57,35 @@ public class GraphicalViewRequestsLayer extends Group {
         double graphicSize = 24 * screenScale * mapScale;
 
         Stop warehouse = tourData.getWarehouse();
-        GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicSize, 0);
+        GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, 0, false);
         double[] warehousePos = graphicalView.projectLatLon(warehouse.getAddress());
         warehouseGraphic.place(warehousePos);
-        warehouseGraphic.setOnMouseClicked(e -> graphicalView.getWindow().getController().clickOnGraphicalStop(warehouse));
         this.getChildren().add(warehouseGraphic);
 
         for (Request request : requests) {
 
             Stop pickup = request.getPickup();
-            GraphicalViewStop pickupGraphic = new GraphicalViewStop(pickup, graphicSize, pickup.getStopNumber());
+            GraphicalViewStop pickupGraphic = new GraphicalViewStop(
+                pickup,
+                graphicalView,
+                graphicSize,
+                pickup.getStopNumber(),
+                pickup.getStopNumber() > 0
+            );
             double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
             pickupGraphic.place(pickupPos);
-            pickupGraphic.setOnMouseClicked(e -> graphicalView.getWindow().getController().clickOnGraphicalStop(pickup));
             this.getChildren().add(pickupGraphic);
 
             Stop delivery = request.getDelivery();
-            GraphicalViewStop deliveryGraphic = new GraphicalViewStop(delivery, graphicSize, delivery.getStopNumber() );
+            GraphicalViewStop deliveryGraphic = new GraphicalViewStop(
+                delivery,
+                graphicalView,
+                graphicSize,
+                delivery.getStopNumber(),
+                pickup.getStopNumber() > 0
+            );
             double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
             deliveryGraphic.place(deliveryPos);
-            deliveryGraphic.setOnMouseClicked(e -> graphicalView.getWindow().getController().clickOnGraphicalStop(delivery));
             this.getChildren().add(deliveryGraphic);
 
         }
