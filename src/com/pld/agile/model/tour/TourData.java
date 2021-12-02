@@ -21,6 +21,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static com.pld.agile.model.tour.StopType.DELIVERY;
+import static com.pld.agile.model.tour.StopType.PICKUP;
 
 /**
  * Stores the data of a loaded requests list.
@@ -289,43 +290,41 @@ public class TourData extends Observable {
 
         ArrayList<Stop> listStops = new ArrayList<>();
         listStops.add(tourPaths.get(0).getOrigin());
-        int indexStop = 0;
+        int stopIndex = 0;
 
         //Build a list of all the stops in the tour in order
         for (int i = 0; i < tourPaths.size(); i++) {
-            Stop currStop = tourPaths.get(i).getDestination();
+            Stop currStop = tourPaths.get(i).getOrigin();
             listStops.add(currStop);
-            if (currStop.equals(stop)) { indexStop = i; }
+            if (currStop.equals(stop)) { stopIndex = i; }
         }
 
         //Check if the stop is allowed to move up
         boolean canMove = true;
-        Stop stopAbove = null;
-        if (indexStop < 1) {
+        Stop neighbourStop;
+        if (stopIndex < 2) {
             canMove = false;
         } else {
-            stopAbove = listStops.get(indexStop - 2);
-            if (stop.getType() == DELIVERY) {
-                System.out.println("delivery");
-                //todo : check if delivery above pickup
-                if (stop.getRequest().equals(stopAbove.getRequest())) { System.out.println("cannot move"); canMove = false; }
+            neighbourStop = listStops.get(stopIndex + dir);
+            if ((stop.getType() == DELIVERY && dir < 0) || (stop.getType() == PICKUP && dir > 0)) {
+                if (stop.getRequest().equals(neighbourStop.getRequest())) {
+                    canMove = false;
+                }
             }
         }
-        System.out.println("check done :" + canMove);
+        System.out.println("check done : " + canMove);
 
         if (canMove) {
 
             //Shift the stop up one place
-            listStops.add(indexStop, stopAbove);
-            listStops.add(indexStop - 1, stop);
+            //listStops.add(indexStop, stopAbove);
+            //listStops.add(indexStop - 1, stop);
+            Collections.swap(listStops, stopIndex, stopIndex + dir);
             System.out.println("stop moved");
 
             //Reconstruct tourData
             tourPaths.clear();
             for (int i = 0; i < listStops.size() - 1; i++) {
-
-                //Update stopNumber
-                listStops.get(i).setStopNumber(i);
 
                 //Get index of stops
                 int indexOrigin = -1, indexDestination = -1;
@@ -346,9 +345,9 @@ public class TourData extends Observable {
 
             }
 
-            notifyObservers(UpdateType.TOUR);
-            System.out.println("DONE");
+            setStopTimeAndNumber();
             return true;
+
         }
 
         return false;
