@@ -177,6 +177,11 @@ public class TourData extends Observable {
                 //Store destination and remove path to it
                 currentDestination = path.getDestination();
                 tourPaths.remove(path);
+                if (currentDestination == delivery) {
+                    currentDestination = tourPaths.get(i).getDestination();
+                    path = tourPaths.get(i);
+                    tourPaths.remove(path);
+                }
 
                 //Find new path
                 int indexOrigin = -1, indexDestination = -1;
@@ -196,6 +201,7 @@ public class TourData extends Observable {
                 //Insert in position i
                 tourPaths.add(i, newPath);
                 currentOrigin = null;
+
             }
 
             /**
