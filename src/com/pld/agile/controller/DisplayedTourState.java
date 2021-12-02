@@ -15,8 +15,9 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
 
+import java.io.IOException;
+import java.util.List;
 import static com.pld.agile.model.tour.StopType.DELIVERY;
 import static com.pld.agile.model.tour.StopType.PICKUP;
 
@@ -190,7 +191,9 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doStartAddRequest(Controller c, Window window) {
+        System.out.println("DoSstartAddRequest");
         TourData tourData = window.getTourData();
+        int nbRequests = tourData.getRequestList().size();
         tourData.unHighlightStops();
         window.getScene().setCursor(Cursor.CROSSHAIR);
         window.toggleMainSceneButton(false);
