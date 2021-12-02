@@ -59,13 +59,13 @@ public class TextualViewStop extends VBox implements Observer {
         double duration = stop.getDuration();
         StopType type = stop.getType();
         LocalTime arrivalTime = stop.getArrivalTime();
-        String arrivalTimeString = "";
+        String arrivalTimeString = "00:00";
         if (arrivalTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             arrivalTimeString = formatter.format(arrivalTime);
         }
         LocalTime departureTime = stop.getDepartureTime();
-        String departureTimeString = "";
+        String departureTimeString = "00:00";
         if (departureTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             departureTimeString = formatter.format(departureTime);
@@ -102,10 +102,10 @@ public class TextualViewStop extends VBox implements Observer {
         // Hours of departure / arrival
         if (type == StopType.WAREHOUSE) {
             labelPanel.getChildren().addAll(separatorText);
-            // Departure hour of warehouse
-            TimeTextField departureHourInput = new TimeTextField(departureTimeString);
-            departureHourInput.setFocusTraversable(false);
             if (editable) {
+                // Departure hour of warehouse
+                TimeTextField departureHourInput = new TimeTextField(departureTimeString);
+                departureHourInput.setFocusTraversable(false);
                 departureHourInput.setOnKeyPressed(
                         (event) -> {
                             if (event.getCode() == KeyCode.ENTER) {
@@ -132,23 +132,37 @@ public class TextualViewStop extends VBox implements Observer {
                             }
                         }
                 );
+                departureHourInput.setPrefWidth(60);
+                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
                 // Arrival hour back at warehouse
                 TimeTextField arrivalHourInput = new TimeTextField(arrivalTimeString);
                 arrivalHourInput.setFocusTraversable(false);
                 arrivalHourInput.setEditable(false);
                 arrivalHourInput.setMouseTransparent(true);
-                departureHourInput.setPrefWidth(60);
-                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                arrivalHourInput.setPrefWidth(60);
+                arrivalHourInput.getStyleClass().add("textual-view-stop-panel-hour");
                 // Adding them together
                 labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText, arrivalHourInput);
             } else {
+                LocalTime warehouseDepartureTime = parent.getWindow().getTourData().getDepartureTime();
+                String warehouseDepartureTimeString = "00:00";
+                if (warehouseDepartureTime != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                    warehouseDepartureTimeString = formatter.format(warehouseDepartureTime);
+                }
+                TimeTextField departureHourInput = new TimeTextField(warehouseDepartureTimeString);
+                departureHourInput.setFocusTraversable(false);
                 departureHourInput.setEditable(false);
+                departureHourInput.setMouseTransparent(true);
+                departureHourInput.setPrefWidth(60);
+                departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                // Adding them together
+                labelPanel.getChildren().addAll(departureHourInput);
             }
-            departureHourInput.setPrefWidth(60);
-            departureHourInput.getStyleClass().add("textual-view-stop-panel-hour");
         } else {
             // Arrival hour at stop
             if (editable) {
+                labelPanel.getChildren().addAll(separatorText);
                 Text arrivalHourText = new Text(arrivalTimeString);
                 arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
                 labelPanel.setAlignment(Pos.CENTER_LEFT);
