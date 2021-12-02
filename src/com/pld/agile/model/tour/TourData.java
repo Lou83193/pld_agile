@@ -150,10 +150,10 @@ public class TourData extends Observable {
      * Unhighlights every stop.
      */
     public void unHighlightStops() {
-        warehouse.setHighlighted(false);
+        warehouse.setHighlighted(0);
         for (Request request : requestList) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
+            request.getPickup().setHighlighted(0);
+            request.getDelivery().setHighlighted(0);
         }
     }
 
@@ -402,7 +402,7 @@ public class TourData extends Observable {
 
         }
         Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
-        currentStop.setStopNumber(tourPaths.size()-1);
+        currentStop.setStopNumber(0);
         currentStop.setArrivalTime(currentTime);
 
         notifyObservers(UpdateType.TOUR);

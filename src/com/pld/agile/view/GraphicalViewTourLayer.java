@@ -68,15 +68,21 @@ public class GraphicalViewTourLayer extends Pane {
         for (Path path : tourPaths) {
 
             GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
-                    graphicalView,
-                    path,
-                    4 * screenScale * mapScale,
-                    Color.web("#ED6A08")
+                graphicalView,
+                path,
+                4 * screenScale * mapScale
             );
             this.getChildren().add(graphicalViewPath);
 
         }
 
+    }
+
+    /**
+     * Clear the tour trace
+     */
+    public void clear() {
+        this.getChildren().clear();
     }
 
     /**

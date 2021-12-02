@@ -94,7 +94,7 @@ public class Window extends Application {
         stage = s;
 
         wrapperPane = new BorderPane();
-        scene = new Scene(wrapperPane, 1020, 720);
+        scene = new Scene(wrapperPane, 1040, 720);
         scene.getStylesheets().add("stylesheet.css");
 
         constructMenuBar();
@@ -119,6 +119,8 @@ public class Window extends Application {
 
         homePane = new BorderPane();
         homePane.setId("home-pane");
+        homePane.maxHeightProperty().bind(scene.heightProperty());
+        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1040/720.0));
 
         // Logo
         ImageView logo = new ImageView(new Image("logo.png"));
@@ -155,6 +157,8 @@ public class Window extends Application {
 
         mainPane = new BorderPane();
         mainPane.getStyleClass().add("white-background");
+        mainPane.maxHeightProperty().bind(scene.heightProperty());
+        mainPane.maxWidthProperty().bind(scene.heightProperty().add(320));
 
         BorderPane centerPanel = new BorderPane();
         // Street name label
@@ -285,6 +289,13 @@ public class Window extends Application {
                 topNode.setPadding(new Insets(0, 20, 20, 20));
             }
         }
+    }
+
+    /**
+     * Deactivates the main scene's button
+     */
+    public void toggleMainSceneButton(boolean enabled) {
+        mainSceneButton.setDisable(!enabled);
     }
 
     /**

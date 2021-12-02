@@ -77,7 +77,6 @@ public class GraphicalViewMapLayer extends Pane {
                     graphicalView,
                     segment,
                     2 * screenScale * mapScale,
-                    Color.web("#545454"),
                     graphicalView.getWindow().getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);
