@@ -1,20 +1,19 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
-import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
 import static com.pld.agile.model.tour.StopType.DELIVERY;
 import static com.pld.agile.model.tour.StopType.PICKUP;
@@ -42,9 +41,8 @@ public class DisplayedTourState implements State {
         if (requestsFile != null) {
 
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
-            boolean success = requestsLoader.load();
-
-            if (success) {
+            try {
+                requestsLoader.load();
                 window.toggleFileMenuItem(2, true);
                 window.setMainSceneButton(
                         "Compute tour",
@@ -52,9 +50,16 @@ public class DisplayedTourState implements State {
                 );
                 window.placeMainSceneButton(false);
                 c.setCurrState(c.displayedRequestsState);
-            }
-            return success;
 
+                return true;
+            } catch (SyntaxException | IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Map loading error");
+                alert.showAndWait();
+                return false;
+            }
         }
         return false;
     }
@@ -85,60 +90,8 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
-        Stop pickup = request.getPickup();
-        Stop delivery = request.getDelivery();
-        Stop currentOrigin = null;
-        Stop currentDestination = null;
-
-        List<Path> tourPath = window.getTourData().getTourPaths();
-
-        for (int i = 0; i<tourPath.size(); i++) {
-            Path path = tourPath.get(i);
-
-            /** If we found the request which we want to remove in the previous iteration,
-             * we find the new path between the previous stop and the next stop,
-             * and we add it to the tourPath.
-             */
-            if (currentOrigin != null) {
-
-                //Store destination and remove path to it
-                currentDestination = path.getDestination();
-                tourPath.remove(path);
-
-                //Find new path
-                Graph stopsGraph = window.getTourData().getStopsGraph();
-                List<Integer> stops = window.getTourData().getStops();
-                int indexOrigin = -1, indexDestination = -1;
-                for (int j = 0; j < stops.size(); j++) {
-                    if(stops.get(j) == currentOrigin.getAddress().getId()){
-                        indexOrigin = j;
-                    } else if (stops.get(j) == currentDestination.getAddress().getId()){
-                        indexDestination = j;
-                    }
-                    if(indexOrigin != -1 && indexDestination != -1) { break; }
-                }
-
-                Path newPath = stopsGraph.getPath(indexOrigin, indexDestination);
-
-                //Insert in position i
-                tourPath.add(i, newPath);
-                currentOrigin = null;
-            }
-
-            /**
-             * If the destination of the current path
-             * is the stop which we want to remove
-             * we store the origin of that stop and
-             * remove the path to it
-             */
-            if (path.getDestination() == pickup || path.getDestination() == delivery) {
-                currentOrigin = path.getOrigin();
-                tourPath.remove(path);
-                i--;
-            }
-        }
-
-        window.getTourData().setStopTimeAndNumber();
+        TourData tourData = window.getTourData();
+        tourData.deleteRequest(request);
     }
 
     @Override
@@ -226,6 +179,8 @@ public class DisplayedTourState implements State {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
         c.setCurrState(c.addingRequestState1);
+
+
     }
 
     @Override
