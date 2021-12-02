@@ -4,16 +4,18 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
-import com.pld.agile.utils.parsing.SyntaxException;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -53,13 +55,8 @@ public interface State {
                 c.setCurrState(c.awaitRequestsState);
 
                 return true;
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
-                alert.setTitle("Error"); // force english
-                alert.setHeaderText("Map loading error");
-                alert.showAndWait();
-                return false;
-            } catch (SyntaxException e) {
+            } catch (IOException | SyntaxException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");
@@ -119,14 +116,18 @@ public interface State {
     }
 
     default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
+        TourData tourData = window.getTourData();
         stop.setDuration(newDuration);
-        TourData td = window.getTourData();
-        td.setStopTimeAndNumber();
-        // change the attribute in stop
-        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+        tourData.setStopTimeAndNumber();
     }
 
     default void doStartAddRequest(Controller c, Window window) {
+    }
+
+    default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
+        TourData tourData = window.getTourData();
+        tourData.setDepartureTime(time);
+        tourData.setStopTimeAndNumber();
     }
 
 }

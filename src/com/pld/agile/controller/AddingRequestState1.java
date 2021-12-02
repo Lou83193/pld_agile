@@ -29,6 +29,7 @@ public class AddingRequestState1 implements State {
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP );
         newRequest.setPickup(newPickup);
         window.getTourData().getRequestList().add(newRequest);
+
         c.setCurrState(c.addingRequestState2);
     }
 

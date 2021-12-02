@@ -1,18 +1,25 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
-import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+
+import java.io.IOException;
 import java.util.List;
+import static com.pld.agile.model.tour.StopType.DELIVERY;
+import static com.pld.agile.model.tour.StopType.PICKUP;
 
 /**
  * State when the map and a list of requests are loaded.
@@ -37,9 +44,8 @@ public class DisplayedTourState implements State {
         if (requestsFile != null) {
 
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
-            boolean success = requestsLoader.load();
-
-            if (success) {
+            try {
+                requestsLoader.load();
                 window.toggleFileMenuItem(2, true);
                 window.setMainSceneButton(
                         "Compute tour",
@@ -47,9 +53,16 @@ public class DisplayedTourState implements State {
                 );
                 window.placeMainSceneButton(false);
                 c.setCurrState(c.displayedRequestsState);
-            }
-            return success;
 
+                return true;
+            } catch (SyntaxException | IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Requests loading error");
+                alert.showAndWait();
+                return false;
+            }
         }
         return false;
     }
@@ -57,19 +70,31 @@ public class DisplayedTourState implements State {
     @Override
     public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
-        tourData.getWarehouse().setHighlighted(false);
-        for (Request request : tourData.getRequestList()) {
-            request.getPickup().setHighlighted(false);
-            request.getDelivery().setHighlighted(false);
+        tourData.unHighlightStops();
+        stop.setHighlighted(2);
+        if (stop.getType() != StopType.WAREHOUSE) {
+            if (stop.getRequest().getPickup().equals(stop)) {
+                stop.getRequest().getDelivery().setHighlighted(1);
+            }
+            else {
+                stop.getRequest().getPickup().setHighlighted(1);
+            }
         }
-        stop.setHighlighted(true);
     }
 
     @Override
     public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
         TourData tourData = window.getTourData();
         tourData.unHighlightStops();
-        stop.setHighlighted(true);
+        stop.setHighlighted(2);
+        if (stop.getType() != StopType.WAREHOUSE) {
+            if (stop.getRequest().getPickup().equals(stop)) {
+                stop.getRequest().getDelivery().setHighlighted(1);
+            }
+            else {
+                stop.getRequest().getPickup().setHighlighted(1);
+            }
+        }
     }
 
     @Override
@@ -80,69 +105,77 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
-        Stop pickup = request.getPickup();
-        Stop delivery = request.getDelivery();
-        Stop currentOrigin = null;
-        Stop currentDestination = null;
-
-        List<Path> tourPath = window.getTourData().getTourPaths();
-
-        for (int i = 0; i<tourPath.size(); i++) {
-            Path path = tourPath.get(i);
-
-            /** If we found the request which we want to remove in the previous iteration,
-             * we find the new path between the previous stop and the next stop,
-             * and we add it to the tourPath.
-             */
-            if (currentOrigin != null) {
-
-                //Store destination and remove path to it
-                currentDestination = path.getDestination();
-                tourPath.remove(path);
-
-                //Find new path
-                Graph stopsGraph = window.getTourData().getStopsGraph();
-                List<Integer> stops = window.getTourData().getStops();
-                int indexOrigin = -1, indexDestination = -1;
-                for (int j = 0; j < stops.size(); j++) {
-                    if(stops.get(j) == currentOrigin.getAddress().getId()){
-                        indexOrigin = j;
-                    } else if (stops.get(j) == currentDestination.getAddress().getId()){
-                        indexDestination = j;
-                    }
-                    if(indexOrigin != -1 && indexDestination != -1) { break; }
-                }
-
-                Path newPath = stopsGraph.getPath(indexOrigin, indexDestination);
-
-                //Insert in position i
-                tourPath.add(i, newPath);
-                currentOrigin = null;
-            }
-
-            /**
-             * If the destination of the current path
-             * is the stop which we want to remove
-             * we store the origin of that stop and
-             * remove the path to it
-             */
-            if (path.getDestination() == pickup || path.getDestination() == delivery) {
-                currentOrigin = path.getOrigin();
-                tourPath.remove(path);
-                i--;
-            }
-        }
-
-        window.getTourData().setStopTimeAndNumber();
+        TourData tourData = window.getTourData();
+        tourData.deleteRequest(request);
     }
 
     @Override
     public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
-        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
-        // then shift the stop up or down
-        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
-        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
-        // don't forget to change order attribute in stop
+        ArrayList<Stop> listStops = new ArrayList<>();
+        List<Path> tourPath = window.getTourData().getTourPaths();
+
+        listStops.add(tourPath.get(0).getOrigin());
+        int indexStop = 0;
+
+        //Build a list of all the stops in the tour in order
+        for(int i = 0; i < tourPath.size(); i++) {
+            Stop currStop = tourPath.get(i).getDestination();
+            listStops.add(currStop);
+            if (currStop == stop) { indexStop = i; }
+        }
+
+        //Check if the stop is allowed to move up
+        boolean canMove = true;
+        Stop stopAbove = null;
+        if (indexStop < 1) {
+            canMove = false;
+        } else {
+            stopAbove = listStops.get(indexStop - 2);
+            if (stop.getType() == DELIVERY) {
+                System.out.println("delivery");
+                //todo : check if delivery above pickup
+                if (stop.getRequest().equals(stopAbove.getRequest())) { System.out.println("cannot move"); canMove = false; }
+            }
+        }
+        System.out.println("check done :" + canMove);
+
+        if (canMove) {
+            //Shift the stop up one place
+            listStops.add(indexStop, stopAbove);
+            listStops.add(indexStop - 1, stop);
+            System.out.println("stop moved");
+
+            //Reconstruct tourData
+            for (int i = 0; i < listStops.size() - 1; i++) {
+                //Update stopNumber
+                listStops.get(i).setStopNumber(i);
+
+                //Get index of stops
+
+                List<Integer> stops = window.getTourData().getStops();
+                int indexOrigin = -1, indexDestination = -1;
+                for (int j = 0; j < stops.size(); j++) {
+                    if (stops.get(j) == listStops.get(i).getAddress().getId()) {
+                        indexOrigin = j;
+                    } else if (stops.get(j) == listStops.get(i + 1).getAddress().getId()) {
+                        indexDestination = j;
+                    }
+                    if (indexOrigin != -1 && indexDestination != -1) {
+                        break;
+                    }
+                }
+
+                //Add path to tourPath
+                Graph stopsGraph = window.getTourData().getStopsGraph();
+                tourPath.clear();
+                tourPath.add(stopsGraph.getPath(indexOrigin, indexDestination));
+                System.out.println("path added");
+            }
+
+            System.out.println("DONE");
+            return true;
+        }
+
         return false;
     }
 
@@ -162,6 +195,8 @@ public class DisplayedTourState implements State {
         TourData tourData = window.getTourData();
         int nbRequests = tourData.getRequestList().size();
         tourData.unHighlightStops();
+        window.getScene().setCursor(Cursor.CROSSHAIR);
+        window.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
     }
 

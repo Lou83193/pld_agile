@@ -6,6 +6,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -29,9 +30,13 @@ public class AddingRequestState2 implements State {
         //Intersection intersection = window.getMapData().getIntersections().get(1022);
 
         Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
+
         Request newRequest = tourData.getRequestList().get(tourData.getRequestList().size()-1);
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY );
-        newRequest.setDelivery(newDelivery);
+        newRequest.setDelivery(newDelivery);     
+        
+        window.getScene().setCursor(Cursor.DEFAULT);
+        window.toggleMainSceneButton(true);
         System.out.println("Request added : " + tourData.getRequestList().get(tourData.getRequestList().size()-1));
         tourData.addRequest();
         c.setCurrState(c.displayedTourState);
