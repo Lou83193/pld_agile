@@ -105,6 +105,7 @@ public class Window extends Application {
         wrapperPane.setCenter(homePane);
 
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.setTitle("COLIFFIMO - Route Planner");
         stage.getIcons().add(new Image("icon.png"));
         stage.show();

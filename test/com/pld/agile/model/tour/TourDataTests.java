@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 public class TourDataTests {
     private final MapData mapData = new MapData ();
     private final MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
@@ -38,7 +39,6 @@ public class TourDataTests {
             e.printStackTrace();
         }
     }
-
     @Test
     public void testTourData(){
         TourData tourData = new TourData();
@@ -99,14 +99,12 @@ public class TourDataTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tourDataInit.setStops();
+        //tourDataInit.setStops();
         tourData = tourDataInit;
         tourData.computeTour();
 
         assertNotEquals(tourData.getStops().toString(), tourDataInit.getStops().toString());
     }
-
-
 
 /*
     @Test
