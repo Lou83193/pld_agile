@@ -10,6 +10,8 @@ import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.utils.view.ZoomableScrollPane;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 /**
@@ -62,6 +64,11 @@ public class GraphicalView implements Observer {
         tourData.addObserver(this);
 
         Pane pane = new Pane();
+        pane.addEventHandler(MouseEvent.ANY, event -> {
+            if (event.getButton() != MouseButton.PRIMARY) {
+                event.consume();
+            }
+        });
         component = new ZoomableScrollPane(pane);
         component.setId("map");
 
@@ -126,6 +133,7 @@ public class GraphicalView implements Observer {
                 graphicalViewMapLayer.draw();
             }
             case REQUESTS -> {
+                graphicalViewTourLayer.clear();
                 graphicalViewRequestsLayer.draw();
             }
             case TOUR -> {

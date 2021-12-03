@@ -1,7 +1,12 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.StopType;
+import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -11,12 +16,20 @@ import com.pld.agile.view.Window;
  */
 public class AddingRequestState2 implements State {
 
+    /**
+     * Finishes new request setting and returning to displayedTourState.
+     * @param c the controller
+     * @param window the application window
+     * @param latLonPos latitude and longitude of selected point
+     */
     @Override
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        // loop through all intersections
-        // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-        // find the smallest distance
-        // create a delivery stop at that position, associated to the request that's in construction
+        Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
+        Request tmp = window.getTourData().getRequestList().get(window.getTourData().getRequestList().size()-1);
+        Stop newDelivery = new Stop(tmp, intersection, 0, StopType.DELIVERY );
+        tmp.setDelivery(newDelivery);
+        window.getScene().setCursor(Cursor.DEFAULT);
+        window.toggleMainSceneButton(true);
         c.setCurrState(c.displayedTourState);
     }
 

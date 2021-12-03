@@ -8,6 +8,7 @@ import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -115,16 +116,18 @@ public interface State {
     }
 
     default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
-        // change the attribute in stop
-        // loop through all the stops in order of passage (tourPaths) and recompute the hours of arrival
+        TourData tourData = window.getTourData();
+        stop.setDuration(newDuration);
+        tourData.setStopTimeAndNumber();
     }
 
     default void doStartAddRequest(Controller c, Window window) {
     }
 
     default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
-        // change attribute in stop
-        // loop through all the stops and recompute
+        TourData tourData = window.getTourData();
+        tourData.setDepartureTime(time);
+        tourData.setStopTimeAndNumber();
     }
 
 }
