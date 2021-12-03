@@ -41,7 +41,7 @@ public class TourDataTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tourDataInit.setStops();
+        //tourDataInit.setStops();
         tourData = tourDataInit;
         tourData.computeTour();
 

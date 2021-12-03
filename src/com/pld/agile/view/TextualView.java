@@ -110,9 +110,6 @@ public class TextualView implements Observer {
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();
             VBox requestPanel = new TextualViewStop(stop, this, true);
-            /*requestPanel.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(stop)
-            );*/
             requestListContainer.getChildren().add(requestPanel);
         }
 
@@ -127,10 +124,12 @@ public class TextualView implements Observer {
      */
     @Override
     public void update(Observable o, UpdateType updateType) {
+        //double oldScrollValue = component.getVvalue();
         switch (updateType) {
             case REQUESTS -> populateInitialTextualView();
             case TOUR -> populateTourTextualView();
         }
+        //component.setVvalue(oldScrollValue);
     }
 
     /**

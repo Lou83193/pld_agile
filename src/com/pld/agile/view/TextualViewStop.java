@@ -248,6 +248,7 @@ public class TextualViewStop extends VBox implements Observer {
             upButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderUp(stop)
             );
+            upButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, -1));
             // Arrow down
             Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
             ImageView downIconView = new ImageView(downIcon);
@@ -256,8 +257,9 @@ public class TextualViewStop extends VBox implements Observer {
             downButton.setGraphic(downIconView);
             downButton.getStyleClass().add("control-button");
             downButton.setOnMouseClicked(
-                    e -> parent.getWindow().getController().shiftStopOrderDown(stop)
+                e -> parent.getWindow().getController().shiftStopOrderDown(stop)
             );
+            downButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, +1));
             controls.getChildren().addAll(deleteButton, upButton, downButton);
             panel.setRight(controls);
 

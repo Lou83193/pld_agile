@@ -109,9 +109,8 @@ public class DisplayedTourState implements State {
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
         TourData tourData = window.getTourData();
-        boolean b = tourData.deleteRequest(request);
-        System.out.println("b = "+b);
-        if (!b) {
+        boolean success = tourData.deleteRequest(request);
+        if (!success) {
             window.switchToMainPane();
             window.toggleFileMenuItem(1, true);
             window.toggleFileMenuItem(2, false);
@@ -120,7 +119,6 @@ public class DisplayedTourState implements State {
                     new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
             );
             window.placeMainSceneButton(true);
-            // switch controller state to Await RequestsState
             c.setCurrState(c.awaitRequestsState);
         }
     }
@@ -141,9 +139,7 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doStartAddRequest(Controller c, Window window) {
-        System.out.println("DoSstartAddRequest");
         TourData tourData = window.getTourData();
-        int nbRequests = tourData.getRequestList().size();
         tourData.unHighlightStops();
         window.getScene().setCursor(Cursor.CROSSHAIR);
         window.toggleMainSceneButton(false);
