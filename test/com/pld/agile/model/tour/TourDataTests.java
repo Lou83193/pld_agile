@@ -9,7 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TourDataTests {
@@ -31,6 +35,20 @@ public class TourDataTests {
     }
 
     @Test
+    public void testTourData(){
+        TourData tourData = new TourData();
+        assertEquals(new ArrayList<>(),tourData.getRequestList());
+        assertEquals(new ArrayList<>(),tourData.getTourPaths());
+        assertEquals(null,tourData.getAssociatedMap());
+        assertEquals(null,tourData.getDepartureTime());
+        assertEquals(null,tourData.getWarehouse());
+    }
+
+    @Test
+    public void testUnHighlightStop(){
+
+    }
+    @Test
     //Test n°3.1
     public void testNotOptimalTour (){
         requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourDataInit);
@@ -48,6 +66,9 @@ public class TourDataTests {
         assertFalse(tourData.getStops().toString().equals(tourDataInit.getStops().toString()));
 
     }
+
+
+
 /*
     @Test
     //Test n°3.2
