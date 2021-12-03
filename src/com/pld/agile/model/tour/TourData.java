@@ -160,7 +160,6 @@ public class TourData extends Observable {
         }
     }
 
-
     public void constructNewRequest1(Intersection intersection) {
         Request newRequest = new Request();
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
@@ -287,30 +286,31 @@ public class TourData extends Observable {
     }
 
     public boolean shiftStopOrder(Stop stop, int dir) {
-
         ArrayList<Stop> listStops = new ArrayList<>();
         listStops.add(tourPaths.get(0).getOrigin());
         int stopIndex = 0;
 
         //Build a list of all the stops in the tour in order
         for (int i = 0; i < tourPaths.size(); i++) {
-            Stop currStop = tourPaths.get(i).getOrigin();
+            Stop currStop = tourPaths.get(i).getDestination();
             listStops.add(currStop);
             if (currStop.equals(stop)) { stopIndex = i; }
         }
 
-        //Check if the stop is allowed to move up
+        //Check if the stop is allowed to move in the direction
         boolean canMove = true;
         Stop neighbourStop;
         if (stopIndex < 2) {
             canMove = false;
         } else {
-            neighbourStop = listStops.get(stopIndex + dir);
-            if ((stop.getType() == DELIVERY && dir < 0) || (stop.getType() == PICKUP && dir > 0)) {
-                if (stop.getRequest().equals(neighbourStop.getRequest())) {
-                    canMove = false;
+            if(stopIndex + 1 + dir < listStops.size()) {
+                neighbourStop = listStops.get(stopIndex + 1 + dir);
+                if ((stop.getType() == DELIVERY && dir < 0) || (stop.getType() == PICKUP && dir > 0)) {
+                    if (stop.getRequest().equals(neighbourStop.getRequest())) {
+                        canMove = false;
+                    }
                 }
-            }
+            } else { canMove = false; }
         }
         System.out.println("check done : " + canMove);
 
@@ -322,7 +322,7 @@ public class TourData extends Observable {
             Collections.swap(listStops, stopIndex, stopIndex + dir);
             System.out.println("stop moved");
 
-            //Reconstruct tourData
+            //Reconstruct tourPaths
             tourPaths.clear();
             for (int i = 0; i < listStops.size() - 1; i++) {
 
@@ -341,7 +341,7 @@ public class TourData extends Observable {
 
                 //Add path to tourPath
                 tourPaths.add(stopsGraph.getPath(indexOrigin, indexDestination));
-                System.out.println("path added");
+                System.out.println("path added" + i);
 
             }
 
