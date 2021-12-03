@@ -215,7 +215,7 @@ public class TourData extends Observable {
 
     }
 
-    public void deleteRequest(Request request) {
+    public boolean deleteRequest(Request request) {
 
         Stop pickup = request.getPickup();
         Stop delivery = request.getDelivery();
@@ -239,7 +239,7 @@ public class TourData extends Observable {
                     currentDestination = tourPaths.get(i).getDestination();
                     path = tourPaths.get(i);
                     tourPaths.remove(path);
-                }
+                    }
 
                 //Find new path
                 int indexOrigin = -1, indexDestination = -1;
@@ -280,8 +280,13 @@ public class TourData extends Observable {
          * Remove from request list
          */
         requestList.removeIf(request::equals);
-
-        setStopTimeAndNumber();
+        if(tourPaths.size()!=1 || tourPaths.get(0)!=null){
+            setStopTimeAndNumber();
+            return true;
+        }else{
+            notifyObservers(UpdateType.TOUR);
+            return false;
+        }
 
     }
 
@@ -518,7 +523,6 @@ public class TourData extends Observable {
 
         LocalTime currentTime = departureTime;
         for(int i = 0; i < tourPaths.size(); i++) {
-
             Stop currentStop = tourPaths.get(i).getOrigin();
 
             currentStop.setStopNumber(i);
