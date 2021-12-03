@@ -279,6 +279,32 @@ public class TextualViewStop extends VBox implements Observer {
             e -> parent.getWindow().getController().clickOnTextualStop(stop)
         );
 
+        setHighlight(stop);
+
+    }
+
+    /**
+     * Highlights or un-highlights the graphical object
+     * based on the stop's highlight status.
+     * @param stop The stop to base the highlight on.
+     */
+    private void setHighlight(Stop stop) {
+        if (stop.getHighlighted() > 0) {
+            this.setBorder(new Border(new BorderStroke(
+                    ViewUtilities.ORANGE,
+                    BorderStrokeStyle.SOLID,
+                    new CornerRadii(10),
+                    new BorderWidths(2)
+            )));
+            //ViewUtilities.ensureVisible(scrollPane, this);
+        } else {
+            this.setBorder(new Border(new BorderStroke(
+                    Color.TRANSPARENT,
+                    BorderStrokeStyle.SOLID,
+                    new CornerRadii(10),
+                    new BorderWidths(2)
+            )));
+        }
     }
 
     @Override
@@ -286,23 +312,8 @@ public class TextualViewStop extends VBox implements Observer {
 
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
-                Stop stop = (Stop)observed;
-                if (stop.getHighlighted() > 0) {
-                    this.setBorder(new Border(new BorderStroke(
-                        ViewUtilities.ORANGE,
-                        BorderStrokeStyle.SOLID,
-                        new CornerRadii(10),
-                        new BorderWidths(2)
-                    )));
-                    //ViewUtilities.ensureVisible(scrollPane, this);
-                } else {
-                    this.setBorder(new Border(new BorderStroke(
-                        Color.TRANSPARENT,
-                        BorderStrokeStyle.SOLID,
-                        new CornerRadii(10),
-                        new BorderWidths(2)
-                    )));
-                }
+                Stop stop = (Stop) observed;
+                setHighlight(stop);
             }
         }
 

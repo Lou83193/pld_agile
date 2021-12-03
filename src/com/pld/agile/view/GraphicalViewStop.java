@@ -6,6 +6,7 @@
 
 package com.pld.agile.view;
 
+import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
@@ -184,14 +185,15 @@ public class GraphicalViewStop extends Pane implements Observer {
                     }
                     t.consume();
                 });
+                MapData mapData = parent.getWindow().getMapData();
                 this.setOnMouseDragExited((t) -> {
                     double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
                             t.getX() + pointerCenterX,
                             t.getY() + pointerCenterY + pointerH,
-                            parent.getMapData().getMinLat(),
-                            parent.getMapData().getMaxLat(),
-                            parent.getMapData().getMinLon(),
-                            parent.getMapData().getMaxLon(),
+                            mapData.getMinLat(),
+                            mapData.getMaxLat(),
+                            mapData.getMinLon(),
+                            mapData.getMaxLon(),
                             ((ScrollPane) parent.getComponent()).getHeight()
                     );
                     parent.getWindow().getController().dragOffGraphicalStop(latLonPos);
@@ -199,6 +201,8 @@ public class GraphicalViewStop extends Pane implements Observer {
                 });
 
             }
+
+            setHighlight(stop);
 
         }
 
@@ -215,34 +219,43 @@ public class GraphicalViewStop extends Pane implements Observer {
         );
     }
 
+    /**
+     * Highlights or un-highlights the graphical object
+     * based on the stop's highlight status.
+     * @param stop The stop to base the highlight on.
+     */
+    private void setHighlight(Stop stop) {
+        if (stop.getHighlighted() > 0) {
+            DropShadow shadow = new DropShadow();
+            shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));
+            shadow.setRadius(5);
+            this.setEffect(shadow);
+            stopGraphic.setFill(Color.WHITE);
+            stopGraphic.setStroke(ViewUtilities.ORANGE);
+            if (stop.getHighlighted() > 1) {
+                highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
+                if (numText != null) {
+                    numText.setFill(ViewUtilities.DARK_ORANGE);
+                }
+            }
+        } else {
+            this.setEffect(null);
+            stopGraphic.setFill(fillColour);
+            stopGraphic.setStroke(outlineColour);
+            highlightPointerGraphic.setFill(Color.TRANSPARENT);
+            if (numText != null) {
+                numText.setFill(Color.BLACK);
+            }
+        }
+    }
+
     @Override
     public void update(Observable observed, UpdateType updateType) {
 
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
                 Stop stop = (Stop)observed;
-                if (stop.getHighlighted() > 0) {
-                    DropShadow shadow = new DropShadow();
-                    shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));
-                    shadow.setRadius(5);
-                    this.setEffect(shadow);
-                    stopGraphic.setFill(Color.WHITE);
-                    stopGraphic.setStroke(ViewUtilities.ORANGE);
-                    if (stop.getHighlighted() > 1) {
-                        highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
-                        if (numText != null) {
-                            numText.setFill(ViewUtilities.DARK_ORANGE);
-                        }
-                    }
-                } else {
-                    this.setEffect(null);
-                    stopGraphic.setFill(fillColour);
-                    stopGraphic.setStroke(outlineColour);
-                    highlightPointerGraphic.setFill(Color.TRANSPARENT);
-                    if (numText != null) {
-                        numText.setFill(Color.BLACK);
-                    }
-                }
+                setHighlight(stop);
             }
         }
 

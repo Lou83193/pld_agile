@@ -4,6 +4,7 @@ import com.pld.agile.model.tour.*;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
+import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -129,7 +130,7 @@ public class TextualView implements Observer {
             case REQUESTS -> populateInitialTextualView();
             case TOUR -> populateTourTextualView();
         }
-        //component.setVvalue(oldScrollValue);
+        //component.setVvalue(ViewUtilities.clamp(oldScrollValue, component.getVmin(), component.getVmax()));
     }
 
     /**

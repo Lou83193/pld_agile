@@ -33,12 +33,12 @@ public class GraphicalViewRequestsLayer extends Group {
     public void draw() {
 
         GraphicalViewMapLayer graphicalMap = graphicalView.getGraphicalViewMapLayer();
-        MapData mapData = graphicalView.getMapData();
-        TourData tourData = graphicalView.getTourData();
+        MapData mapData = graphicalView.getWindow().getMapData();
+        TourData tourData = graphicalView.getWindow().getTourData();
 
         double screenScale = ViewUtilities.mapValue(
                 graphicalMap.getHeight(),
-                0, 720,
+                0, 1000,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(

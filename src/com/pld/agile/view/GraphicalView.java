@@ -20,14 +20,6 @@ import javafx.scene.layout.Pane;
 public class GraphicalView implements Observer {
 
     /**
-     * The application's MapData instance.
-     */
-    private MapData mapData;
-    /**
-     * The application's TourData instance.
-     */
-    private TourData tourData;
-    /**
      * The application's Window instance.
      */
     private Window window;
@@ -57,11 +49,8 @@ public class GraphicalView implements Observer {
     public GraphicalView(Window window) {
 
         this.window = window;
-        this.mapData = window.getMapData();
-        this.tourData = window.getTourData();
-
-        mapData.addObserver(this);
-        tourData.addObserver(this);
+        window.getMapData().addObserver(this);
+        window.getTourData().addObserver(this);
 
         Pane pane = new Pane();
         pane.addEventHandler(MouseEvent.ANY, event -> {
@@ -110,6 +99,7 @@ public class GraphicalView implements Observer {
      * @return A double[] containing the {x, y} projection.
      */
     public double[] projectLatLon(final Intersection intersection) {
+        MapData mapData = window.getMapData();
         return ViewUtilities.projectMercatorLatLon(
                 intersection.getLatitude(),
                 intersection.getLongitude(),
@@ -156,20 +146,6 @@ public class GraphicalView implements Observer {
      */
     public GraphicalViewMapLayer getGraphicalViewMapLayer() {
         return graphicalViewMapLayer;
-    }
-    /**
-     * Getter for mapData.
-     * @return mapData
-     */
-    public MapData getMapData() {
-        return mapData;
-    }
-    /**
-     * Getter for tourData.
-     * @return tourData
-     */
-    public TourData getTourData() {
-        return tourData;
     }
     /**
      * Getter for window.
