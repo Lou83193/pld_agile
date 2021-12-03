@@ -58,7 +58,10 @@
     -fx-opacity: 0.8;
 }
 .control-button:hover {
-    -fx-background-color: #EFEFEF;
+    -fx-background-color: #F2F2F2;
+}
+.control-button:disabled {
+    -fx-opacity: 0.2;
 }
 
 .add-button {

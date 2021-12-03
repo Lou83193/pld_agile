@@ -1,11 +1,11 @@
 package com.pld.agile.controller;
 
 import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
 
 /**
@@ -23,11 +23,11 @@ public class AddingRequestState1 implements State {
      */
     @Override
     public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        Intersection intersection = window.getMapData().findClosestIntersection(latLonPos);
-        Request tmp = new Request();
-        Stop newPickup = new Stop(tmp, intersection, 0, StopType.PICKUP);
-        tmp.setPickup(newPickup);
-        window.getTourData().getRequestList().add(tmp);
+        MapData mapData = window.getMapData();
+        TourData tourData = window.getTourData();
+        //Intersection intersection = mapData.getIntersections().get(506);
+        Intersection intersection = mapData.findClosestIntersection(latLonPos);
+        tourData.constructNewRequest1(intersection);
         c.setCurrState(c.addingRequestState2);
     }
 

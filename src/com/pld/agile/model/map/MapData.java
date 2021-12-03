@@ -13,6 +13,7 @@ import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -220,20 +221,20 @@ public class MapData extends Observable {
     public Intersection findClosestIntersection(double[] latLonPos) {
         double lat = 0;
         double lon = 0;
-        ViewUtilities viewUtilities = new ViewUtilities();
-        double shortest = 0;
+        double shortest = Double.MAX_VALUE;
         Intersection closestIntersection = null;
-        double tmp = 0;
+        double distanceToIntersection = 0;
         int bound = intersections.size();
+
         // loop through all intersections
         for ( int i = 0; i<bound; i++){
             lat = intersections.get(i).getLatitude();
             lon = intersections.get(i).getLongitude();
             // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-            tmp = viewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
+            distanceToIntersection = ViewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
             // find the smallest distance
-            if(tmp<shortest){
-                shortest = tmp;
+            if(distanceToIntersection<shortest){
+                shortest = distanceToIntersection;
                 closestIntersection = intersections.get(i);
             }
         }
