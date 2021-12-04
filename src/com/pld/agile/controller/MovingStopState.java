@@ -1,6 +1,9 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
 import com.pld.agile.view.Window;
 
 /**
@@ -16,6 +19,11 @@ public class MovingStopState implements State {
         // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
         // find the smallest distance
         // change the intersection of the currently dragged stop to that
+        MapData mapData = window.getMapData();
+        TourData tourData = window.getTourData();
+        Intersection intersection = mapData.findClosestIntersection(latLonPos);
+        tourData.constructNewRequest1(intersection);
+        
         c.setCurrState(c.displayedTourState);
     }
 
