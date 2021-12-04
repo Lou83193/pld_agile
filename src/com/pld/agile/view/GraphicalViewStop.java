@@ -19,7 +19,7 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Shadow;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -58,6 +58,7 @@ public class GraphicalViewStop extends Pane implements Observer {
     private Shape stopGraphic;
     private Shape highlightPointerGraphic;
     private Text numText;
+    private boolean isDragged;
 
     /**
      * TextualViewStop constructor.
@@ -71,6 +72,7 @@ public class GraphicalViewStop extends Pane implements Observer {
 
         stop.addObserver(this);
 
+        isDragged = false;
         fillColour = Color.BLACK;
         outlineColour = Color.BLACK;
 
@@ -166,7 +168,9 @@ public class GraphicalViewStop extends Pane implements Observer {
             if (editable) {
 
                 this.setCursor(Cursor.HAND);
-                this.setOnMouseDragEntered((t) -> {
+                this.setOnDragDetected((t) -> {
+                    System.out.println("hi");
+                    isDragged = true;
                     this.toFront();
                     parent.getWindow().getController().dragOnGraphicalStop();
                     t.consume();
@@ -186,18 +190,22 @@ public class GraphicalViewStop extends Pane implements Observer {
                     t.consume();
                 });
                 MapData mapData = parent.getWindow().getMapData();
-                this.setOnMouseDragExited((t) -> {
-                    double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
-                            t.getX() + pointerCenterX,
-                            t.getY() + pointerCenterY + pointerH,
-                            mapData.getMinLat(),
-                            mapData.getMaxLat(),
-                            mapData.getMinLon(),
-                            mapData.getMaxLon(),
-                            ((ScrollPane) parent.getComponent()).getHeight()
-                    );
-                    parent.getWindow().getController().dragOffGraphicalStop(stop, latLonPos);
-                    t.consume();
+                this.setOnMouseReleased((t) -> {
+                    if (isDragged) {
+                        System.out.println("bye");
+                        double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
+                                t.getX() + pointerCenterX,
+                                t.getY() + pointerCenterY + pointerH,
+                                mapData.getMinLat(),
+                                mapData.getMaxLat(),
+                                mapData.getMinLon(),
+                                mapData.getMaxLon(),
+                                ((ScrollPane) parent.getComponent()).getHeight()
+                        );
+                        parent.getWindow().getController().dragOffGraphicalStop(stop, latLonPos);
+                        isDragged = false;
+                        t.consume();
+                    }
                 });
 
             }
