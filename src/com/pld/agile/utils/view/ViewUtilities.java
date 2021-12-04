@@ -104,27 +104,24 @@ public class ViewUtilities {
         return new Color(r, g, b, a);
     }
 
-    // Source: https://stackoverflow.com/questions/12837592/how-to-scroll-to-make-a-node-within-the-content-of-a-scrollpane-visible
     public static void ensureVisible(ScrollPane pane, Node node) {
-        double width = pane.getContent().getBoundsInParent().getWidth();
-        double height = pane.getContent().getBoundsInParent().getHeight();
-        double x = node.getBoundsInParent().getMaxX();
-        double yMax = node.getBoundsInParent().getMaxY();
-        double yMin = node.getBoundsInParent().getMinY();
-        double yCurr = pane.getVvalue() * height;
-        Bounds paneBounds = pane.localToScene(pane.getBoundsInParent());
-        Bounds nodeBounds = node.localToScene(node.getBoundsInLocal());
-        if (paneBounds.intersects(nodeBounds)) {
+        Bounds viewPortBound = pane.getViewportBounds();
+        Bounds nodeBounds = node.getBoundsInParent();
+        Bounds contentBounds = pane.getContent().getLayoutBounds();
+        double viewPortMidPoint = (viewPortBound.getMaxY() + viewPortBound.getMinY())/2;
+        double nodeMidPoint = (nodeBounds.getMaxY() + nodeBounds.getMinY())/2;
+        double currTopY = ViewUtilities.mapValue(pane.getVvalue(), pane.getVmin(), pane.getVmax(), contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight());
+        if (nodeBounds.getMinY() >= currTopY && nodeBounds.getMaxY() <= currTopY + viewPortBound.getHeight()) {
             return;
         }
-        if (yMin < 1) {
-            pane.setVvalue(0);
-        } else if (yMax > yCurr) {
-            pane.setVvalue(yMax / height);
-        } else if (yMin < yCurr) {
-            pane.setVvalue(yMin / height);
+        double desiredY;
+        if (nodeMidPoint - currTopY < viewPortMidPoint) {
+            desiredY = nodeBounds.getMinY();
+        } else {
+            desiredY = nodeBounds.getMaxY() - viewPortBound.getHeight();
         }
-        pane.setHvalue(x / width);
+        double v = ViewUtilities.mapValue(desiredY, contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight(), pane.getVmin(), pane.getVmax());
+        pane.setVvalue(ViewUtilities.clamp(v, pane.getVmin(), pane.getVmax()));
         node.requestFocus();
     }
 

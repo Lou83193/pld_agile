@@ -305,7 +305,7 @@ public class TourData extends Observable {
         //Check if the stop is allowed to move in the direction
         boolean canMove = true;
         Stop neighbourStop;
-        if ((stopIndex < 2 && dir < 0) || (stopIndex > listStops.size() - 2 && dir > 0)) {
+        if ((stopIndex < 2 && dir < 0) || (stopIndex > listStops.size() - 3 && dir > 0)) {
             canMove = false;
         } else {
             neighbourStop = listStops.get(stopIndex + dir);

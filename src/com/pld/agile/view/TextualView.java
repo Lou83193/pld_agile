@@ -74,19 +74,18 @@ public class TextualView implements Observer {
 
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
-            /*requestPanel1.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(request.getPickup())
-            );*/
             VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
-            /*requestPanel2.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(request.getDelivery())
-            );*/
             requestListContainer.getChildren().addAll(
                     requestPanel1,
                     requestPanel2
             );
         }
 
+        VBox oldContent = (VBox) component.getContent();
+        for (Node n : oldContent.getChildren()) {
+            TextualViewStop s = (TextualViewStop) n;
+            s.stopObserving();
+        }
         component.setContent(requestListContainer);
 
     }
@@ -96,6 +95,8 @@ public class TextualView implements Observer {
      * by iterating through the tour data's computed path.
      */
     public void populateTourTextualView() {
+
+        double oldScrollValue = component.getVvalue();
 
         VBox requestListContainer = new VBox(20);
         requestListContainer.getStyleClass().add("white-background");
@@ -114,7 +115,18 @@ public class TextualView implements Observer {
             requestListContainer.getChildren().add(requestPanel);
         }
 
+        VBox oldContent = (VBox) component.getContent();
+        for (Node n : oldContent.getChildren()) {
+            TextualViewStop s = (TextualViewStop) n;
+            s.stopObserving();
+        }
         component.setContent(requestListContainer);
+
+        if (oldContent.getChildren().size() >= requestListContainer.getChildren().size()) {
+            component.setVvalue(ViewUtilities.clamp(oldScrollValue, component.getVmin(), component.getVmax()));
+        } else {
+            component.setVvalue(1);
+        }
 
     }
 
@@ -125,12 +137,10 @@ public class TextualView implements Observer {
      */
     @Override
     public void update(Observable o, UpdateType updateType) {
-        //double oldScrollValue = component.getVvalue();
         switch (updateType) {
             case REQUESTS -> populateInitialTextualView();
             case TOUR -> populateTourTextualView();
         }
-        //component.setVvalue(ViewUtilities.clamp(oldScrollValue, component.getVmin(), component.getVmax()));
     }
 
     /**
