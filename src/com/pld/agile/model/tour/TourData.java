@@ -10,12 +10,10 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.tsp.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.util.Pair;
+import javafx.application.Platform;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -26,7 +24,7 @@ import static com.pld.agile.model.tour.StopType.PICKUP;
 /**
  * Stores the data of a loaded requests list.
  */
-public class TourData extends Observable {
+public class TourData extends Observable implements Observer {
     /**
      * List of requests composing the tour.
      */
@@ -53,6 +51,8 @@ public class TourData extends Observable {
     private Graph stopsGraph;
 
     private List<Path> tourPaths;
+
+    private Thread tourComputingThread;
 
 
     /**
@@ -212,7 +212,7 @@ public class TourData extends Observable {
         tourPaths.add(pickupToDelivery);
         Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
         tourPaths.add(deliveryToWarehouse);
-        setStopTimeAndNumber();
+        updateStopsTimesAndNumbers();
 
     }
 
@@ -280,7 +280,7 @@ public class TourData extends Observable {
 
         // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
-            setStopTimeAndNumber();
+            updateStopsTimesAndNumbers();
             return true;
         } else {
             notifyObservers(UpdateType.TOUR);
@@ -350,7 +350,7 @@ public class TourData extends Observable {
 
             }
 
-            setStopTimeAndNumber();
+            updateStopsTimesAndNumbers();
             return true;
 
         }
@@ -366,6 +366,10 @@ public class TourData extends Observable {
 
     public List<Path> getTourPaths() { return tourPaths; }
 
+    public void setTourComputingThread(Thread thread) {
+        tourComputingThread = thread;
+    }
+
     private void setStops() {
         stops = new ArrayList<>();
         stops.add(warehouse.getAddress().getId());
@@ -380,6 +384,13 @@ public class TourData extends Observable {
         setStops();
         dijkstra();
         tsp();
+    }
+
+    public void stopComputingTour() {
+        if (tourPaths.size() > 0) {
+            tourComputingThread.interrupt();
+            notifyObservers(UpdateType.TOUR);
+        }
     }
 
     private void dijkstra() {
@@ -502,69 +513,82 @@ public class TourData extends Observable {
 
         }
         //TESTS :
+        /*
         System.out.println("stops graph : ");
         for (int i = 0; i < stops.size(); i++) {
             for (int j = 0; j < stops.size(); j++) {
                 System.out.println(stopsGraph.getCost(i, j) + " ");
             }
             System.out.println();
-        }
+        }*/
+
         System.out.println("END Dijkstra");
 
-    } // ---- END of dijkstra
+    }
 
-    public void setStopTimeAndNumber() {
-
+    private void setStopsTimesAndNumbers() {
         LocalTime currentTime = departureTime;
         for(int i = 0; i < tourPaths.size(); i++) {
             Stop currentStop = tourPaths.get(i).getOrigin();
-
             currentStop.setStopNumber(i);
             currentStop.setArrivalTime(currentTime);
             currentTime = currentTime.plusSeconds(currentStop.getDuration());
             currentStop.setDepartureTime(currentTime);
-
             double d = tourPaths.get(i).getLength();
             int t = (int)(d/(15/3.6))+1;
             currentTime = currentTime.plusSeconds(t);
-
         }
         Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
         currentStop.setStopNumber(0);
         currentStop.setArrivalTime(currentTime);
+    }
 
+    public void updateStopsTimesAndNumbers() {
+        setStopsTimesAndNumbers();
         notifyObservers(UpdateType.TOUR);
-
     }
 
     private void tsp() {
 
-        // Compute TSP
-        TSP tsp = new TSP3();
+        TSP tsp = new TSP3(this);
         long startTime = System.currentTimeMillis();
         System.out.println("TSP START");
-        tsp.searchSolution(20000, stopsGraph);
-        System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+        tsp.searchSolution(120000, stopsGraph);
+        Platform.runLater(() -> {
+            if (tourComputingThread != null && !tourComputingThread.isInterrupted()) {
+                System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+                processTSPUpdate(tsp);
+            }
+        });
 
-        tourPaths = new ArrayList<>();
-        for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
-        }
-        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
-
-        setStopTimeAndNumber();
-
-    } // ---- END of TSP
-
+    }
     // Branch&Bound (notes for myself)
     /* H1 = 0
     /* H2 = (nbUnvisited+1)*dMin
     /* H3 = l + sum of li
     /* Improvement = Sort unvisited by shortest cost to last visited vertex
     */
-
     /* Best Algo -> Limited Discrepancy Search (LDS)
     */
+
+    public void processTSPUpdate(TSP tsp) {
+        tourPaths = new ArrayList<>();
+        int n = stopsGraph.getNbVertices();
+        for(int i = 0; i < n-1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+        }
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n-1), tsp.getSolution(0)));
+        setStopsTimesAndNumbers();
+    }
+
+    @Override
+    public void update(Observable observed, UpdateType updateType) {
+        if (updateType == UpdateType.INTERMEDIARY_TSP && tourComputingThread != null && !tourComputingThread.isInterrupted()) {
+            TSP tsp = (TemplateTSP) observed;
+            processTSPUpdate(tsp);
+            notifyObservers(UpdateType.INTERMEDIARY_TOUR);
+        }
+    }
 
     /**
      * Generates a String which describes the object
@@ -579,4 +603,5 @@ public class TourData extends Observable {
                 + ", departureTime='" + departureTime + '\''
                 + '}';
     }
+
 }

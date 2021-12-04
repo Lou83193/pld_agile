@@ -8,7 +8,6 @@ import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -52,7 +51,7 @@ public interface State {
                 );
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
-                c.setCurrState(c.awaitRequestsState);
+                c.setCurrState(c.loadedMapState);
 
                 return true;
             } catch (IOException | SyntaxException e) {
@@ -88,6 +87,9 @@ public interface State {
         return false;
     }
 
+    default void doStopComputingTour(Controller c, Window window) {
+    }
+
     default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
     }
 
@@ -95,7 +97,6 @@ public interface State {
     }
 
     default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        System.out.println(latLonPos[0]+  "; " + latLonPos[1]);
     }
 
     default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
@@ -118,7 +119,7 @@ public interface State {
     default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
         TourData tourData = window.getTourData();
         stop.setDuration(newDuration);
-        tourData.setStopTimeAndNumber();
+        tourData.updateStopsTimesAndNumbers();
     }
 
     default void doStartAddRequest(Controller c, Window window) {
@@ -127,7 +128,7 @@ public interface State {
     default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
         TourData tourData = window.getTourData();
         tourData.setDepartureTime(time);
-        tourData.setStopTimeAndNumber();
+        tourData.updateStopsTimesAndNumbers();
     }
 
 }

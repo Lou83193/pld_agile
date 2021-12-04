@@ -6,19 +6,21 @@
 
 package com.pld.agile.utils.tsp;
 
+import com.pld.agile.utils.observer.Observable;
+import com.pld.agile.utils.observer.UpdateType;
+import javafx.application.Platform;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
-public abstract class TemplateTSP implements TSP {
+public abstract class TemplateTSP extends Observable implements TSP {
 	private Integer[] bestSol;
 	protected Graph g;
 	private double bestSolCost;
 	private int timeLimit;
 	private long startTime;
 
-	public void searchSolution(int timeLimit, Graph g){
+	public void searchSolution(int timeLimit, Graph g) {
+
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();
 		this.timeLimit = timeLimit;
@@ -79,6 +81,7 @@ public abstract class TemplateTSP implements TSP {
 	    		if (currentCost+g.getPath(currentVertex,0).getLength() < bestSolCost){
 	    			visited.toArray(bestSol);
 	    			bestSolCost = currentCost+g.getPath(currentVertex,0).getLength();
+					Platform.runLater(() -> notifyObservers(UpdateType.INTERMEDIARY_TSP));
 	    		}
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){

@@ -17,6 +17,10 @@ public enum ButtonEventType {
      */
     COMPUTE_TOUR,
     /**
+     * Event invoked to stop the tour computation.
+     */
+    STOP_COMPUTING_TOUR,
+    /**
      * Event invoked to add a request to the tour.
      */
     ADD_REQUEST
