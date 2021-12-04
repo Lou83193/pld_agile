@@ -13,6 +13,7 @@ import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.view.Window;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -218,26 +219,25 @@ public class MapData extends Observable {
      * @return Intersection closestIntersection
      */
     public Intersection findClosestIntersection(double[] latLonPos) {
-        double lat = 0;
-        double lon = 0;
-        ViewUtilities viewUtilities = new ViewUtilities();
-        double shortest = 0;
+        double lat;
+        double lon;
+        double shortest = Double.MAX_VALUE;
         Intersection closestIntersection = null;
-        double tmp = 0;
+        double distanceToIntersection;
         int bound = intersections.size();
+
         // loop through all intersections
-        for ( int i = 0; i<bound; i++){
-            lat = intersections.get(i).getLatitude();
-            lon = intersections.get(i).getLongitude();
+        for (Intersection intersection : intersections) {
+            lat = intersection.getLatitude();
+            lon = intersection.getLongitude();
             // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-            tmp = viewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
+            distanceToIntersection = ViewUtilities.distanceLatLon(latLonPos[0], latLonPos[1], lat, lon);
             // find the smallest distance
-            if(tmp<shortest){
-                shortest = tmp;
-                closestIntersection = intersections.get(i);
+            if (distanceToIntersection < shortest) {
+                shortest = distanceToIntersection;
+                closestIntersection = intersection;
             }
         }
-        System.out.println("Latitude/Longitude demandées : "+latLonPos[0]+"/"+latLonPos[1]+" Latitude/Longitude obtenues : "+lat+"/"+lon);
         return closestIntersection;
     }
 

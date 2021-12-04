@@ -1,11 +1,13 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.tour.Path;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
+import com.pld.agile.utils.tsp.*;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
@@ -15,7 +17,12 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import static com.pld.agile.model.tour.StopType.DELIVERY;
+import static com.pld.agile.model.tour.StopType.PICKUP;
 
 /**
  * State when the map and a list of requests are loaded.
@@ -102,27 +109,32 @@ public class DisplayedTourState implements State {
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
         TourData tourData = window.getTourData();
-        tourData.deleteRequest(request);
+        boolean success = tourData.deleteRequest(request);
+        if (!success) {
+            window.switchToMainPane();
+            window.toggleFileMenuItem(1, true);
+            window.toggleFileMenuItem(2, false);
+            window.setMainSceneButton(
+                    "Load requests",
+                    new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
+            );
+            window.placeMainSceneButton(true);
+            c.setCurrState(c.awaitRequestsState);
+        }
     }
 
     @Override
     public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
-        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
-        // then shift the stop up or down
-        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
-        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
-        // don't forget to change order attribute in stop
-        return false;
+        TourData tourData = window.getTourData();
+        boolean success = tourData.shiftStopOrder(stop, -1);
+        return success;
     }
 
     @Override
     public boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
-        // here it might be easier to construct a list of stops from the tour (using tourPaths, the list of paths)
-        // then shift the stop up or down
-        // then reconstruct tourPaths by iterating through the modified order list and fetching the paths in the graph
-        // (otherwise you could also directly manipulate the list of paths but it might be a tricky algorithm)
-        // don't forget to change order attribute in stop
-        return false;
+        TourData tourData = window.getTourData();
+        boolean success = tourData.shiftStopOrder(stop, +1);
+        return success;
     }
 
     @Override

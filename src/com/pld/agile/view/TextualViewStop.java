@@ -41,7 +41,9 @@ public class TextualViewStop extends VBox implements Observer {
 
     private ScrollPane scrollPane;
     private String inputValueTracker;
-
+    private GraphicalViewStop labelGraphic;
+    private Stop stop;
+    
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.
@@ -50,6 +52,7 @@ public class TextualViewStop extends VBox implements Observer {
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
+        this.stop = stop;
         stop.addObserver(this);
 
         this.scrollPane = (ScrollPane) parent.getComponent();
@@ -81,7 +84,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
+        labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -165,10 +168,10 @@ public class TextualViewStop extends VBox implements Observer {
                 labelPanel.getChildren().addAll(separatorText);
                 Text arrivalHourText = new Text(arrivalTimeString);
                 arrivalHourText.getStyleClass().add("textual-view-stop-panel-hour");
-                labelPanel.setAlignment(Pos.CENTER_LEFT);
                 labelPanel.getChildren().addAll(arrivalHourText);
             }
         }
+        labelPanel.setAlignment(Pos.CENTER_LEFT);
         contentPane.setTop(labelPanel);
 
         // Position
@@ -248,6 +251,7 @@ public class TextualViewStop extends VBox implements Observer {
             upButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderUp(stop)
             );
+            upButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, -1));
             // Arrow down
             Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
             ImageView downIconView = new ImageView(downIcon);
@@ -256,8 +260,9 @@ public class TextualViewStop extends VBox implements Observer {
             downButton.setGraphic(downIconView);
             downButton.getStyleClass().add("control-button");
             downButton.setOnMouseClicked(
-                    e -> parent.getWindow().getController().shiftStopOrderDown(stop)
+                e -> parent.getWindow().getController().shiftStopOrderDown(stop)
             );
+            downButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, +1));
             controls.getChildren().addAll(deleteButton, upButton, downButton);
             panel.setRight(controls);
 
@@ -277,6 +282,39 @@ public class TextualViewStop extends VBox implements Observer {
             e -> parent.getWindow().getController().clickOnTextualStop(stop)
         );
 
+        setHighlight(stop);
+
+    }
+
+    /**
+     * Highlights or un-highlights the graphical object
+     * based on the stop's highlight status.
+     * @param stop The stop to base the highlight on.
+     */
+    public void setHighlight(Stop stop) {
+        labelGraphic.setHighlight(stop);
+        if (stop.getHighlighted() > 0) {
+            this.setBorder(new Border(new BorderStroke(
+                    ViewUtilities.ORANGE,
+                    BorderStrokeStyle.SOLID,
+                    new CornerRadii(10),
+                    new BorderWidths(2)
+            )));
+            if (stop.getHighlighted() > 1) {
+                ViewUtilities.ensureVisible(scrollPane, this);
+            }
+        } else {
+            this.setBorder(new Border(new BorderStroke(
+                    Color.TRANSPARENT,
+                    BorderStrokeStyle.SOLID,
+                    new CornerRadii(10),
+                    new BorderWidths(2)
+            )));
+        }
+    }
+
+    public void stopObserving() {
+        stop.removeObserver(this);
     }
 
     @Override
@@ -284,23 +322,8 @@ public class TextualViewStop extends VBox implements Observer {
 
         switch (updateType) {
             case STOP_HIGHLIGHT -> {
-                Stop stop = (Stop)observed;
-                if (stop.getHighlighted() > 0) {
-                    this.setBorder(new Border(new BorderStroke(
-                        ViewUtilities.ORANGE,
-                        BorderStrokeStyle.SOLID,
-                        new CornerRadii(10),
-                        new BorderWidths(2)
-                    )));
-                    //ViewUtilities.ensureVisible(scrollPane, this);
-                } else {
-                    this.setBorder(new Border(new BorderStroke(
-                        Color.TRANSPARENT,
-                        BorderStrokeStyle.SOLID,
-                        new CornerRadii(10),
-                        new BorderWidths(2)
-                    )));
-                }
+                Stop stop = (Stop) observed;
+                setHighlight(stop);
             }
         }
 

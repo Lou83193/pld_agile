@@ -32,16 +32,17 @@ public class GraphicalViewMapLayer extends Pane {
         this.graphicalView = graphicalView;
         this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
+        MapData mapData = graphicalView.getWindow().getMapData();
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
                 .withPressedDurationThreshold(150)
                 .setOnMouseClickedNotDragged((mouseEvent) -> {
                     double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
                             mouseEvent.getX(),
                             mouseEvent.getY(),
-                            graphicalView.getMapData().getMinLat(),
-                            graphicalView.getMapData().getMinLon(),
-                            graphicalView.getMapData().getMaxLat(),
-                            graphicalView.getMapData().getMaxLon(),
+                            mapData.getMinLat(),
+                            mapData.getMinLon(),
+                            mapData.getMaxLat(),
+                            mapData.getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
                     graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
@@ -54,11 +55,11 @@ public class GraphicalViewMapLayer extends Pane {
      */
     public void draw() {
 
-        MapData mapData = graphicalView.getMapData();
+        MapData mapData = graphicalView.getWindow().getMapData();
 
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
-                0, 720,
+                0, 1000,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(

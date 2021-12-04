@@ -65,4 +65,27 @@ class MapDataTest {
         assertEquals(Integer.MIN_VALUE,mapData.getMaxLat());
 
     }
+
+    @Test
+    public void testFindClosestIntersection (){
+        List<Intersection> intersections = new ArrayList<>();
+        Intersection inter1 = new Intersection(1,42,42);
+        intersections.add(inter1);
+        Intersection inter2 = new Intersection(2,42,78);
+        intersections.add(inter2);
+        Intersection inter3 = new Intersection(3,89,39);
+        intersections.add(inter3);
+
+        List<Segment> segments = new ArrayList<>();
+        Segment seg1To2 = new Segment("seg1",40,inter1,inter2);
+        segments.add(seg1To2);
+        Segment seg1To3 = new Segment("seg2",65,inter1,inter3);
+        segments.add(seg1To3);
+        Segment seg2To3 = new Segment("seg3",89,inter2,inter3);
+        segments.add(seg2To3);
+
+        MapData mapData = new MapData(intersections,segments);
+
+        assertEquals(inter1.toString(),mapData.findClosestIntersection(new double[] {50,58}).toString());
+    }
 }
