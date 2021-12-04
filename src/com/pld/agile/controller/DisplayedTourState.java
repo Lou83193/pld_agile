@@ -148,8 +148,6 @@ public class DisplayedTourState implements State {
 
     @Override
     public void doDragOnGraphicalStop(Controller c, Window window) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
         c.setCurrState(c.movingStopState);
     }
 
