@@ -52,6 +52,8 @@ public class TourData extends Observable implements Observer {
 
     private List<Path> tourPaths;
 
+    private Thread tourComputingThread;
+
 
     /**
      * TourData constructor.
@@ -364,6 +366,10 @@ public class TourData extends Observable implements Observer {
 
     public List<Path> getTourPaths() { return tourPaths; }
 
+    public void setTourComputingThread(Thread thread) {
+        tourComputingThread = thread;
+    }
+
     private void setStops() {
         stops = new ArrayList<>();
         stops.add(warehouse.getAddress().getId());
@@ -378,6 +384,13 @@ public class TourData extends Observable implements Observer {
         setStops();
         dijkstra();
         tsp();
+    }
+
+    public void stopComputingTour() {
+        if (tourPaths.size() > 0) {
+            tourComputingThread.interrupt();
+            notifyObservers(UpdateType.TOUR);
+        }
     }
 
     private void dijkstra() {
@@ -510,7 +523,7 @@ public class TourData extends Observable implements Observer {
 
         System.out.println("END Dijkstra");
 
-    } // ---- END of dijkstra
+    }
 
     private void setStopsTimesAndNumbers() {
         LocalTime currentTime = departureTime;
@@ -536,33 +549,46 @@ public class TourData extends Observable implements Observer {
 
     private void tsp() {
 
-        Thread thread = new Thread(() -> {
-
-            TSP tsp = new TSP3(this);
-            long startTime = System.currentTimeMillis();
-            System.out.println("TSP START");
-            tsp.searchSolution(20000, stopsGraph);
-            Platform.runLater(() -> {
+        TSP tsp = new TSP3(this);
+        long startTime = System.currentTimeMillis();
+        System.out.println("TSP START");
+        tsp.searchSolution(120000, stopsGraph);
+        Platform.runLater(() -> {
+            if (tourComputingThread != null && !tourComputingThread.isInterrupted()) {
                 System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
                 processTSPUpdate(tsp);
-                notifyObservers(UpdateType.TOUR);
-            });
-
+            }
         });
-        thread.setDaemon(true);
-        thread.start();
 
-    } // ---- END of TSP
-
+    }
     // Branch&Bound (notes for myself)
     /* H1 = 0
     /* H2 = (nbUnvisited+1)*dMin
     /* H3 = l + sum of li
     /* Improvement = Sort unvisited by shortest cost to last visited vertex
     */
-
     /* Best Algo -> Limited Discrepancy Search (LDS)
     */
+
+    public void processTSPUpdate(TSP tsp) {
+        tourPaths = new ArrayList<>();
+        int n = stopsGraph.getNbVertices();
+        for(int i = 0; i < n-1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+        }
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n-1), tsp.getSolution(0)));
+        setStopsTimesAndNumbers();
+    }
+
+    @Override
+    public void update(Observable observed, UpdateType updateType) {
+        if (updateType == UpdateType.INTERMEDIARY_TSP && tourComputingThread != null && !tourComputingThread.isInterrupted()) {
+            TSP tsp = (TemplateTSP) observed;
+            System.out.println("model update!");
+            processTSPUpdate(tsp);
+            notifyObservers(UpdateType.INTERMEDIARY_TOUR);
+        }
+    }
 
     /**
      * Generates a String which describes the object
@@ -578,23 +604,4 @@ public class TourData extends Observable implements Observer {
                 + '}';
     }
 
-    public void processTSPUpdate(TSP tsp) {
-        tourPaths = new ArrayList<>();
-        int n = stopsGraph.getNbVertices();
-        for(int i = 0; i < n-1; i++) {
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
-        }
-        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n-1), tsp.getSolution(0)));
-        setStopsTimesAndNumbers();
-    }
-
-    @Override
-    public void update(Observable observed, UpdateType updateType) {
-        if (updateType == UpdateType.INTERMEDIARY_TSP) {
-            TSP tsp = (TemplateTSP) observed;
-            System.out.println("model update!");
-            processTSPUpdate(tsp);
-            notifyObservers(UpdateType.INTERMEDIARY_TOUR);
-        }
-    }
 }

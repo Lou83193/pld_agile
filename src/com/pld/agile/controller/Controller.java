@@ -45,6 +45,11 @@ public class Controller {
      */
     protected State loadedRequestsState = new LoadedRequestsState();
     /**
+     * State when the map and a list of requests are loaded, and the tour is computing.
+     * User can either wait or stop the tour computation.
+     */
+    protected State computingTourState = new ComputingTourState();
+    /**
      * State when the map and a list of requests are loaded,
      * and the corresponding tour is computed. User can load another map,
      * load another list of requests, or modify the tour.
@@ -105,6 +110,12 @@ public class Controller {
      */
     public void computeTour() {
         currState.doComputeTour(this, window);
+    }
+    /**
+     * Calls method doStopComputingTour() of the current state.
+     */
+    public void stopComputingTour() {
+        currState.doStopComputingTour(this, window);
     }
     /**
      * Calls method clickOnGraphicalStop() of the current state.

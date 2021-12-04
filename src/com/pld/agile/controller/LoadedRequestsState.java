@@ -4,10 +4,14 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.SyntaxException;
+import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.parsing.RequestLoader;
+import com.pld.agile.utils.tsp.TSP;
+import com.pld.agile.utils.tsp.TSP3;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -70,13 +74,24 @@ public class LoadedRequestsState implements State {
      */
     @Override
     public boolean doComputeTour(Controller c, Window window) {
-        // Compute TSP
-        window.getTourData().computeTour();
+        TourData tourData = window.getTourData();
+        Thread computingThread = new Thread(() -> {
+            tourData.computeTour();
+            Platform.runLater(() -> {
+                c.computingTourState.doStopComputingTour(c, window);
+            });
+        });
+        tourData.setTourComputingThread(computingThread);
+        computingThread.setDaemon(true);
+        computingThread.start();
+        window.toggleFileMenuItem(0, false);
+        window.toggleFileMenuItem(1, false);
+        window.toggleFileMenuItem(2, false);
         window.setMainSceneButton(
-                "Add request",
-                new ButtonListener(c, ButtonEventType.ADD_REQUEST)
+                "Stop computing",
+                new ButtonListener(c, ButtonEventType.STOP_COMPUTING_TOUR)
         );
-        c.setCurrState(c.computedTourState);
+        c.setCurrState(c.computingTourState);
         return true;
     }
 

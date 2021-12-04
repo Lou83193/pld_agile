@@ -49,8 +49,8 @@ public class GraphicalViewPath extends Polyline {
             traceColour2 = ViewUtilities.BLUE;
         }
         else {
-            traceColour1 = ViewUtilities.YELLOW;
-            traceColour2 = ViewUtilities.PURPLE;
+            traceColour1 = ViewUtilities.PURPLE;
+            traceColour2 = ViewUtilities.YELLOW;
         }
         this.setStrokeWidth(strokeWidth);
         this.setStroke(traceColour1);

@@ -87,6 +87,9 @@ public interface State {
         return false;
     }
 
+    default void doStopComputingTour(Controller c, Window window) {
+    }
+
     default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
     }
 
@@ -94,7 +97,6 @@ public interface State {
     }
 
     default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        System.out.println(latLonPos[0]+  "; " + latLonPos[1]);
     }
 
     default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
