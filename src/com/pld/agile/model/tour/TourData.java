@@ -12,10 +12,6 @@ import com.pld.agile.model.map.Segment;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.tsp.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.util.Pair;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -168,7 +164,7 @@ public class TourData extends Observable {
         notifyObservers(UpdateType.TOUR);
     }
 
-    public void constructNewRequest2(Intersection intersection) {
+    public void constructNewRequest2 (Intersection intersection) {
         Request newRequest = requestList.get(requestList.size()-1);
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
@@ -176,29 +172,33 @@ public class TourData extends Observable {
         System.out.println("Request added : " + newRequest);
     }
 
-    public void addRequest(Request newRequest) {
+    /**
+     * add a request (pickup + delivery) at the end of the tour
+     * @param newRequest the request to add at the end of the tour
+     */
+    public void addRequest (Request newRequest) {
 
         Stop pickup = newRequest.getPickup();
         Stop delivery = newRequest.getDelivery();
 
         stops.add(pickup.getAddress().getId());
         stops.add(delivery.getAddress().getId());
-        stopMap.put(pickup.getAddress().getId(),pickup);
-        stopMap.put(delivery.getAddress().getId(),delivery);
+        stopMap.put(pickup.getAddress().getId(), pickup);
+        stopMap.put(delivery.getAddress().getId(), delivery);
 
         dijkstra();
-        tourPaths.remove(tourPaths.size()-1);
-        Stop lastStop = tourPaths.get(tourPaths.size()-1).getDestination();
+        tourPaths.remove(tourPaths.size() - 1);
+        Stop lastStop = tourPaths.get(tourPaths.size() - 1).getDestination();
 
         Integer indexLastStop = -1;
-        for(int i = 0; i < stops.size();i++){
-            if(stops.get(i) == lastStop.getAddress().getId()){
+        for (int i = 0; i < stops.size(); i++) {
+            if (stops.get(i) == lastStop.getAddress().getId()) {
                 indexLastStop = i;
                 break;
             }
         }
 
-        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size()-2);
+        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size() - 2);
         tourPaths.add(lastToPickup);
 
         //tests :
@@ -208,14 +208,18 @@ public class TourData extends Observable {
             System.out.println(lastToPickup.getSegments().get(i));
         }*/
 
-        Path pickupToDelivery = stopsGraph.getPath(stops.size()-2,stops.size()-1);
+        Path pickupToDelivery = stopsGraph.getPath(stops.size() - 2,stops.size() - 1);
         tourPaths.add(pickupToDelivery);
-        Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
+        Path deliveryToWarehouse = stopsGraph.getPath(stops.size() - 1,0);
         tourPaths.add(deliveryToWarehouse);
         setStopTimeAndNumber();
 
     }
 
+    /**
+     * delete a request and modify the tour without changing the order of the stops
+     * @param request the request to delete
+     */
     public boolean deleteRequest(Request request) {
 
         Stop pickup = request.getPickup();
@@ -359,13 +363,36 @@ public class TourData extends Observable {
 
     }
 
+    /**
+     * when moving a stop, we need to compute the shortest paths with dijkstra and change
+     * the departure and arrival times of each stop
+     */
+    public void moveStop(){
 
+        dijkstra();
+        setStopTimeAndNumber();
+    }
+
+    /**
+     * Getter for attribute stops.
+     * @return stops a List of Integers (applicatives IDs of intersections)
+     */
     public List<Integer> getStops() {
         return stops;
     }
 
-    public List<Path> getTourPaths() { return tourPaths; }
+    /**
+     * Getter for attribute tourPaths.
+     * @return tourPaths a List of Paths composing the computed tour
+     */
+    public List<Path> getTourPaths() {
+        return tourPaths;
+    }
 
+    /**
+     * Setter for attribute stops.
+     * add the warehouse and each stop composing the request list
+     */
     private void setStops() {
         stops = new ArrayList<>();
         stops.add(warehouse.getAddress().getId());
@@ -376,6 +403,9 @@ public class TourData extends Observable {
         System.out.println("stops=" + stops);
     }
 
+    /**
+     * after loading a list of requests, compute the tour using dijkstra and tsp on the stops List
+     */
     public void computeTour() {
         setStops();
         dijkstra();
@@ -391,7 +421,7 @@ public class TourData extends Observable {
         int stopIndex = 0; // need index of currStop in the list stops to fill predecessors
 
         System.out.println("Dijkstra START");
-        for(int currStopId : stops) {
+        for (int currStopId : stops) {
             System.out.println("On Stop : " + stops.get(stopIndex));
             // Current Stop Variables
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
@@ -400,10 +430,10 @@ public class TourData extends Observable {
 
             PriorityQueue<Integer> pq = new PriorityQueue<>(
                 (o1, o2) -> {
-                    if(dist[o1] < dist[o2]) {
+                    if (dist[o1] < dist[o2]) {
                         return -1;
                     }
-                    if(dist[o1] > dist[o2]) {
+                    if (dist[o1] > dist[o2]) {
                         return 1;
                     }
                     return 0;
@@ -423,7 +453,7 @@ public class TourData extends Observable {
 
             while (nbStopCalculated != stops.size()) {
 
-                    if(pq.isEmpty())
+                    if (pq.isEmpty())
                         break;
 
                     int node = pq.remove();
@@ -493,7 +523,7 @@ public class TourData extends Observable {
                     path.setSegments(pathSegments);
                     path.setLength(dist[stops.get(i)]);
                     stopsGraph.setPath(stopIndex, i, path);
-                    stopsGraph.setCost(stopIndex,i, dist[stops.get(i)]);
+                    stopsGraph.setCost(stopIndex, i, dist[stops.get(i)]);
                 }
 
             }
@@ -524,11 +554,11 @@ public class TourData extends Observable {
             currentStop.setDepartureTime(currentTime);
 
             double d = tourPaths.get(i).getLength();
-            int t = (int)(d/(15/3.6))+1;
+            int t = (int)(d/(15/3.6)) + 1;
             currentTime = currentTime.plusSeconds(t);
 
         }
-        Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
+        Stop currentStop = tourPaths.get(tourPaths.size() - 1).getDestination();
         currentStop.setStopNumber(0);
         currentStop.setArrivalTime(currentTime);
 
@@ -547,9 +577,9 @@ public class TourData extends Observable {
 
         tourPaths = new ArrayList<>();
         for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i), tsp.getSolution(i + 1)));
         }
-        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices() - 1), tsp.getSolution(0)));
 
         setStopTimeAndNumber();
 
