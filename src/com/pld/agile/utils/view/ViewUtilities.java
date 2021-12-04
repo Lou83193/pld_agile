@@ -106,17 +106,28 @@ public class ViewUtilities {
 
     // Source: https://stackoverflow.com/questions/12837592/how-to-scroll-to-make-a-node-within-the-content-of-a-scrollpane-visible
     public static void ensureVisible(ScrollPane pane, Node node) {
-        double width = pane.getContent().getBoundsInParent().getWidth();
-        double height = pane.getContent().getBoundsInParent().getHeight();
-        double x = node.getBoundsInParent().getMaxX();
-        double yMax = node.getBoundsInParent().getMaxY();
-        double yMin = node.getBoundsInParent().getMinY();
-        double yCurr = pane.getVvalue() * height;
+        System.out.println();
         Bounds paneBounds = pane.localToScene(pane.getBoundsInParent());
         Bounds nodeBounds = node.localToScene(node.getBoundsInLocal());
+        double totalHeight = pane.getContent().getBoundsInParent().getHeight();
+        double paneHeight = paneBounds.getHeight();
+        double currTopY = ViewUtilities.mapValue(pane.getVvalue(), 0, 1, 0, totalHeight - paneHeight);
+        System.out.println("Pane: " + paneBounds.getMinY() + " -> " + paneBounds.getMaxY() + " | " + paneBounds.getHeight() + " / " + totalHeight);
+        System.out.println("Node: " + nodeBounds.getMinY() + " -> " + nodeBounds.getMaxY() + " | " + nodeBounds.getHeight());
+        System.out.println(pane.getVvalue() + "; " + pane.getVmin() + "; " + pane.getVmax() + " | " + currTopY);
         if (paneBounds.intersects(nodeBounds)) {
             return;
         }
+        double desiredY = 0;
+        if (nodeBounds.getMaxY() < 0) {
+            desiredY = nodeBounds.getMinY();
+        }
+        if (nodeBounds.getMinY() > paneBounds.getMaxY()) {
+            desiredY = nodeBounds.getMaxY() - paneBounds.getHeight();
+        }
+        double v = ViewUtilities.mapValue(desiredY, 0, totalHeight - paneHeight, 0, 1);
+        pane.setVvalue(v);
+        /*
         if (yMin < 1) {
             pane.setVvalue(0);
         } else if (yMax > yCurr) {
@@ -124,7 +135,7 @@ public class ViewUtilities {
         } else if (yMin < yCurr) {
             pane.setVvalue(yMin / height);
         }
-        pane.setHvalue(x / width);
+        */
         node.requestFocus();
     }
 

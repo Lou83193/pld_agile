@@ -296,7 +296,9 @@ public class TextualViewStop extends VBox implements Observer {
                     new CornerRadii(10),
                     new BorderWidths(2)
             )));
-            //ViewUtilities.ensureVisible(scrollPane, this);
+            if (stop.getHighlighted() > 1) {
+                ViewUtilities.ensureVisible(scrollPane, this);
+            }
         } else {
             this.setBorder(new Border(new BorderStroke(
                     Color.TRANSPARENT,

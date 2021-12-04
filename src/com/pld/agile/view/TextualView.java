@@ -74,13 +74,7 @@ public class TextualView implements Observer {
 
         for (Request request : requests) {
             VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
-            /*requestPanel1.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(request.getPickup())
-            );*/
             VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
-            /*requestPanel2.setOnMouseClicked(
-                e -> window.getController().clickOnTextualStop(request.getDelivery())
-            );*/
             requestListContainer.getChildren().addAll(
                     requestPanel1,
                     requestPanel2

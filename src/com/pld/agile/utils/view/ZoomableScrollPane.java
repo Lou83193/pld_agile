@@ -41,6 +41,10 @@ public class ZoomableScrollPane extends ScrollPane {
         setFitToHeight(true); //center
         setFitToWidth(true); //center
 
+        this.setOnMouseReleased((e) -> {
+            this.setCursor(target.getCursor());
+        });
+
         updateScale();
     }
 
@@ -93,4 +97,5 @@ public class ZoomableScrollPane extends ScrollPane {
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
     }
+
 }
