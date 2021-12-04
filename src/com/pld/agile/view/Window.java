@@ -8,6 +8,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -127,6 +128,7 @@ public class Window extends Application {
         ImageView logo = new ImageView(new Image("logo.png"));
         logo.setPreserveRatio(true);
         logo.setFitWidth(600);
+        logo.setSmooth(true);
         // Button
         Button button = new Button("Load Map");
         button.getStyleClass().add("main-button");

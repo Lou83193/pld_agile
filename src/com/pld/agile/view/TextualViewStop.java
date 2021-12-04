@@ -276,7 +276,7 @@ public class TextualViewStop extends VBox implements Observer {
             Color.TRANSPARENT,
             BorderStrokeStyle.SOLID,
             new CornerRadii(10),
-            new BorderWidths(2)
+            new BorderWidths(3)
         )));
         this.setOnMouseClicked(
             e -> parent.getWindow().getController().clickOnTextualStop(stop)
@@ -298,7 +298,7 @@ public class TextualViewStop extends VBox implements Observer {
                     ViewUtilities.ORANGE,
                     BorderStrokeStyle.SOLID,
                     new CornerRadii(10),
-                    new BorderWidths(2)
+                    new BorderWidths(3)
             )));
             if (stop.getHighlighted() > 1) {
                 ViewUtilities.ensureVisible(scrollPane, this);
@@ -308,7 +308,7 @@ public class TextualViewStop extends VBox implements Observer {
                     Color.TRANSPARENT,
                     BorderStrokeStyle.SOLID,
                     new CornerRadii(10),
-                    new BorderWidths(2)
+                    new BorderWidths(3)
             )));
         }
     }

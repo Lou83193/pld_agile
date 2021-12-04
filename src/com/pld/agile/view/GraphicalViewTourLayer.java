@@ -70,7 +70,7 @@ public class GraphicalViewTourLayer extends Pane {
             GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
                 graphicalView,
                 path,
-                4 * screenScale * mapScale,
+                6 * screenScale * mapScale,
                     finished
             );
             this.getChildren().add(graphicalViewPath);

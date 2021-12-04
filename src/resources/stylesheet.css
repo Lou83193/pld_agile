@@ -18,6 +18,7 @@
 
 #home-pane {
     -fx-background-image: url("subtleBackground.jpg");
+    -fx-background-size: cover, auto;
     -fx-background-repeat: none;
     -fx-background-position: center center;
 }
