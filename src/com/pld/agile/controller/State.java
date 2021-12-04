@@ -51,7 +51,7 @@ public interface State {
                 );
                 window.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
-                c.setCurrState(c.awaitRequestsState);
+                c.setCurrState(c.loadedMapState);
 
                 return true;
             } catch (IOException | SyntaxException e) {

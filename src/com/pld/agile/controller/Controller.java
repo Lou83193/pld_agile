@@ -32,24 +32,24 @@ public class Controller {
      * Initial state.
      * The user can only load a map xml file.
      */
-    protected State awaitMapState = new AwaitMapState();
+    protected State initialState = new InitialState();
     /**
      * State when the map is loaded.
      * User can load another map, or load a request xml file.
      */
-    protected State awaitRequestsState = new AwaitRequestsState();
+    protected State loadedMapState = new LoadedMapState();
     /**
      * State when the map and a list of requests are loaded.
      * User can load another map, load another list of requests
      * or ask the app to compute the tour.
      */
-    protected State displayedRequestsState = new DisplayedRequestsState();
+    protected State loadedRequestsState = new LoadedRequestsState();
     /**
      * State when the map and a list of requests are loaded,
      * and the corresponding tour is computed. User can load another map,
      * load another list of requests, or modify the tour.
      */
-    protected State displayedTourState = new DisplayedTourState();
+    protected State computedTourState = new ComputedTourState();
     /**
      * State when the map and a list of requests are loaded, the corresponding
      * tour is computed, and the user has asked to add another request.
@@ -77,7 +77,7 @@ public class Controller {
      */
     public Controller(Window window) {
         this.window = window;
-        this.currState = awaitMapState;
+        this.currState = initialState;
     }
 
     /**
