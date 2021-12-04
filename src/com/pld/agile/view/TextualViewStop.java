@@ -43,7 +43,7 @@ public class TextualViewStop extends VBox implements Observer {
     private String inputValueTracker;
     private GraphicalViewStop labelGraphic;
     private Stop stop;
-    
+
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.

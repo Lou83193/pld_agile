@@ -13,10 +13,7 @@ import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.tsp.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.util.Pair;
+import javafx.application.Platform;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -213,7 +210,7 @@ public class TourData extends Observable implements Observer {
         tourPaths.add(pickupToDelivery);
         Path deliveryToWarehouse = stopsGraph.getPath(stops.size()-1,0);
         tourPaths.add(deliveryToWarehouse);
-        setStopTimeAndNumber();
+        updateStopsTimesAndNumbers();
 
     }
 
@@ -281,7 +278,7 @@ public class TourData extends Observable implements Observer {
 
         // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
-            setStopTimeAndNumber();
+            updateStopsTimesAndNumbers();
             return true;
         } else {
             notifyObservers(UpdateType.TOUR);
@@ -351,7 +348,7 @@ public class TourData extends Observable implements Observer {
 
             }
 
-            setStopTimeAndNumber();
+            updateStopsTimesAndNumbers();
             return true;
 
         }
@@ -515,9 +512,7 @@ public class TourData extends Observable implements Observer {
 
     } // ---- END of dijkstra
 
-    public void setStopTimeAndNumber() {
-
-        // In a method
+    private void setStopsTimesAndNumbers() {
         LocalTime currentTime = departureTime;
         for(int i = 0; i < tourPaths.size(); i++) {
             Stop currentStop = tourPaths.get(i).getOrigin();
@@ -525,37 +520,37 @@ public class TourData extends Observable implements Observer {
             currentStop.setArrivalTime(currentTime);
             currentTime = currentTime.plusSeconds(currentStop.getDuration());
             currentStop.setDepartureTime(currentTime);
-
             double d = tourPaths.get(i).getLength();
             int t = (int)(d/(15/3.6))+1;
             currentTime = currentTime.plusSeconds(t);
-
         }
         Stop currentStop = tourPaths.get(tourPaths.size()-1).getDestination();
         currentStop.setStopNumber(0);
         currentStop.setArrivalTime(currentTime);
-        // ----
+    }
 
+    public void updateStopsTimesAndNumbers() {
+        setStopsTimesAndNumbers();
         notifyObservers(UpdateType.TOUR);
-
     }
 
     private void tsp() {
 
-        // Compute TSP
-        TSP tsp = new TSP3(this);
-        long startTime = System.currentTimeMillis();
-        System.out.println("TSP START");
-        tsp.searchSolution(20000, stopsGraph);
-        System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+        Thread thread = new Thread(() -> {
 
-        tourPaths = new ArrayList<>();
-        for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
-        }
-        tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
+            TSP tsp = new TSP3(this);
+            long startTime = System.currentTimeMillis();
+            System.out.println("TSP START");
+            tsp.searchSolution(20000, stopsGraph);
+            Platform.runLater(() -> {
+                System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+                processTSPUpdate(tsp);
+                notifyObservers(UpdateType.TOUR);
+            });
 
-        setStopTimeAndNumber();
+        });
+        thread.setDaemon(true);
+        thread.start();
 
     } // ---- END of TSP
 
@@ -583,16 +578,23 @@ public class TourData extends Observable implements Observer {
                 + '}';
     }
 
+    public void processTSPUpdate(TSP tsp) {
+        tourPaths = new ArrayList<>();
+        int n = stopsGraph.getNbVertices();
+        for(int i = 0; i < n-1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+        }
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n-1), tsp.getSolution(0)));
+        setStopsTimesAndNumbers();
+    }
+
     @Override
     public void update(Observable observed, UpdateType updateType) {
-        if(updateType == UpdateType.TSP_COMPUTED) {
-            tourPaths = new ArrayList<>();
+        if (updateType == UpdateType.INTERMEDIARY_TSP) {
             TSP tsp = (TemplateTSP) observed;
-            for(int i = 0; i < stopsGraph.getNbVertices() - 1; i++) {
-                tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
-            }
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(stopsGraph.getNbVertices()-1), tsp.getSolution(0)));
-            notifyObservers(UpdateType.TOUR);
+            System.out.println("model update!");
+            processTSPUpdate(tsp);
+            notifyObservers(UpdateType.INTERMEDIARY_TOUR);
         }
     }
 }

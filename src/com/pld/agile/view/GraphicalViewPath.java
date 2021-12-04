@@ -10,6 +10,7 @@ import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
@@ -22,11 +23,13 @@ public class GraphicalViewPath extends Polyline {
      * GraphicalViewPath constructor.
      * @param graphicalView The parent GraphicalView instance.
      * @param path The associated Path model object.
-     * @param strokeWidth The segment's line thickness.
+     * @param strokeWidth The path's line thickness.
+     * @param finished Whether the path is final or an intermediary result.
      */
     public GraphicalViewPath(final GraphicalView graphicalView,
                              final Path path,
-                             final double strokeWidth) {
+                             final double strokeWidth,
+                             final boolean finished) {
         super();
         int count = 0;
         List<Segment> pathSegments = path.getSegments();
@@ -39,19 +42,29 @@ public class GraphicalViewPath extends Polyline {
             this.getPoints().addAll(destinationPos[0], destinationPos[1]);
             count++;
         }
+        final Color traceColour1;
+        final Color traceColour2;
+        if (finished) {
+            traceColour1 = ViewUtilities.DARK_ORANGE;
+            traceColour2 = ViewUtilities.BLUE;
+        }
+        else {
+            traceColour1 = ViewUtilities.YELLOW;
+            traceColour2 = ViewUtilities.PURPLE;
+        }
         this.setStrokeWidth(strokeWidth);
-        this.setStroke(ViewUtilities.DARK_ORANGE);
+        this.setStroke(traceColour1);
         this.setStrokeLineCap(StrokeLineCap.ROUND);
         this.setStrokeLineJoin(StrokeLineJoin.ROUND);
         this.addEventHandler(MouseEvent.MOUSE_ENTERED,
             e -> {
-                this.setStroke(ViewUtilities.BLUE);
+                this.setStroke(traceColour2);
                 this.toFront();
             }
         );
         this.addEventHandler(MouseEvent.MOUSE_EXITED,
             e -> {
-                this.setStroke(ViewUtilities.DARK_ORANGE);
+                this.setStroke(traceColour1);
             }
         );
     }
