@@ -103,28 +103,26 @@ public class ViewUtilities {
         double a = lerpValue(c1.getOpacity(), c2.getOpacity(), p);
         return new Color(r, g, b, a);
     }
-
+    
     public static void ensureVisible(ScrollPane pane, Node node) {
-        Bounds paneBounds = pane.getBoundsInLocal();
+        System.out.println();
+        Bounds viewPortBound = pane.getViewportBounds();
         Bounds nodeBounds = node.getBoundsInParent();
-        double totalHeight = pane.getContent().getBoundsInParent().getHeight();
-        double paneHeight = paneBounds.getHeight();
-        double paneMidPoint = (paneBounds.getMaxY() + paneBounds.getMinY())/2;
+        Bounds contentBounds = pane.getContent().getLayoutBounds();
+        double viewPortMidPoint = (viewPortBound.getMaxY() + viewPortBound.getMinY())/2;
         double nodeMidPoint = (nodeBounds.getMaxY() + nodeBounds.getMinY())/2;
-        double currTopY = ViewUtilities.mapValue(pane.getVvalue(), 0, 1, 0, totalHeight - paneHeight);
-        if (nodeBounds.getMinY() >= currTopY && nodeBounds.getMaxY() <= currTopY + paneHeight) {
+        double currTopY = ViewUtilities.mapValue(pane.getVvalue(), pane.getVmin(), pane.getVmax(), contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight());
+        if (nodeBounds.getMinY() >= currTopY && nodeBounds.getMaxY() <= currTopY + viewPortBound.getHeight()) {
             return;
         }
-        double spacing = 30;
-        double desiredY = 0;
-        if (nodeMidPoint < paneMidPoint) {
-            desiredY = nodeBounds.getMinY() - spacing;
+        double desiredY;
+        if (nodeMidPoint - currTopY < viewPortMidPoint) {
+            desiredY = nodeBounds.getMinY();
+        } else {
+            desiredY = nodeBounds.getMaxY() - viewPortBound.getHeight();
         }
-        if (nodeMidPoint > paneMidPoint) {
-            desiredY = nodeBounds.getMaxY() + spacing - paneBounds.getHeight();
-        }
-        double v = ViewUtilities.mapValue(desiredY, 0, totalHeight - paneHeight, 0, 1);
-        pane.setVvalue(ViewUtilities.clamp(v, 0, 1));
+        double v = ViewUtilities.mapValue(desiredY, contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight(), pane.getVmin(), pane.getVmax());
+        pane.setVvalue(ViewUtilities.clamp(v, pane.getVmin(), pane.getVmax()));
         node.requestFocus();
     }
 
