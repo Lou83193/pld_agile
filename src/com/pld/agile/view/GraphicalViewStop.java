@@ -224,7 +224,7 @@ public class GraphicalViewStop extends Pane implements Observer {
      * based on the stop's highlight status.
      * @param stop The stop to base the highlight on.
      */
-    private void setHighlight(Stop stop) {
+    public void setHighlight(Stop stop) {
         if (stop.getHighlighted() > 0) {
             DropShadow shadow = new DropShadow();
             shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));

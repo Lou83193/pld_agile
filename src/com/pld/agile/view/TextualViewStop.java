@@ -41,6 +41,8 @@ public class TextualViewStop extends VBox implements Observer {
 
     private ScrollPane scrollPane;
     private String inputValueTracker;
+    private GraphicalViewStop labelGraphic;
+    private Stop stop;
 
     /**
      * TextualViewStop constructor.
@@ -50,6 +52,7 @@ public class TextualViewStop extends VBox implements Observer {
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
+        this.stop = stop;
         stop.addObserver(this);
 
         this.scrollPane = (ScrollPane) parent.getComponent();
@@ -81,7 +84,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
+        labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -288,7 +291,8 @@ public class TextualViewStop extends VBox implements Observer {
      * based on the stop's highlight status.
      * @param stop The stop to base the highlight on.
      */
-    private void setHighlight(Stop stop) {
+    public void setHighlight(Stop stop) {
+        labelGraphic.setHighlight(stop);
         if (stop.getHighlighted() > 0) {
             this.setBorder(new Border(new BorderStroke(
                     ViewUtilities.ORANGE,
@@ -296,7 +300,9 @@ public class TextualViewStop extends VBox implements Observer {
                     new CornerRadii(10),
                     new BorderWidths(2)
             )));
-            //ViewUtilities.ensureVisible(scrollPane, this);
+            if (stop.getHighlighted() > 1) {
+                ViewUtilities.ensureVisible(scrollPane, this);
+            }
         } else {
             this.setBorder(new Border(new BorderStroke(
                     Color.TRANSPARENT,
@@ -305,6 +311,10 @@ public class TextualViewStop extends VBox implements Observer {
                     new BorderWidths(2)
             )));
         }
+    }
+
+    public void stopObserving() {
+        stop.removeObserver(this);
     }
 
     @Override
