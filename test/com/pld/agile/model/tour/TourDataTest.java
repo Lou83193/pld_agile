@@ -121,7 +121,7 @@ public class TourDataTest {
 
     @Test
     public void testComputeTour (){
-        tourData = tourDataInit;
+        tourDataInit = tourData;
         tourData.computeTour();
         assertNotEquals(tourData.getStops().toString(), tourDataInit.getStops().toString());
     }

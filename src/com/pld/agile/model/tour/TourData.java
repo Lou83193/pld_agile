@@ -221,7 +221,7 @@ public class TourData extends Observable {
         Stop pickup = request.getPickup();
         Stop delivery = request.getDelivery();
         Stop currentOrigin = null;
-        Stop currentDestination = null;
+        Stop currentDestination;
 
         for (int i = 0; i < tourPaths.size(); i++) {
             Path path = tourPaths.get(i);
@@ -396,7 +396,7 @@ public class TourData extends Observable {
             // Current Stop Variables
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
             int [] pi = new int[nbIntersections]; //index = intersection id in map data
-            Set<Integer> settled = new HashSet<Integer>();
+            Set<Integer> settled = new HashSet<>();
 
             PriorityQueue<Integer> pq = new PriorityQueue<>(
                 (o1, o2) -> {
@@ -416,15 +416,16 @@ public class TourData extends Observable {
             }
             dist[currStopId] = 0; // distance to current stop is 0
 
-            pi[currStopId] = -1; //null, starting stop won't have predecessors
+            pi[currStopId] = currStopId; //null, starting stop won't have predecessors
             pq.add(currStopId);
 
             int nbStopCalculated = 0;
 
             while (nbStopCalculated != stops.size()) {
 
-                    if(pq.isEmpty())
+                    if(pq.isEmpty()) {
                         break;
+                    }
 
                     int node = pq.remove();
 

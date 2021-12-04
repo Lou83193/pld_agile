@@ -22,6 +22,7 @@ public class Controller {
      * depending on the current State.
      */
     private State currState;
+
     /**
      * Application Window.
      */
@@ -79,6 +80,21 @@ public class Controller {
         this.window = window;
         this.currState = awaitMapState;
     }
+
+    /**
+     * Getter for attribute window.
+     */
+    public Window getWindow() {return window;}
+
+    /**
+     * Getter for attribute currState.
+     */
+    public State getCurrState() {return currState;}
+
+    /**
+     * Getter for attribute awaitMapState.
+     */
+    public State getAwaitMapState() {return awaitMapState;}
 
     /**
      * Setter for attribute currState.
