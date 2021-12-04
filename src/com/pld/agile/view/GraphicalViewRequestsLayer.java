@@ -54,7 +54,7 @@ public class GraphicalViewRequestsLayer extends Group {
             return;
         }
 
-        double graphicSize = 24 * screenScale * mapScale;
+        double graphicSize = 32 * screenScale * mapScale;
 
         Stop warehouse = tourData.getWarehouse();
         GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, 0, false);
