@@ -584,7 +584,6 @@ public class TourData extends Observable implements Observer {
     public void update(Observable observed, UpdateType updateType) {
         if (updateType == UpdateType.INTERMEDIARY_TSP && tourComputingThread != null && !tourComputingThread.isInterrupted()) {
             TSP tsp = (TemplateTSP) observed;
-            System.out.println("model update!");
             processTSPUpdate(tsp);
             notifyObservers(UpdateType.INTERMEDIARY_TOUR);
         }
