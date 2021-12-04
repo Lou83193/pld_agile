@@ -98,10 +98,10 @@ public interface State {
         System.out.println(latLonPos[0]+  "; " + latLonPos[1]);
     }
 
-    default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+    default void doDragOnGraphicalStop(Controller c, Window window) {
     }
 
-    default void doDragOffGraphicalStop(Controller c, Window window, double[] latLonPos) {
+    default void doDragOffGraphicalStop(Controller c, Window window, Stop stop, double[] latLonPos) {
     }
 
     default void doDeleteRequest(Controller c, Window window, Request request) {

@@ -168,7 +168,7 @@ public class GraphicalViewStop extends Pane implements Observer {
                 this.setCursor(Cursor.HAND);
                 this.setOnMouseDragEntered((t) -> {
                     this.toFront();
-                    parent.getWindow().getController().dragOnGraphicalStop(stop);
+                    parent.getWindow().getController().dragOnGraphicalStop();
                     t.consume();
                 });
                 this.setOnMouseDragged((t) -> {
@@ -196,7 +196,7 @@ public class GraphicalViewStop extends Pane implements Observer {
                             mapData.getMaxLon(),
                             ((ScrollPane) parent.getComponent()).getHeight()
                     );
-                    parent.getWindow().getController().dragOffGraphicalStop(latLonPos);
+                    parent.getWindow().getController().dragOffGraphicalStop(stop, latLonPos);
                     t.consume();
                 });
 
