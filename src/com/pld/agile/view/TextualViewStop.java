@@ -41,6 +41,7 @@ public class TextualViewStop extends VBox implements Observer {
 
     private ScrollPane scrollPane;
     private String inputValueTracker;
+    private Stop stop;
 
     /**
      * TextualViewStop constructor.
@@ -50,6 +51,7 @@ public class TextualViewStop extends VBox implements Observer {
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
+        this.stop = stop;
         stop.addObserver(this);
 
         this.scrollPane = (ScrollPane) parent.getComponent();
@@ -298,6 +300,7 @@ public class TextualViewStop extends VBox implements Observer {
             )));
             if (stop.getHighlighted() > 1) {
                 ViewUtilities.ensureVisible(scrollPane, this);
+                System.out.println(this.getBoundsInParent());
             }
         } else {
             this.setBorder(new Border(new BorderStroke(
@@ -307,6 +310,10 @@ public class TextualViewStop extends VBox implements Observer {
                     new BorderWidths(2)
             )));
         }
+    }
+
+    public void stopObserving() {
+        stop.removeObserver(this);
     }
 
     @Override

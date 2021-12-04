@@ -81,6 +81,11 @@ public class TextualView implements Observer {
             );
         }
 
+        VBox oldContent = (VBox) component.getContent();
+        for (Node n : oldContent.getChildren()) {
+            TextualViewStop s = (TextualViewStop) n;
+            s.stopObserving();
+        }
         component.setContent(requestListContainer);
 
     }
@@ -108,6 +113,11 @@ public class TextualView implements Observer {
             requestListContainer.getChildren().add(requestPanel);
         }
 
+        VBox oldContent = (VBox) component.getContent();
+        for (Node n : oldContent.getChildren()) {
+            TextualViewStop s = (TextualViewStop) n;
+            s.stopObserving();
+        }
         component.setContent(requestListContainer);
 
     }

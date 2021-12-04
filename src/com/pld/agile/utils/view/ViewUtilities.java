@@ -104,44 +104,27 @@ public class ViewUtilities {
         return new Color(r, g, b, a);
     }
 
-    // Source: https://stackoverflow.com/questions/12837592/how-to-scroll-to-make-a-node-within-the-content-of-a-scrollpane-visible
     public static void ensureVisible(ScrollPane pane, Node node) {
-        System.out.println();
-        Bounds paneBounds = pane.getBoundsInLocal(); //pane.localToScene(pane.getBoundsInParent());
-        Bounds nodeBounds = node.getBoundsInParent(); //node.localToScene(node.getBoundsInLocal());
+        Bounds paneBounds = pane.getBoundsInLocal();
+        Bounds nodeBounds = node.getBoundsInParent();
         double totalHeight = pane.getContent().getBoundsInParent().getHeight();
         double paneHeight = paneBounds.getHeight();
         double paneMidPoint = (paneBounds.getMaxY() + paneBounds.getMinY())/2;
         double nodeMidPoint = (nodeBounds.getMaxY() + nodeBounds.getMinY())/2;
         double currTopY = ViewUtilities.mapValue(pane.getVvalue(), 0, 1, 0, totalHeight - paneHeight);
-        System.out.println("Pane: " + paneBounds.getMinY() + " -> " + paneBounds.getMaxY() + " | " + paneBounds.getHeight() + " / " + totalHeight);
-        System.out.println("Node: " + nodeBounds.getMinY() + " -> " + nodeBounds.getMaxY() + " | " + nodeBounds.getHeight());
-        System.out.println(pane.getVvalue() + "; " + pane.getVmin() + "; " + pane.getVmax() + " | " + currTopY);
-        if (nodeBounds.getMinY() > currTopY && nodeBounds.getMaxY() < currTopY + paneHeight) {
+        if (nodeBounds.getMinY() >= currTopY && nodeBounds.getMaxY() <= currTopY + paneHeight) {
             return;
         }
-        double spacing = 25;
+        double spacing = 30;
         double desiredY = 0;
         if (nodeMidPoint < paneMidPoint) {
             desiredY = nodeBounds.getMinY() - spacing;
-            System.out.println("to the top!");
         }
         if (nodeMidPoint > paneMidPoint) {
             desiredY = nodeBounds.getMaxY() + spacing - paneBounds.getHeight();
-            System.out.println("to the bottom!");
         }
         double v = ViewUtilities.mapValue(desiredY, 0, totalHeight - paneHeight, 0, 1);
-        System.out.println(desiredY + " -> " + v);
         pane.setVvalue(ViewUtilities.clamp(v, 0, 1));
-        /*
-        if (yMin < 1) {
-            pane.setVvalue(0);
-        } else if (yMax > yCurr) {
-            pane.setVvalue(yMax / height);
-        } else if (yMin < yCurr) {
-            pane.setVvalue(yMin / height);
-        }
-        */
         node.requestFocus();
     }
 
