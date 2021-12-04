@@ -219,26 +219,25 @@ public class MapData extends Observable {
      * @return Intersection closestIntersection
      */
     public Intersection findClosestIntersection(double[] latLonPos) {
-        double lat = 0;
-        double lon = 0;
+        double lat;
+        double lon;
         double shortest = Double.MAX_VALUE;
         Intersection closestIntersection = null;
-        double distanceToIntersection = 0;
+        double distanceToIntersection;
         int bound = intersections.size();
 
         // loop through all intersections
-        for ( int i = 0; i<bound; i++){
-            lat = intersections.get(i).getLatitude();
-            lon = intersections.get(i).getLongitude();
+        for (Intersection intersection : intersections) {
+            lat = intersection.getLatitude();
+            lon = intersection.getLongitude();
             // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-            distanceToIntersection = ViewUtilities.distanceLatLon(latLonPos[0],latLonPos[1],lat,lon);
+            distanceToIntersection = ViewUtilities.distanceLatLon(latLonPos[0], latLonPos[1], lat, lon);
             // find the smallest distance
-            if(distanceToIntersection<shortest){
+            if (distanceToIntersection < shortest) {
                 shortest = distanceToIntersection;
-                closestIntersection = intersections.get(i);
+                closestIntersection = intersection;
             }
         }
-        System.out.println("Latitude/Longitude demandées : "+latLonPos[0]+"/"+latLonPos[1]+" Latitude/Longitude obtenues : "+lat+"/"+lon);
         return closestIntersection;
     }
 

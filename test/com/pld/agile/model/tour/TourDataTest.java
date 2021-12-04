@@ -6,6 +6,7 @@
 
 package com.pld.agile.model.tour;
 
+import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.MapLoader;
@@ -22,7 +23,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TourDataTests {
+public class TourDataTest {
     private final MapData mapData = new MapData ();
     private final MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
     private TourData tourDataInit = new TourData();
@@ -35,6 +36,8 @@ public class TourDataTests {
             mapLoader.load();
             tourDataInit.setAssociatedMap(mapData);
             tourData.setAssociatedMap(mapData);
+            requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourData);
+            requestLoader.load();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,14 +54,6 @@ public class TourDataTests {
 
     @Test
     public void testUnHighlightStop(){
-        requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourData);
-        try {
-            requestLoader.load();
-        } catch (SyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         for (Request r:tourData.getRequestList()) {
             r.getPickup().setHighlighted(1);
             r.getDelivery().setHighlighted(1);
@@ -74,35 +69,60 @@ public class TourDataTests {
 
     @Test
     public void testDeleteRequest (){
-        requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourData);
-        try {
-            requestLoader.load();
-        } catch (SyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        tourData.computeTour();
         tourData.deleteRequest(tourData.getRequestList().get(1));
-
-        assertThrows(IndexOutOfBoundsException.class,()-> tourData.getRequestList().get(1));
-
+        assertEquals(2,tourData.getRequestList().size());
     }
     @Test
-    //Test n°3.1
-    public void testNotOptimalTour (){
-        requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourDataInit);
-        try {
-            requestLoader.load();
-        } catch (SyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //tourDataInit.setStops();
+    public void testAddRequest () {
+        tourData.computeTour();
+        Intersection pickupAddress = mapData.getIntersections().get(3);
+        Intersection deliveryAddress = mapData.getIntersections().get(4);
+        Request newRequest = new Request ();
+        Stop pickup = new Stop (newRequest,pickupAddress,0,StopType.PICKUP);
+        Stop delivery = new Stop (newRequest,deliveryAddress,0,StopType.DELIVERY);
+        newRequest.setDelivery(delivery);
+        newRequest.setPickup(pickup);
+        tourData.addRequest(newRequest);
+
+        assertEquals(newRequest.toString(),tourData.getRequestList().get(tourData.getRequestList().size()-1).toString());
+    }
+    @Test
+    public void testConstructNewRequest(){
+        tourData.computeTour();
+        Intersection pickupAddress = mapData.getIntersections().get(3);
+        Intersection deliveryAddress = mapData.getIntersections().get(4);
+        Request newRequest = new Request ();
+        Stop pickup = new Stop (newRequest,pickupAddress,0,StopType.PICKUP);
+        Stop delivery = new Stop (newRequest,deliveryAddress,0,StopType.DELIVERY);
+        newRequest.setDelivery(delivery);
+        newRequest.setPickup(pickup);
+
+        tourData.constructNewRequest1(pickupAddress);
+        tourData.constructNewRequest2(deliveryAddress);
+
+        assertEquals(newRequest.toString(),tourData.getRequestList().get(tourData.getRequestList().size()-1).toString());
+
+    }
+
+    @Test
+    public void testStopIsShiftable(){
+        tourData.computeTour();
+        Stop stop = tourData.getTourPaths().get(1).getDestination();
+        assertTrue(tourData.stopIsShiftable(stop,2));
+    }
+
+    @Test
+    public void testShiftStopOrder(){
+        tourData.computeTour();
+        Stop stop = tourData.getTourPaths().get(1).getDestination();
+        assertTrue(tourData.shiftStopOrder(stop,2));
+    }
+
+    @Test
+    public void testComputeTour (){
         tourData = tourDataInit;
         tourData.computeTour();
-
         assertNotEquals(tourData.getStops().toString(), tourDataInit.getStops().toString());
     }
 

@@ -29,7 +29,7 @@ class IntersectionTest {
         assertEquals(originOf,intersection.getOriginOf());
     }
     @Test
-    public void testFindSegmentTo() {
+    public void testFindSegmentToSuccess() {
         Intersection inter1 = new Intersection(1,42,42);
         Intersection inter2 = new Intersection(2,46,79);
         Intersection inter3 = new Intersection(3,89,39);
@@ -45,6 +45,26 @@ class IntersectionTest {
         inter1.setOriginOf(segments);
 
         assertEquals(seg1To3.toString(),inter1.findSegmentTo(inter3).toString());
+
+    }
+
+    @Test
+    public void testFindSegmentToFail() {
+        Intersection inter1 = new Intersection(1,42,42);
+        Intersection inter2 = new Intersection(2,46,79);
+        Intersection inter3 = new Intersection(3,89,39);
+        Intersection inter4 = new Intersection(4,89,52);
+
+        List<Segment> segments = new ArrayList<>();
+        Segment seg1To2 = new Segment("seg1",40,inter1,inter2);
+        segments.add(seg1To2);
+        Segment seg1To3 = new Segment("seg2",65,inter1,inter3);
+        segments.add(seg1To3);
+        Segment seg1To4 = new Segment("seg3",89,inter1,inter4);
+        segments.add(seg1To4);
+        inter1.setOriginOf(segments);
+
+        assertNull(inter2.findSegmentTo(inter3));
 
     }
 }
