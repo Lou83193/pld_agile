@@ -18,7 +18,7 @@ class ControllerTest {
         Window window = new Window();
         Controller controller = new Controller(window);
         assertEquals(window.toString(),controller.getWindow().toString());
-        assertEquals(controller.getCurrState().toString(),controller.getAwaitMapState().toString());
+        assertEquals(controller.getCurrState().toString(),controller.getInitialState().toString());
     }
     @Test
     void loadMap() {

@@ -99,7 +99,7 @@ public class Controller {
     /**
      * Getter for attribute awaitMapState.
      */
-    public State getAwaitMapState() {return awaitMapState;}
+    public State getInitialState() {return initialState;}
 
     /**
      * Setter for attribute currState.
