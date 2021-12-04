@@ -103,9 +103,8 @@ public class ViewUtilities {
         double a = lerpValue(c1.getOpacity(), c2.getOpacity(), p);
         return new Color(r, g, b, a);
     }
-    
+
     public static void ensureVisible(ScrollPane pane, Node node) {
-        System.out.println();
         Bounds viewPortBound = pane.getViewportBounds();
         Bounds nodeBounds = node.getBoundsInParent();
         Bounds contentBounds = pane.getContent().getLayoutBounds();

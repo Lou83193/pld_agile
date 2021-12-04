@@ -41,6 +41,7 @@ public class TextualViewStop extends VBox implements Observer {
 
     private ScrollPane scrollPane;
     private String inputValueTracker;
+    private GraphicalViewStop labelGraphic;
     private Stop stop;
 
     /**
@@ -83,7 +84,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
+        labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -290,7 +291,8 @@ public class TextualViewStop extends VBox implements Observer {
      * based on the stop's highlight status.
      * @param stop The stop to base the highlight on.
      */
-    private void setHighlight(Stop stop) {
+    public void setHighlight(Stop stop) {
+        labelGraphic.setHighlight(stop);
         if (stop.getHighlighted() > 0) {
             this.setBorder(new Border(new BorderStroke(
                     ViewUtilities.ORANGE,
