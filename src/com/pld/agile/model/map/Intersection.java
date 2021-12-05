@@ -135,4 +135,11 @@ public class Intersection {
                 //", originOf=" + originOf +
                 '}';
     }
+
+    /**
+     * Resets the ID counter;
+     */
+    public static void resetIdCounter() {
+        idCounter = 0;
+    }
 }

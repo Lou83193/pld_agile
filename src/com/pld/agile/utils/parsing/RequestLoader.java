@@ -71,6 +71,7 @@ public class RequestLoader {
             Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
 
             List<Stop> stopList = new ArrayList<>();
+            Stop.resetIdCounter();
 
             Element warehouseElement = (Element) warehouseNode;
             String[] time = warehouseElement.attributeValue("departureTime").split(":");

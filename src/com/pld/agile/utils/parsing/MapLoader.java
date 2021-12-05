@@ -124,6 +124,7 @@ public class MapLoader {
             map.resetBounds();
             HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
             List<Intersection> intersections = new ArrayList<>();
+            Intersection.resetIdCounter();
             for (Node intersectionNode : intersectionNodes) {
                 Element intersectionElement = (Element) intersectionNode;
                 String id = intersectionElement.attributeValue("id");
