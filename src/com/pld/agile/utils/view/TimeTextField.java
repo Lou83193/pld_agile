@@ -17,6 +17,9 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.regex.Pattern;
 
+/**
+ * Special type of TextField that allows inputting times (formatted as HH:MM)
+ */
 public class TimeTextField extends TextField {
 
     enum Unit {
@@ -28,44 +31,6 @@ public class TimeTextField extends TextField {
     private final ReadOnlyIntegerWrapper hours;
 
     private final ReadOnlyIntegerWrapper minutes;
-
-    /*
-    public TimeTextField() {
-        this("00:00");
-        this.addEventFilter(KeyEvent.KEY_TYPED, inputevent -> {
-            int c = TimeTextField.this.getCaretPosition();
-            if (c <= 7) {
-                if (!"1234567890:".contains(inputevent.getCharacter().toLowerCase())) {
-                    inputevent.consume();
-                }
-            } else {
-                inputevent.consume();
-            }
-        });
-        this.addEventFilter(KeyEvent.KEY_RELEASED, inputevent -> {
-            boolean withMinutes = false;
-            if (TimeTextField.this.getText() != null
-                    && TimeTextField.this.getText().length() >= 5
-                    && TimeTextField.this.getText().indexOf(":") == 2) {
-                withMinutes = true;
-            }
-            boolean withSeconds = false;
-            if (TimeTextField.this.getText() != null
-                    && TimeTextField.this.getText().length() == 8
-                    && TimeTextField.this.getText().lastIndexOf(":") == 5) {
-                withSeconds = true;
-            }
-
-            int c = TimeTextField.this.getCaretPosition();
-            if (((c == 2 && withMinutes) || (c == 5 && withSeconds))
-                    && (inputevent.getCode() != KeyCode.LEFT && inputevent.getCode() != KeyCode.BACK_SPACE)) {
-                TimeTextField.this.forward();
-                inputevent.consume();
-            }
-        });
-
-    }
-    */
 
     public TimeTextField(String time) {
         super(time);

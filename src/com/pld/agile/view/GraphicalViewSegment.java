@@ -40,20 +40,20 @@ public class GraphicalViewSegment extends Line {
         this.setEndX(destinationPos[0]);
         this.setEndY(destinationPos[1]);
         this.setStrokeWidth(strokeWidth);
-        this.setStroke(ViewUtilities.GREY);
+        this.setStroke(ViewUtilities.COLOURS.get("GREY"));
         this.setStrokeLineCap(StrokeLineCap.ROUND);
         if (displayer != null) {
             this.addEventHandler(MouseEvent.MOUSE_ENTERED,
                 e -> {
                     displayer.setText(segment.getName());
-                    this.setStroke(ViewUtilities.GREY.brighter());
+                    this.setStroke(ViewUtilities.COLOURS.get("GREY").brighter());
                     e.consume();
                 }
             );
             this.addEventHandler(MouseEvent.MOUSE_EXITED,
                 e -> {
                     displayer.setText("");
-                    this.setStroke(ViewUtilities.GREY);
+                    this.setStroke(ViewUtilities.COLOURS.get("GREY"));
                     e.consume();
                 }
             );

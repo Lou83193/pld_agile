@@ -20,6 +20,9 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Special type of ScrollPane that allows zooming and panning.
+ */
 public class ZoomableScrollPane extends ScrollPane {
 
     private final double MAX_SCALE = 10.0;
