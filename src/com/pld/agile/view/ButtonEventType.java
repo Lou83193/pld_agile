@@ -23,5 +23,13 @@ public enum ButtonEventType {
     /**
      * Event invoked to add a request to the tour.
      */
-    ADD_REQUEST
+    ADD_REQUEST,
+    /**
+     * Event invoked to undo an action
+     */
+    UNDO,
+    /**
+     * Event invooked to redo an action
+     */
+    REDO
 }

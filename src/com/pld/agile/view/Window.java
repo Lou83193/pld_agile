@@ -235,8 +235,14 @@ public class Window extends Application {
         Menu editMenu = new Menu("Edit");
         MenuItem editMenu1 = new MenuItem("Undo");
         MenuItem editMenu2 = new MenuItem("Redo");
-        editMenu1.setDisable(true);
-        editMenu2.setDisable(true);
+        editMenu1.setOnAction(
+                new ButtonListener(controller, ButtonEventType.UNDO)
+        );
+        editMenu2.setOnAction(
+                new ButtonListener(controller, ButtonEventType.REDO)
+        );
+        //editMenu1.setDisable(true);
+        //editMenu2.setDisable(true);
         editMenu.getItems().addAll(editMenu1, editMenu2);
 
         // About menu
