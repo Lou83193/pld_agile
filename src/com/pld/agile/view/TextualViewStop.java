@@ -7,6 +7,7 @@ import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -72,6 +73,8 @@ public class TextualViewStop extends VBox {
      * @param editable Whether the component has edit buttons or not.
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
+
+        long startTime = System.currentTimeMillis();
 
         this.scrollPane = (ScrollPane) parent.getComponent();
 
@@ -251,30 +254,23 @@ public class TextualViewStop extends VBox {
 
             VBox controls = new VBox(6);
             // Delete button
-            Image deleteIcon = new Image("deleteIcon.png", 20, 20, true, true);
-            ImageView deleteIconView = new ImageView(deleteIcon);
             Button deleteButton = new Button();
-            deleteButton.setGraphic(deleteIconView);
+            deleteButton.setGraphic(new ImageView(ViewUtilities.DELETE_ICON));
             deleteButton.getStyleClass().add("control-button");
             deleteButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().deleteRequest(stop.getRequest())
             );
             // Arrow up
-            Image upIcon = new Image("arrowIcon.png", 20, 20, true, true);
-            ImageView upIconView = new ImageView(upIcon);
             Button upButton = new Button();
-            upButton.setGraphic(upIconView);
+            upButton.setGraphic(new ImageView(ViewUtilities.UP_ARROW_ICON));
             upButton.getStyleClass().add("control-button");
             upButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderUp(stop)
             );
             upButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, -1));
             // Arrow down
-            Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
-            ImageView downIconView = new ImageView(downIcon);
-            downIconView.setRotate(180);
             Button downButton = new Button();
-            downButton.setGraphic(downIconView);
+            downButton.setGraphic(new ImageView(ViewUtilities.DOWN_ARROW_ICON));
             downButton.getStyleClass().add("control-button");
             downButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderDown(stop)
@@ -341,6 +337,8 @@ public class TextualViewStop extends VBox {
         } else {
             setHighlight(0);
         }
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + "ms");
 
     }
 
