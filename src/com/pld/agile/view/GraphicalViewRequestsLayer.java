@@ -38,7 +38,7 @@ public class GraphicalViewRequestsLayer extends Group {
 
         double screenScale = ViewUtilities.mapValue(
                 graphicalMap.getHeight(),
-                0, 1000,
+                0, 1080,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(

@@ -2,11 +2,13 @@ package com.pld.agile.view;
 
 import com.pld.agile.controller.Controller;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.*;
@@ -16,7 +18,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Window class of the application.
@@ -61,7 +67,10 @@ public class Window extends Application {
      * Main page's side panel.
      */
     private BorderPane sidePanel;
-
+    /**
+     * Map associating stops to their graphical or textual view components
+     */
+    private HashMap<Stop, Node[]> graphicalStopsMap;
     /**
      * The application's Controller instance.
      */
@@ -157,6 +166,8 @@ public class Window extends Application {
      * Directly sets the mainPane attribute.
      */
     public void constructMainPane() {
+
+        graphicalStopsMap = new HashMap<>();
 
         mainPane = new BorderPane();
         mainPane.getStyleClass().add("white-background");
@@ -302,6 +313,22 @@ public class Window extends Application {
     }
 
     /**
+     * Unhighlights all graphical stops
+     */
+    public void unhighlightStops() {
+        for (Node[] nodePair : graphicalStopsMap.values()) {
+            GraphicalViewStop graphicalViewStop = (GraphicalViewStop) nodePair[0];
+            TextualViewStop textualViewStop = (TextualViewStop) nodePair[1];
+            if (graphicalViewStop != null) {
+                graphicalViewStop.setHighlight(0);
+            }
+            if (textualViewStop != null) {
+                textualViewStop.setHighlight(0);
+            }
+        }
+    }
+
+    /**
      * Getter for stage.
      * @return stage
      */
@@ -335,6 +362,13 @@ public class Window extends Application {
      */
     public TextField getStreetNameLabel() {
         return streetNameLabel;
+    }
+    /**
+     * Getter for graphicalStopsMap.
+     * @return graphicalStopsMap
+     */
+    public HashMap<Stop, Node[]> getGraphicalStopsMap() {
+        return graphicalStopsMap;
     }
     /**
      * Getter for controller.

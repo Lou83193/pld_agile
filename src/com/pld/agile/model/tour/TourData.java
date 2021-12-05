@@ -149,17 +149,6 @@ public class TourData extends Observable implements Observer {
         this.departureTime = departureTime;
     }
 
-    /**
-     * Unhighlights every stop.
-     */
-    public void unHighlightStops() {
-        warehouse.setHighlighted(0);
-        for (Request request : requestList) {
-            request.getPickup().setHighlighted(0);
-            request.getDelivery().setHighlighted(0);
-        }
-    }
-
     public void constructNewRequest1(Intersection intersection) {
         Request newRequest = new Request();
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);

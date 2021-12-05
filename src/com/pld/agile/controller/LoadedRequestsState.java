@@ -95,40 +95,4 @@ public class LoadedRequestsState implements State {
         return true;
     }
 
-    @Override
-    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-        stop.setHighlighted(2);
-        if (stop.getType() != StopType.WAREHOUSE) {
-            if (stop.getRequest().getPickup().equals(stop)) {
-                stop.getRequest().getDelivery().setHighlighted(1);
-            }
-            else {
-                stop.getRequest().getPickup().setHighlighted(1);
-            }
-        }
-    }
-
-    @Override
-    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-        stop.setHighlighted(2);
-        if (stop.getType() != StopType.WAREHOUSE) {
-            if (stop.getRequest().getPickup().equals(stop)) {
-                stop.getRequest().getDelivery().setHighlighted(1);
-            }
-            else {
-                stop.getRequest().getPickup().setHighlighted(1);
-            }
-        }
-    }
-
-    @Override
-    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-    }
-
 }

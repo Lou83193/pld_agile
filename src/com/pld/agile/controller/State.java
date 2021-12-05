@@ -90,12 +90,6 @@ public interface State {
     default void doStopComputingTour(Controller c, Window window) {
     }
 
-    default void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-    }
-
-    default void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-    }
-
     default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
     }
 

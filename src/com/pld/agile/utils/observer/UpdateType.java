@@ -5,6 +5,5 @@ public enum UpdateType {
     REQUESTS,
     TOUR,
     INTERMEDIARY_TOUR,
-    INTERMEDIARY_TSP,
-    STOP_HIGHLIGHT
+    INTERMEDIARY_TSP
 }

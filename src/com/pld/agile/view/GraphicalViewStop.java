@@ -14,6 +14,7 @@ import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -28,6 +29,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.HashMap;
+
 /**
  * Graphical object representing a Stop in the graphical view.
  * A Stop is represented (in the graphical view) by an icon with a shape
@@ -38,7 +41,7 @@ import javafx.scene.text.TextAlignment;
  * Delivery Stops are represented by square pointers.
  * Warehouse Stops are represented by diamond pointers.
  */
-public class GraphicalViewStop extends Pane implements Observer {
+public class GraphicalViewStop extends Pane {
 
     /**
      * The center of the shape's X coordinate.
@@ -58,6 +61,7 @@ public class GraphicalViewStop extends Pane implements Observer {
     private Shape stopGraphic;
     private Shape highlightPointerGraphic;
     private Text numText;
+    private int highlightLevel;
 
     /**
      * TextualViewStop constructor.
@@ -68,8 +72,6 @@ public class GraphicalViewStop extends Pane implements Observer {
      * @param num The order number of the stop.
      */
     public GraphicalViewStop(Stop stop, GraphicalView parent, double graphicSize, int num, boolean editable) {
-
-        stop.addObserver(this);
 
         fillColour = Color.BLACK;
         outlineColour = Color.BLACK;
@@ -159,9 +161,37 @@ public class GraphicalViewStop extends Pane implements Observer {
                         parent.getWindow().getController().clickOnGraphicalStop(stop);
                     });
             */
-            this.setOnMousePressed((t) -> {
-                parent.getWindow().getController().clickOnGraphicalStop(stop);
-            });
+            this.setOnMousePressed(
+                (e) -> {
+                    Window w = parent.getWindow();
+                    w.unhighlightStops();
+                    if (stop.getRequest() != null) {
+                        Stop pickup = stop.getRequest().getPickup();
+                        Stop delivery = stop.getRequest().getDelivery();
+                        GraphicalViewStop pickupGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(pickup)[0];
+                        GraphicalViewStop deliveryGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(delivery)[0];
+                        TextualViewStop pickupTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(pickup)[1];
+                        TextualViewStop deliveryTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(delivery)[1];
+                        if (this.equals(pickupGraphicalView)) {
+                            pickupGraphicalView.setHighlight(2);
+                            pickupTextualView.setHighlight(2);
+                            deliveryGraphicalView.setHighlight(1);
+                            deliveryTextualView.setHighlight(1);
+                        } else {
+                            pickupGraphicalView.setHighlight(1);
+                            pickupTextualView.setHighlight(1);
+                            deliveryGraphicalView.setHighlight(2);
+                            deliveryTextualView.setHighlight(2);
+                        }
+                    }
+                    else {
+                        GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
+                        TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
+                        stopGraphicalView.setHighlight(2);
+                        stopTextualView.setHighlight(2);
+                    }
+                }
+            );
 
             if (editable) {
 
@@ -202,10 +232,27 @@ public class GraphicalViewStop extends Pane implements Observer {
 
             }
 
-            setHighlight(stop);
+            GraphicalViewStop oldGraphicalViewStop = null;
+            HashMap<Stop, Node[]> graphicalStopsMap = parent.getWindow().getGraphicalStopsMap();
+            if (graphicalStopsMap.containsKey(stop)) {
+                oldGraphicalViewStop = (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
+                graphicalStopsMap.get(stop)[0] = this;
+            } else {
+                graphicalStopsMap.put(stop, new Node[] {this, null});
+            }
+
+            if (oldGraphicalViewStop != null) {
+                setHighlight(oldGraphicalViewStop.getHighlightLevel());
+            } else {
+                setHighlight(0);
+            }
 
         }
 
+    }
+
+    public int getHighlightLevel() {
+        return highlightLevel;
     }
 
     /**
@@ -220,19 +267,19 @@ public class GraphicalViewStop extends Pane implements Observer {
     }
 
     /**
-     * Highlights or un-highlights the graphical object
-     * based on the stop's highlight status.
-     * @param stop The stop to base the highlight on.
+     * Highlights or un-highlights the graphical object.
+     * @param highlightLevel The level of highlight (2 = primary; 1 = secondary; 0 = none).
      */
-    public void setHighlight(Stop stop) {
-        if (stop.getHighlighted() > 0) {
+    public void setHighlight(int highlightLevel) {
+        this.highlightLevel = highlightLevel;
+        if (highlightLevel > 0) {
             DropShadow shadow = new DropShadow();
             shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));
             shadow.setRadius(5);
             this.setEffect(shadow);
             stopGraphic.setFill(Color.WHITE);
             stopGraphic.setStroke(ViewUtilities.ORANGE);
-            if (stop.getHighlighted() > 1) {
+            if (highlightLevel > 1) {
                 highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
                 if (numText != null) {
                     numText.setFill(ViewUtilities.DARK_ORANGE);
@@ -249,15 +296,4 @@ public class GraphicalViewStop extends Pane implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable observed, UpdateType updateType) {
-
-        switch (updateType) {
-            case STOP_HIGHLIGHT -> {
-                Stop stop = (Stop)observed;
-                setHighlight(stop);
-            }
-        }
-
-    }
 }

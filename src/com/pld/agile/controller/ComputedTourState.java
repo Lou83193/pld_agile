@@ -65,42 +65,6 @@ public class ComputedTourState implements State {
     }
 
     @Override
-    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-        stop.setHighlighted(2);
-        if (stop.getType() != StopType.WAREHOUSE) {
-            if (stop.getRequest().getPickup().equals(stop)) {
-                stop.getRequest().getDelivery().setHighlighted(1);
-            }
-            else {
-                stop.getRequest().getPickup().setHighlighted(1);
-            }
-        }
-    }
-
-    @Override
-    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-        stop.setHighlighted(2);
-        if (stop.getType() != StopType.WAREHOUSE) {
-            if (stop.getRequest().getPickup().equals(stop)) {
-                stop.getRequest().getDelivery().setHighlighted(1);
-            }
-            else {
-                stop.getRequest().getPickup().setHighlighted(1);
-            }
-        }
-    }
-
-    @Override
-    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
-    }
-
-    @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
         TourData tourData = window.getTourData();
         boolean success = tourData.deleteRequest(request);
@@ -133,8 +97,7 @@ public class ComputedTourState implements State {
 
     @Override
     public void doStartAddRequest(Controller c, Window window) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
+        window.unhighlightStops();
         window.getScene().setCursor(Cursor.CROSSHAIR);
         window.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
@@ -142,8 +105,7 @@ public class ComputedTourState implements State {
 
     @Override
     public void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        tourData.unHighlightStops();
+        window.unhighlightStops();
         c.setCurrState(c.movingStopState);
     }
 
