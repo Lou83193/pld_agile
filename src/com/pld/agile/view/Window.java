@@ -6,6 +6,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,6 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -205,6 +210,19 @@ public class Window extends Application {
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);
 
+        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
+            if (undoKeyboardShortcut.match(event)) {
+                menuBar.getMenus().get(1).getItems().get(0).fire();
+            }
+        });
+        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
+            if (redoKeyboardShortcut.match(event)) {
+                menuBar.getMenus().get(1).getItems().get(1).fire();
+            }
+        });
+
     }
 
     /**
@@ -233,8 +251,8 @@ public class Window extends Application {
 
         // Edit menu
         Menu editMenu = new Menu("Edit");
-        MenuItem editMenu1 = new MenuItem("Undo");
-        MenuItem editMenu2 = new MenuItem("Redo");
+        MenuItem editMenu1 = new MenuItem("Undo (Ctrl+Z)");
+        MenuItem editMenu2 = new MenuItem("Redo (Ctrl+Y)");
         editMenu1.setOnAction(
                 new ButtonListener(controller, ButtonEventType.UNDO)
         );
