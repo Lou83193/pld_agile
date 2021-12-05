@@ -304,10 +304,12 @@ public class TourData extends Observable {
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             setStopTimeAndNumber();
         } else {
-            Path p = new Path(stopMap.get(stops.get(0)),stopMap.get(stops.get(0)));
-            tourPaths.add(p);
+            Path emptyPath = new Path(stopMap.get(stops.get(0)),stopMap.get(stops.get(0)));
+            emptyPath.setSegments(new ArrayList<>());
+            emptyPath.setLength(0);
+            tourPaths.add(emptyPath);
             tourPaths.remove(tourPaths.get(0));
-             notifyObservers(UpdateType.TOUR);
+            notifyObservers(UpdateType.TOUR);
         }
 
     }

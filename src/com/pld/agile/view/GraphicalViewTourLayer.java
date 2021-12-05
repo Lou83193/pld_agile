@@ -56,14 +56,9 @@ public class GraphicalViewTourLayer extends Pane {
                 1.25, 0.75
         );
 
-        List<Request> requests = tourData.getRequestList();
         List<Path> tourPaths = tourData.getTourPaths();
 
         this.getChildren().clear();
-
-        if (requests.size() == 0) {
-            return;
-        }
 
         for (Path path : tourPaths) {
 

@@ -50,13 +50,13 @@ public class GraphicalViewRequestsLayer extends Group {
         List<Request> requests = tourData.getRequestList();
         this.getChildren().clear();
 
-        if (requests.size() == 0) {
+        Stop warehouse = tourData.getWarehouse();
+        if (warehouse == null) {
             return;
         }
 
         double graphicSize = 24 * screenScale * mapScale;
 
-        Stop warehouse = tourData.getWarehouse();
         GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, 0, false);
         double[] warehousePos = graphicalView.projectLatLon(warehouse.getAddress());
         warehouseGraphic.place(warehousePos);
