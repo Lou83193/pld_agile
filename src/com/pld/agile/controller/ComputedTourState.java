@@ -75,18 +75,7 @@ public class ComputedTourState implements State {
     @Override
     public void doDeleteRequest(Controller c, Window w, Request request) {
         TourData tourData = w.getTourData();
-        boolean success = tourData.deleteRequest(request);
-        if (!success) {
-            w.switchToMainPane();
-            w.toggleMenuItem(0, 1, true);
-            w.toggleMenuItem(0, 2, false);
-            w.setMainSceneButton(
-                    "Load requests",
-                    new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
-            );
-            w.placeMainSceneButton(true);
-            c.setCurrState(c.loadedMapState);
-        }
+        tourData.deleteRequest(request);
     }
 
     /**
@@ -129,10 +118,9 @@ public class ComputedTourState implements State {
      * Starts moving a stop on the map by entering the moving stop state.
      * @param c the controller
      * @param w the application window
-     * @param stop the dragged stop
      */
     @Override
-    public void doDragOnGraphicalStop(Controller c, Window w, Stop stop) {
+    public void doDragOnGraphicalStop(Controller c, Window w) {
         w.unhighlightStops();
         w.toggleMenuItem(1, 0, false);
         w.toggleMenuItem(1, 1, false);

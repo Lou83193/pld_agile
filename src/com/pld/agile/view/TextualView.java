@@ -59,23 +59,11 @@ public class TextualView implements Observer {
         VBox requestListContainer = new VBox(20);
         requestListContainer.getStyleClass().add("white-background");
 
-        List<Request> requests = tourData.getRequestList();
+        List<Stop> stops = tourData.getStopsList();
 
-        if (requests.size() == 0) {
-            component.setContent(requestListContainer);
-            return;
-        }
-
-        VBox warehousePanel = new TextualViewStop(tourData.getWarehouse(), this, false);
-        requestListContainer.getChildren().add(warehousePanel);
-
-        for (Request request : requests) {
-            VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
-            VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
-            requestListContainer.getChildren().addAll(
-                    requestPanel1,
-                    requestPanel2
-            );
+        for (Stop stop : stops) {
+            VBox stopPanel = new TextualViewStop(stop, this, false);
+            requestListContainer.getChildren().add(stopPanel);
         }
 
         component.setContent(requestListContainer);
@@ -93,13 +81,7 @@ public class TextualView implements Observer {
         VBox requestListContainer = new VBox(20);
         requestListContainer.getStyleClass().add("white-background");
 
-        List<Request> requests = tourData.getRequestList();
         List<Path> tourPaths = tourData.getTourPaths();
-
-        if (requests.size() == 0) {
-            component.setContent(requestListContainer);
-            return;
-        }
       
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();

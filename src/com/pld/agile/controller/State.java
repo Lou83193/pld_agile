@@ -39,7 +39,7 @@ public interface State {
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), w.getMapData());
             try {
                 mapLoader.load();
-                w.getTourData().setRequestList(new ArrayList<>());
+                w.getTourData().setStopsList(new ArrayList<>());
                 w.getTourData().setAssociatedMap(w.getMapData());
                 w.switchToMainPane();
                 w.toggleMenuItem(0, 1, true);
@@ -106,18 +106,18 @@ public interface State {
      * Fires when a graphical stop is dragged across the graphical view.
      * @param c the controller
      * @param w the application window
-     * @param stop the concerned stop
      */
-    default void doDragOnGraphicalStop(Controller c, Window w, Stop stop) {
+    default void doDragOnGraphicalStop(Controller c, Window w) {
     }
 
     /**
      * Fires when a graphical stop is dropped on the graphical view (after a drag)
      * @param c the controller
      * @param w the application window
+     * @param stop the stop that is being dropped
      * @param latLonPos the position where the stop was dropped, in lat/lon coordinates
      */
-    default void doDragOffGraphicalStop(Controller c, Window w, double[] latLonPos) {
+    default void doDragOffGraphicalStop(Controller c, Window w, Stop stop, double[] latLonPos) {
     }
 
     /**
