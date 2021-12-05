@@ -43,11 +43,17 @@ public class TourData extends Observable {
      * The departure time from the warehouse.
      */
     private LocalTime departureTime;
-
+    /**
+     * The list of ids of each intersection of a stop.
+     */
     private List<Integer> stops;
-
+    /**
+     * The graph of stops to use for the TSP
+     */
     private Graph stopsGraph;
-
+    /**
+     * The list of shortest paths computed by dijkstra
+     */
     private List<Path> tourPaths;
 
 
