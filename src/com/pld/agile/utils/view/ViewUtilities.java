@@ -9,6 +9,8 @@ package com.pld.agile.utils.view;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import java.util.Collections;
@@ -37,6 +39,19 @@ public class ViewUtilities {
         map.put("GREEN", Color.web("#21ED1F"));
         COLOURS = Collections.unmodifiableMap(map);
     }
+
+    /**
+     * Image used for the textual view's stop "Delete" button
+     */
+    public static final Image DELETE_ICON = new Image("deleteIcon.png", 20, 20, true, true);
+    /**
+     * Image used for the textual view's stop "Shift Up" button
+     */
+    public static final Image UP_ARROW_ICON = new Image("upArrowIcon.png", 20, 20, true, true);
+    /**
+     * Image used for the textual view's stop "Shift Down" button
+     */
+    public static final Image DOWN_ARROW_ICON = new Image("downArrowIcon.png", 20, 20, true, true);
 
     /**
      * Returns the linear interpolation between two values.
