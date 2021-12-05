@@ -174,4 +174,19 @@ public interface State {
     default void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
     }
 
+    /**
+     * Fires when the user requests to undo a command.
+     */
+    default void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Fires when the user requests to redo a command.
+     */
+    default void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
+
+    }
+
 }

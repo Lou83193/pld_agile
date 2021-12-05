@@ -28,6 +28,11 @@ public class Controller {
      */
     private Window window;
 
+    /**
+     * The list of commands instance.
+     */
+    private ListOfCommands listOfCommands;
+
     // Available states :
     /**
      * Initial state.
@@ -186,6 +191,18 @@ public class Controller {
      */
     public void changeWarehouseDepartureTime(LocalTime time) {
         currState.doChangeWarehouseDepartureTime(this, window, time);
+    }
+    /**
+     * Calls method undo() of the current state.
+     */
+    public void undo() {
+        currState.undo(listOfCommands);
+    }
+    /**
+     * Calls method redo() of the current state.
+     */
+    public void redo() {
+        currState.redo(listOfCommands);
     }
 
 }
