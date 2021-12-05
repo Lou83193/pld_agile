@@ -478,7 +478,11 @@ public class TourData extends Observable implements Observer {
                     Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(i));
                     int predecessor = predecessors[stopIndex][stops.get(i)];
                     Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
-                    pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
+                    Segment segmentTo = currIntersection.findSegmentTo(initialIntersection);
+                    if (!currIntersection.equals(initialIntersection) && segmentTo == null) {
+                        throw new PathException("Unable to compute paths for this request");
+                    }
+                    pathSegments.add(segmentTo);
                     Stop nextStop = stopMap.get(stops.get(i));
                     Path path = new Path(currStop,nextStop);
 
@@ -486,8 +490,8 @@ public class TourData extends Observable implements Observer {
                     while (predecessor != stops.get(stopIndex)) {
                         predecessor = predecessors[stopIndex][predecessor];
                         Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
-                        Segment segmentTo = nextIntersection.findSegmentTo(currIntersection);
-                        if (segmentTo == null) {
+                        segmentTo = nextIntersection.findSegmentTo(currIntersection);
+                        if (!currIntersection.equals(nextIntersection) && segmentTo == null) {
                             throw new PathException("Unable to compute paths for this request");
                         }
                         pathSegments.add(segmentTo);

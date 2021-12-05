@@ -4,6 +4,7 @@ import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
@@ -99,6 +100,9 @@ public class ComputedTourState implements State {
     public void doStartAddRequest(Controller c, Window window) {
         window.unhighlightStops();
         window.getScene().setCursor(Cursor.CROSSHAIR);
+        window.toggleFileMenuItem(0, false);
+        window.toggleFileMenuItem(1, false);
+        window.toggleFileMenuItem(2, false);
         window.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
     }

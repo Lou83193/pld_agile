@@ -33,6 +33,7 @@ public class AddingRequestState2 implements State {
             tourData.constructNewRequest2(intersection);
         } catch (PathException e) {
             tourData.deleteRequest(tourData.getRequestList().get(tourData.getRequestList().size() - 1));
+            // dijkstra iis broken after this error, try to redo it?
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.setTitle("Error"); // force english
@@ -41,6 +42,9 @@ public class AddingRequestState2 implements State {
         }
         window.getScene().setCursor(Cursor.DEFAULT);
         window.toggleMainSceneButton(true);
+        window.toggleFileMenuItem(0, true);
+        window.toggleFileMenuItem(1, true);
+        window.toggleFileMenuItem(2, false);
         c.setCurrState(c.computedTourState);
     }
 
