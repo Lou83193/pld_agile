@@ -21,7 +21,6 @@ import org.dom4j.io.SAXReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime;
 import java.util.Map;
@@ -72,8 +71,9 @@ public class RequestLoader {
             Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
 
             List<Request> requestList = new ArrayList<>();
-            HashMap<Integer, Stop> stopMap = new HashMap<>();
+            List<Stop> stopList = new ArrayList<>();
 
+            int currId = 0;
             Element warehouseElement = (Element) warehouseNode;
             String[] time = warehouseElement.attributeValue("departureTime").split(":");
             LocalTime departureTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
@@ -85,7 +85,7 @@ public class RequestLoader {
             Intersection warehouseLocation = interectionsByOldId.get(warehouseElement.attributeValue("address"));
             Stop warehouse = new Stop(null, warehouseLocation, 0, StopType.WAREHOUSE);
             tour.setWarehouse(warehouse);
-            stopMap.put(warehouse.getAddress().getId(), warehouse);
+            stopList.add(warehouse);
 
             for (Node requestNode : requestNodes) {
                 Element requestElement = (Element) requestNode;
@@ -98,16 +98,17 @@ public class RequestLoader {
                     Request request = new Request();
                     Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);
                     Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);
-                    stopMap.put(pickup.getAddress().getId(), pickup);
-                    stopMap.put(delivery.getAddress().getId(), delivery);
                     request.setPickup(pickup);
                     request.setDelivery(delivery);
                     requestList.add(request);
+                    stopList.add(pickup);
+                    stopList.add(delivery);
+
                 }
             }
 
+            tour.setStopsList(stopList);
             tour.setRequestList(requestList);
-            tour.setStopMap(stopMap);
         } catch(SyntaxException e) {
             throw e;
         } catch (Exception e) {
@@ -116,7 +117,7 @@ public class RequestLoader {
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 
-        if (tour.getRequestList().size() == 0 || tour.getStopMap().size() == 0) {
+        if (tour.getRequestList().size() == 0) {
             throw new SyntaxException("Invalid file - couldn't use it to load a request (all might be out loaded map).");
         }
     }

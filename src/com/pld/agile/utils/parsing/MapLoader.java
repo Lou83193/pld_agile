@@ -123,7 +123,6 @@ public class MapLoader {
             map.resetBounds();
             HashMap<String, Intersection> intersectionsById = new HashMap<>();  // used to create segments
             List<Intersection> intersections = new ArrayList<>();
-            int currId = 0;
             for (Node intersectionNode : intersectionNodes) {
                 Element intersectionElement = (Element) intersectionNode;
                 String id = intersectionElement.attributeValue("id");
@@ -131,12 +130,11 @@ public class MapLoader {
                     double lat = Double.parseDouble(intersectionElement.attributeValue("latitude"));
                     double lon = Double.parseDouble(intersectionElement.attributeValue("longitude"));
                     map.updateBounds(lat, lon);
-                    Intersection i = new Intersection(currId, lat, lon); // override id
+                    Intersection i = new Intersection(lat, lon);
                     if (!intersectionsById.containsKey(id)) {
                         // we don't add an intersection if it has an already existing ID
                         intersectionsById.put(id, i);
                         intersections.add(i);
-                        currId++;
                     }
                 }
             }
