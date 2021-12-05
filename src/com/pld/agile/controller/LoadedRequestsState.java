@@ -1,14 +1,9 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.utils.exception.SyntaxException;
-import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.parsing.RequestLoader;
-import com.pld.agile.utils.tsp.TSP;
-import com.pld.agile.utils.tsp.TSP3;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
@@ -29,30 +24,28 @@ public class LoadedRequestsState implements State {
     /**
      * Loads the requests to tourData if map is loaded (default doesn't load).
      * @param c the controller
-     * @param window the application window
+     * @param w the application window
      * @return boolean success
      */
     @Override
-    public boolean doLoadRequests(Controller c, Window window) {
+    public boolean doLoadRequests(Controller c, Window w) {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Tour File");
         fileChooser.setInitialDirectory(new File("./src/resources/xml/requests"));
-        File requestsFile = fileChooser.showOpenDialog(window.getStage());
+        File requestsFile = fileChooser.showOpenDialog(w.getStage());
 
         if (requestsFile != null) {
-
-            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                window.toggleFileMenuItem(2, true);
-                window.setMainSceneButton(
+                w.toggleFileMenuItem(2, true);
+                w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
                 );
-                window.placeMainSceneButton(false);
+                w.placeMainSceneButton(false);
                 c.setCurrState(c.loadedRequestsState);
-
                 return true;
             } catch (SyntaxException | IOException e) {
                 e.printStackTrace();
@@ -70,12 +63,11 @@ public class LoadedRequestsState implements State {
      * Computes a tour and displays it (default doesn't do it
      * since there is no guarantee that requests are loaded).
      * @param c the controller
-     * @param window the application window
-     * @return boolean success
+     * @param w the application window
      */
     @Override
-    public boolean doComputeTour(Controller c, Window window) {
-        TourData tourData = window.getTourData();
+    public void doComputeTour(Controller c, Window w) {
+        TourData tourData = w.getTourData();
         Thread computingThread = new Thread(() -> {
             try {
                 tourData.computeTour();
@@ -87,21 +79,20 @@ public class LoadedRequestsState implements State {
                 alert.showAndWait();
             }
             Platform.runLater(() -> {
-                c.computingTourState.doStopComputingTour(c, window);
+                c.computingTourState.doStopComputingTour(c, w);
             });
         });
         tourData.setTourComputingThread(computingThread);
         computingThread.setDaemon(true);
         computingThread.start();
-        window.toggleFileMenuItem(0, false);
-        window.toggleFileMenuItem(1, false);
-        window.toggleFileMenuItem(2, false);
-        window.setMainSceneButton(
+        w.toggleFileMenuItem(0, false);
+        w.toggleFileMenuItem(1, false);
+        w.toggleFileMenuItem(2, false);
+        w.setMainSceneButton(
                 "Stop computing",
                 new ButtonListener(c, ButtonEventType.STOP_COMPUTING_TOUR)
         );
         c.setCurrState(c.computingTourState);
-        return true;
     }
 
 }

@@ -55,12 +55,32 @@ public class GraphicalViewStop extends Pane {
      * The pointer's height.
      */
     private double pointerH;
-
+    /**
+     * The fill colour of the graphical stop.
+     */
     private Color fillColour;
+    /**
+     * The outline colour of the graphical stop.
+     */
     private Color outlineColour;
+    /**
+     * The shape of the graphical stop.
+     */
     private Shape stopGraphic;
+    /**
+     * The shape of the highlight pointer on the graphical stop.
+     */
     private Shape highlightPointerGraphic;
+    /**
+     * The text displaying the order number of the graphical stop.
+     */
     private Text numText;
+    /**
+     * The highlight level of the graphical stop.
+     * 2 = highlighted by selection.
+     * 1 = highlighted by association.
+     * 0 = not highlighted.
+     */
     private int highlightLevel;
 
     /**
@@ -69,9 +89,9 @@ public class GraphicalViewStop extends Pane {
      * @param stop The corresponding Stop model object.
      * @param parent The GraphicalView instance containing the stop
      * @param graphicSize The size of the pointer.
-     * @param num The order number of the stop.
+     * @param editable Whether the stop is draggable or not.
      */
-    public GraphicalViewStop(Stop stop, GraphicalView parent, double graphicSize, int num, boolean editable) {
+    public GraphicalViewStop(Stop stop, GraphicalView parent, double graphicSize, boolean editable) {
 
         fillColour = Color.BLACK;
         outlineColour = Color.BLACK;
@@ -138,6 +158,7 @@ public class GraphicalViewStop extends Pane {
 
         this.getChildren().addAll(highlightPointerGraphic, stopGraphic);
 
+        int num = stop.getStopNumber();
         if (num > 0) {
             int fontSize = (int) (graphicSize * 0.7);
             numText = new Text(num + "");
@@ -153,14 +174,6 @@ public class GraphicalViewStop extends Pane {
 
         if (parent != null) {
 
-            /*
-            MouseClickNotDragDetector.clickNotDragDetectingOn(this)
-
-                    .withPressedDurationThreshold(150)
-                    .setOnMouseClickedNotDragged((t) -> {
-                        parent.getWindow().getController().clickOnGraphicalStop(stop);
-                    });
-            */
             this.setOnMousePressed(
                 (e) -> {
                     Window w = parent.getWindow();
@@ -251,6 +264,10 @@ public class GraphicalViewStop extends Pane {
 
     }
 
+    /**
+     * Getter for attribute highlightLevel.
+     * @return highlightLevel
+     */
     public int getHighlightLevel() {
         return highlightLevel;
     }
@@ -268,7 +285,7 @@ public class GraphicalViewStop extends Pane {
 
     /**
      * Highlights or un-highlights the graphical object.
-     * @param highlightLevel The level of highlight (2 = primary; 1 = secondary; 0 = none).
+     * @param highlightLevel The level of highlight.
      */
     public void setHighlight(int highlightLevel) {
         this.highlightLevel = highlightLevel;

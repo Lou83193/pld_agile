@@ -11,7 +11,7 @@ import com.pld.agile.view.Window;
 public class MovingStopState implements State {
 
     @Override
-    public void doDragOffGraphicalStop(Controller c, Window window, double[] latLonPos) {
+    public void doDragOffGraphicalStop(Controller c, Window w, double[] latLonPos) {
         // loop through all intersections
         // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
         // find the smallest distance

@@ -2,9 +2,6 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.model.tour.Request;
-import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.view.Window;
 
@@ -16,19 +13,41 @@ import com.pld.agile.view.Window;
 public class AddingRequestState1 implements State {
 
     /**
-     * Start new request setting and going to addingRequestState2.
+     * Creates a new request with a pickup at the given position,
+     * and goes to addingRequestState2.
      * @param c the controller
-     * @param window the application window
-     * @param latLonPos latitude and longitude of selected point
+     * @param w the application window
+     * @param latLonPos the desired latitude and longitude of the pickup
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        MapData mapData = window.getMapData();
-        TourData tourData = window.getTourData();
-        //Intersection intersection = mapData.getIntersections().get(506);
+    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+        MapData mapData = w.getMapData();
+        TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
         tourData.constructNewRequest1(intersection);
         c.setCurrState(c.addingRequestState2);
+    }
+
+    /**
+     * Does nothing because it is impossible to load a map in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadMap(Controller c, Window w) {
+        return false;
+    }
+
+    /**
+     * Does nothing because it is impossible to load requests in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadRequests(Controller c, Window w) {
+        return false;
     }
 
 }

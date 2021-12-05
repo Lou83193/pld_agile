@@ -18,16 +18,16 @@ import javafx.scene.control.ButtonType;
 public class AddingRequestState2 implements State {
 
     /**
-     * Finishes new request setting and returning to displayedTourState.
+     * Adds the delivery point to the new request, adds the new request to the tour,
+     * and goes back to the computed tour state.
      * @param c the controller
-     * @param window the application window
-     * @param latLonPos latitude and longitude of selected point
+     * @param w the application window
+     * @param latLonPos the desired latitude and longitude of the delivery
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        MapData mapData = window.getMapData();
-        TourData tourData = window.getTourData();
-        //Intersection intersection = mapData.getIntersections().get(1022);
+    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+        MapData mapData = w.getMapData();
+        TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
         try {
             tourData.constructNewRequest2(intersection);
@@ -40,12 +40,34 @@ public class AddingRequestState2 implements State {
             alert.setHeaderText("Computing path error");
             alert.showAndWait();
         }
-        window.getScene().setCursor(Cursor.DEFAULT);
-        window.toggleMainSceneButton(true);
-        window.toggleFileMenuItem(0, true);
-        window.toggleFileMenuItem(1, true);
-        window.toggleFileMenuItem(2, false);
+        w.getScene().setCursor(Cursor.DEFAULT);
+        w.toggleMainSceneButton(true);
+        w.toggleFileMenuItem(0, true);
+        w.toggleFileMenuItem(1, true);
+        w.toggleFileMenuItem(2, false);
         c.setCurrState(c.computedTourState);
+    }
+
+    /**
+     * Does nothing because it is impossible to load a map in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadMap(Controller c, Window w) {
+        return false;
+    }
+
+    /**
+     * Does nothing because it is impossible to load requests in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadRequests(Controller c, Window w) {
+        return false;
     }
 
 }

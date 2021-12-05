@@ -21,30 +21,28 @@ public class LoadedMapState implements State {
     /**
      * Loads the requests to tourData if map is loaded (default doesn't load).
      * @param c the controller
-     * @param window the application window
+     * @param w the application window
      * @return boolean success
      */
     @Override
-    public boolean doLoadRequests(final Controller c, final Window window) {
+    public boolean doLoadRequests(final Controller c, final Window w) {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Tour File");
         fileChooser.setInitialDirectory(new File("./src/resources/xml/requests"));
-        File requestsFile = fileChooser.showOpenDialog(window.getStage());
+        File requestsFile = fileChooser.showOpenDialog(w.getStage());
 
         if (requestsFile != null) {
-
-            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                window.toggleFileMenuItem(2, true);
-                window.setMainSceneButton(
+                w.toggleFileMenuItem(2, true);
+                w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
                 );
-                window.placeMainSceneButton(false);
+                w.placeMainSceneButton(false);
                 c.setCurrState(c.loadedRequestsState);
-
                 return true;
             } catch (SyntaxException | IOException e) {
                 e.printStackTrace();

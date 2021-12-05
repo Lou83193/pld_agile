@@ -43,10 +43,25 @@ import java.util.function.Consumer;
  */
 public class TextualViewStop extends VBox {
 
+    /**
+     * The parent ScrollPane containing all the textual stops.
+     */
     private ScrollPane scrollPane;
+    /**
+     * Tracker used to keep track of the modifications made
+     * to the textual stop's text fields.
+     */
     private String inputValueTracker;
+    /**
+     * The graphical stop icon contained within the textual view stop.
+     */
     private GraphicalViewStop labelGraphic;
-    private Stop stop;
+    /**
+     * The highlight level of the textual stop.
+     * 2 = highlighted by selection.
+     * 1 = highlighted by association.
+     * 0 = not highlighted.
+     */
     private int highlightLevel;
 
     /**
@@ -57,8 +72,6 @@ public class TextualViewStop extends VBox {
      * @param editable Whether the component has edit buttons or not.
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
-
-        this.stop = stop;
 
         this.scrollPane = (ScrollPane) parent.getComponent();
 
@@ -78,7 +91,6 @@ public class TextualViewStop extends VBox {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             departureTimeString = formatter.format(departureTime);
         }
-        int stopNumber = stop.getStopNumber();
 
         BorderPane panel = new BorderPane();
         BorderPane contentPane = new BorderPane();
@@ -89,7 +101,7 @@ public class TextualViewStop extends VBox {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
+        labelGraphic = new GraphicalViewStop(stop, null,14, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -332,7 +344,10 @@ public class TextualViewStop extends VBox {
 
     }
 
-
+    /**
+     * Getter for attribute highlightLevel.
+     * @return highlightLevel
+     */
     public int getHighlightLevel() {
         return highlightLevel;
     }

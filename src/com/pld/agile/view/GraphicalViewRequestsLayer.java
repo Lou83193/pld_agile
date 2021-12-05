@@ -57,7 +57,7 @@ public class GraphicalViewRequestsLayer extends Group {
         double graphicSize = 32 * screenScale * mapScale;
 
         Stop warehouse = tourData.getWarehouse();
-        GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, 0, false);
+        GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, false);
         double[] warehousePos = graphicalView.projectLatLon(warehouse.getAddress());
         warehouseGraphic.place(warehousePos);
         this.getChildren().add(warehouseGraphic);
@@ -70,7 +70,6 @@ public class GraphicalViewRequestsLayer extends Group {
                         pickup,
                         graphicalView,
                         graphicSize,
-                        pickup.getStopNumber(),
                         pickup.getStopNumber() > 0
                 );
                 double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
@@ -84,8 +83,7 @@ public class GraphicalViewRequestsLayer extends Group {
                         delivery,
                         graphicalView,
                         graphicSize,
-                        delivery.getStopNumber(),
-                        pickup.getStopNumber() > 0
+                        delivery.getStopNumber() > 0
                 );
                 double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
                 deliveryGraphic.place(deliveryPos);
