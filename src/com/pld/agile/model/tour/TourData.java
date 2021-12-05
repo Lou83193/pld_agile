@@ -192,32 +192,44 @@ public class TourData extends Observable {
         stopMap.put(pickup.getAddress().getId(), pickup);
         stopMap.put(delivery.getAddress().getId(), delivery);
 
+
         dijkstra();
-        tourPaths.remove(tourPaths.size() - 1);
-        Stop lastStop = tourPaths.get(tourPaths.size() - 1).getDestination();
 
-        Integer indexLastStop = -1;
-        for (int i = 0; i < stops.size(); i++) {
-            if (stops.get(i) == lastStop.getAddress().getId()) {
-                indexLastStop = i;
-                break;
+        if (tourPaths.size() > 2) {
+            tourPaths.remove(tourPaths.size() - 1);
+            Stop lastStop = tourPaths.get(tourPaths.size() - 1).getDestination();
+
+            Integer indexLastStop = -1;
+            for (int i = 0; i < stops.size(); i++) {
+                if (stops.get(i) == lastStop.getAddress().getId()) {
+                    indexLastStop = i;
+                    break;
+                }
             }
-        }
 
-        Path lastToPickup = stopsGraph.getPath(indexLastStop,stops.size() - 2);
-        tourPaths.add(lastToPickup);
+            Path lastToPickup = stopsGraph.getPath(indexLastStop, stops.size() - 2);
+            tourPaths.add(lastToPickup);
 
-        //tests :
+            //tests :
         /*System.out.println("path1 "+  lastToPickup);
         System.out.println("origin  : "+lastToPickup.getOrigin()+" destination : "+lastToPickup.getDestination());
         for(int i=0; i<lastToPickup.getSegments().size();i++){
             System.out.println(lastToPickup.getSegments().get(i));
         }*/
 
-        Path pickupToDelivery = stopsGraph.getPath(stops.size() - 2,stops.size() - 1);
-        tourPaths.add(pickupToDelivery);
-        Path deliveryToWarehouse = stopsGraph.getPath(stops.size() - 1,0);
-        tourPaths.add(deliveryToWarehouse);
+            Path pickupToDelivery = stopsGraph.getPath(stops.size() - 2, stops.size() - 1);
+            tourPaths.add(pickupToDelivery);
+            Path deliveryToWarehouse = stopsGraph.getPath(stops.size() - 1, 0);
+            tourPaths.add(deliveryToWarehouse);
+        }else{
+            tourPaths.remove(tourPaths.get(0));
+            Path warehouseToPickup = stopsGraph.getPath(0, stops.size() - 2);
+            tourPaths.add(warehouseToPickup);
+            Path pickupToDelivery = stopsGraph.getPath(stops.size() - 2, stops.size() - 1);
+            tourPaths.add(pickupToDelivery);
+            Path deliveryToWarehouse = stopsGraph.getPath(stops.size() - 1, 0);
+            tourPaths.add(deliveryToWarehouse);
+        }
         setStopTimeAndNumber();
 
     }
@@ -226,7 +238,7 @@ public class TourData extends Observable {
      * delete a request and modify the tour without changing the order of the stops
      * @param request the request to delete
      */
-    public boolean deleteRequest(Request request) {
+    public void deleteRequest(Request request) {
 
         Stop pickup = request.getPickup();
         Stop delivery = request.getDelivery();
@@ -291,10 +303,11 @@ public class TourData extends Observable {
         // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             setStopTimeAndNumber();
-            return true;
         } else {
-            notifyObservers(UpdateType.TOUR);
-            return false;
+            Path p = new Path(stopMap.get(stops.get(0)),stopMap.get(stops.get(0)));
+            tourPaths.add(p);
+            tourPaths.remove(tourPaths.get(0));
+             notifyObservers(UpdateType.TOUR);
         }
 
     }

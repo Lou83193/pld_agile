@@ -109,18 +109,8 @@ public class DisplayedTourState implements State {
     @Override
     public void doDeleteRequest(Controller c, Window window, Request request) {
         TourData tourData = window.getTourData();
-        boolean success = tourData.deleteRequest(request);
-        if (!success) {
-            window.switchToMainPane();
-            window.toggleFileMenuItem(1, true);
-            window.toggleFileMenuItem(2, false);
-            window.setMainSceneButton(
-                    "Load requests",
-                    new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
-            );
-            window.placeMainSceneButton(true);
-            c.setCurrState(c.awaitRequestsState);
-        }
+        tourData.deleteRequest(request);
+
     }
 
     @Override
