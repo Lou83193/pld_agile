@@ -177,27 +177,28 @@ public class TourData extends Observable implements Observer {
      * Creates a new request with a pickup which is created at the given intersection,
      * and adds it to the list of requests.
      * @param intersection The intersection of the pickup.
+     * @return The new request.
      */
-    public void constructNewRequest1(Intersection intersection) {
+    public Request constructNewRequest1(Intersection intersection) {
         Request newRequest = new Request();
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
         newRequest.setPickup(newPickup);
         requestList.add(newRequest);
         notifyObservers(UpdateType.TOUR);
+        return newRequest;
     }
 
     /**
      * Adds a delivery to the new request (the last one in the list) which is created at the given intersection.
-     * Adds the new request to the tour.
      * @param intersection The intersection of the delivery.
-     * @throws PathException If adding the request to the tour caused an exception.
+     * @return The new request.
      */
-    public void constructNewRequest2(Intersection intersection) throws PathException {
+    public Request constructNewRequest2(Intersection intersection) {
         Request newRequest = requestList.get(requestList.size()-1);
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
-        addRequest(newRequest);
-        System.out.println("Request added : " + newRequest);
+        notifyObservers(UpdateType.TOUR);
+        return newRequest;
     }
 
     /**

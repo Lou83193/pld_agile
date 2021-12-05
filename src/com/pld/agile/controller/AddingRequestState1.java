@@ -1,6 +1,5 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.view.Window;
@@ -47,6 +46,22 @@ public class AddingRequestState1 implements State {
     @Override
     public boolean doLoadRequests(Controller c, Window w) {
         return false;
+    }
+
+    /**
+     * Undoes the last command.
+     */
+    @Override
+    public void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Redoes the last command.
+     */
+    @Override
+    public void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
     }
 
 }

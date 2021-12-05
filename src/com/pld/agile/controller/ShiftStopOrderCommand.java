@@ -6,7 +6,6 @@
 
 package com.pld.agile.controller;
 
-import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 

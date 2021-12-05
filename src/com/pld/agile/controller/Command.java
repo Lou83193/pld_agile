@@ -20,4 +20,5 @@ public interface Command {
      * Undoes a command.
      */
     void undoCommand();
+
 }

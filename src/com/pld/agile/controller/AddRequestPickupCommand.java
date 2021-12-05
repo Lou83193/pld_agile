@@ -62,7 +62,7 @@ public class AddRequestPickupCommand implements Command {
     @Override
     public void undoCommand() {
         tourData.deconstructNewRequest();
-        controller.setCurrState(controller.computingTourState);
+        controller.setCurrState(controller.addingRequestState1);
     }
 
 }

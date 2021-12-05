@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -112,7 +113,6 @@ public class Window extends Application {
         wrapperPane.setCenter(homePane);
 
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.setTitle("COLIFFIMO - Route Planner");
         stage.getIcons().add(new Image("icon.png"));
         stage.show();
@@ -253,6 +253,7 @@ public class Window extends Application {
 
         // Menu bar
         menuBar = new MenuBar();
+        menuBar.setCursor(Cursor.DEFAULT);
         menuBar.getMenus().addAll(fileMenu, editMenu, aboutMenu);
 
     }

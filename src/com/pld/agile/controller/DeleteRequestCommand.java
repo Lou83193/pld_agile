@@ -8,6 +8,7 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 
 /**
  * Command deleting a request from the tour.
@@ -38,7 +39,7 @@ public class DeleteRequestCommand implements Command {
      */
     @Override
     public void doCommand() {
-
+        tourData.deleteRequest(request);
     }
 
     /**
@@ -46,7 +47,9 @@ public class DeleteRequestCommand implements Command {
      */
     @Override
     public void undoCommand() {
-
+        try {
+            tourData.addRequest(request);
+        } catch (PathException e) {}
     }
 
 }
