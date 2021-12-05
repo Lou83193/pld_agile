@@ -169,7 +169,6 @@ public class GraphicalViewStop extends Pane implements Observer {
 
                 this.setCursor(Cursor.HAND);
                 this.setOnDragDetected((t) -> {
-                    System.out.println("hi");
                     isDragged = true;
                     this.toFront();
                     parent.getWindow().getController().dragOnGraphicalStop();
@@ -192,10 +191,10 @@ public class GraphicalViewStop extends Pane implements Observer {
                 MapData mapData = parent.getWindow().getMapData();
                 this.setOnMouseReleased((t) -> {
                     if (isDragged) {
-                        System.out.println("bye");
+                        System.out.println(this.getBoundsInParent().getMinX() + "; " + this.getBoundsInParent().getMinY() + "| " + pointerCenterX + "; " + pointerCenterY + "; " + pointerH);
                         double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
-                                t.getX() + pointerCenterX,
-                                t.getY() + pointerCenterY + pointerH,
+                                this.getBoundsInParent().getMinX() + pointerCenterX,
+                                this.getBoundsInParent().getMinY() + pointerCenterY + pointerH,
                                 mapData.getMinLat(),
                                 mapData.getMaxLat(),
                                 mapData.getMinLon(),
