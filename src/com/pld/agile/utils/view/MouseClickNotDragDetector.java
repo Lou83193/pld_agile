@@ -13,6 +13,9 @@ import java.util.function.Consumer;
 
 import static java.lang.System.currentTimeMillis;
 
+/**
+ * Event Handling object allowing to set a listener for a click that is not followed by a drag.
+ */
 public class MouseClickNotDragDetector {
 
     private final Node node;

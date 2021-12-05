@@ -4,7 +4,6 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ViewUtilities;
 import com.pld.agile.utils.view.ZoomableScrollPane;
@@ -81,12 +80,12 @@ public class GraphicalView implements Observer {
 
         component.widthProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
-            graphicalViewTourLayer.draw();
+            graphicalViewTourLayer.draw(true);
             graphicalViewRequestsLayer.draw();
         });
         component.heightProperty().addListener(evt -> {
             graphicalViewMapLayer.draw();
-            graphicalViewTourLayer.draw();
+            graphicalViewTourLayer.draw(true);
             graphicalViewRequestsLayer.draw();
         });
 
@@ -127,8 +126,11 @@ public class GraphicalView implements Observer {
                 graphicalViewRequestsLayer.draw();
             }
             case TOUR -> {
-                graphicalViewTourLayer.draw();
+                graphicalViewTourLayer.draw(true);
                 graphicalViewRequestsLayer.draw();
+            }
+            case INTERMEDIARY_TOUR -> {
+                graphicalViewTourLayer.draw(false);
             }
         }
     }

@@ -4,5 +4,6 @@ public enum UpdateType {
     MAP,
     REQUESTS,
     TOUR,
-    STOP_HIGHLIGHT
+    INTERMEDIARY_TOUR,
+    INTERMEDIARY_TSP
 }

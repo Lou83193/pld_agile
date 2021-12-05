@@ -40,14 +40,14 @@ public class GraphicalViewTourLayer extends Pane {
     /**
      * Draws the tour trace, by populating the pane with graphical segments.
      */
-    public void draw() {
+    public void draw(boolean finished) {
 
         MapData mapData = graphicalView.getWindow().getMapData();
         TourData tourData = graphicalView.getWindow().getTourData();
 
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
-                0, 1000,
+                0, 1080,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(
@@ -65,7 +65,8 @@ public class GraphicalViewTourLayer extends Pane {
             GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
                 graphicalView,
                 path,
-                4 * screenScale * mapScale
+                6 * screenScale * mapScale,
+                    finished
             );
             this.getChildren().add(graphicalViewPath);
 

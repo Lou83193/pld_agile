@@ -38,7 +38,7 @@ public class GraphicalViewRequestsLayer extends Group {
 
         double screenScale = ViewUtilities.mapValue(
                 graphicalMap.getHeight(),
-                0, 1000,
+                0, 1080,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(
@@ -50,12 +50,7 @@ public class GraphicalViewRequestsLayer extends Group {
         List<Stop> stops = tourData.getStopsList();
         this.getChildren().clear();
 
-        /*Stop warehouse = tourData.getWarehouse();
-        if (warehouse == null) {
-            return;
-        }*/
-
-        double graphicSize = 24 * screenScale * mapScale;
+        double graphicSize = 32 * screenScale * mapScale;
 
         for (Stop stop : stops) {
 
@@ -63,7 +58,6 @@ public class GraphicalViewRequestsLayer extends Group {
                 stop,
                 graphicalView,
                 graphicSize,
-                stop.getStopNumber(),
                 stop.getStopNumber() > 0
             );
             double[] stopPos = graphicalView.projectLatLon(stop.getAddress());

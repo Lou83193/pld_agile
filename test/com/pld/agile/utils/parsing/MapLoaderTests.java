@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MapLoaderTests {
 
     @Test
-    // Test nb 1.1
     public void test5Intersections4Segments() {
         String filePath = "test/resources/loadMap_5Inter4Seg.xml";
         MapData actualMapData = new MapData();
@@ -49,9 +48,8 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of disconnected intersections from mapData on parsing is implemented")
+    //@Disabled("Disabled until removal of disconnected intersections from mapData on parsing is implemented")
     @Test
-    // Test nb 1.2
     public void test4Intersection4Segments() {
         String filePath = "test/resources/loadMap_4Inter4Seg.xml";
         MapData actualMapData = new MapData();
@@ -84,7 +82,6 @@ public class MapLoaderTests {
 
 
     @Test
-    // Test nb 1.3
     public void testNoMapNode() {
         String filePath = "test/resources/loadMap_noMapNode.xml";
         MapData actualMapData = new MapData();
@@ -95,7 +92,6 @@ public class MapLoaderTests {
 
 
     @Test
-    // Test nb 1.4
     public void testIOException() {
         String filePath = "test/resources/FILE_DOES_NOT_EXIST.xml";
         MapData actualMapData = new MapData();
@@ -106,7 +102,6 @@ public class MapLoaderTests {
 
 
     @Test
-    // Test nb 1.5
     public void testSameIntersectionSegment() {
         String filePath = "test/resources/loadMap_sameIntersectionsSegment.xml";
         MapData actualMapData = new MapData();
@@ -138,7 +133,6 @@ public class MapLoaderTests {
 
 
     @Test
-    // Test nb 1.6
     public void testSegmentLengthZero() {
         String filePath = "test/resources/loadMap_segmentLength0.xml";
         MapData actualMapData = new MapData();
@@ -169,9 +163,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of segment with nonexistent origin or destination is implemented")
     @Test
-    // Test nb 1.7
     public void testNonexistentOrigin() {
         String filePath = "test/resources/loadMap_noOriginSegment.xml";
         MapData actualMapData = new MapData();
@@ -201,9 +193,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no id is implemented")
     @Test
-    // Test nb 1.8
     public void testIntersectionNoId() {
         String filePath = "test/resources/loadMap_noId.xml";
         MapData actualMapData = new MapData();
@@ -233,9 +223,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of second intersection with same id is implemented")
     @Test
-    // Test nb 1.9
     public void testIntersectionsSameId() {
         String filePath = "test/resources/loadMap_sameId.xml";
         MapData actualMapData = new MapData();
@@ -265,9 +253,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no latitude is implemented")
     @Test
-    // Test nb 1.10.1
     public void testNoLatitude() {
         String filePath = "test/resources/loadMap_noLat.xml";
         MapData actualMapData = new MapData();
@@ -298,9 +284,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no longitude is implemented")
     @Test
-    // Test 1.10.2
     public void testNoLongitude() {
         String filePath = "test/resources/loadMap_noLong.xml";
         MapData actualMapData = new MapData();
@@ -331,9 +315,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with invalid id is implemented")
     @Test
-    // Test 1.11
     public void testInvalidId() {
         String filePath = "test/resources/loadMap_invalidId.xml";
         MapData actualMapData = new MapData();
@@ -364,9 +346,7 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with invalid coordinates is implemented")
     @Test
-    // Test nb 1.12
     public void testInvalidCoords() {
         String filePath = "test/resources/loadMap_invalidId.xml";
         MapData actualMapData = new MapData();

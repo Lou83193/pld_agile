@@ -10,8 +10,19 @@
     <segment destination="3" length="100" name="Boulevard Général Frère" origin="1"/>
     <segment destination="4" length="100" name="Rue de la Meuse" origin="1"/>
     <segment destination="5" length="100" name="Rue de la Moselle" origin="1"/>
-    <segment destination="2" length="100" name="Avenue Général Frère" origin="5"/>
-    <segment destination="3" length="100" name="Boulevard Général Frère" origin="2"/>
-    <segment destination="4" length="100" name="Rue de la Meuse" origin="3"/>
-    <segment destination="5" length="100" name="Rue de la Moselle" origin="4"/>
+    <segment destination="1" length="100" name="Avenue Général Frère" origin="2"/>
+    <segment destination="1" length="100" name="Boulevard Général Frère" origin="3"/>
+    <segment destination="1" length="100" name="Rue de la Meuse" origin="4"/>
+    <segment destination="1" length="100" name="Rue de la Moselle" origin="5"/>
+    <segment destination="2" length="141" name="Avenue Général Frère" origin="5"/>
+    <segment destination="3" length="141" name="Boulevard Général Frère" origin="2"/>
+    <segment destination="4" length="141" name="Rue de la Meuse" origin="3"/>
+    <segment destination="5" length="141" name="Rue de la Moselle" origin="4"/>
+    <segment destination="5" length="141" name="Avenue Général Frère" origin="2"/>
+    <segment destination="2" length="141" name="Boulevard Général Frère" origin="3"/>
+    <segment destination="3" length="141" name="Rue de la Meuse" origin="4"/>
+    <segment destination="4" length="141" name="Rue de la Moselle" origin="5"/>
+
+
+
 </map>

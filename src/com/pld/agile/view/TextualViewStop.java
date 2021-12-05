@@ -7,12 +7,14 @@ import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -26,10 +28,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 /**
@@ -37,20 +42,39 @@ import java.util.function.Consumer;
  * A Stop is represented (in the textual view) by a panel
  * containing text fields displaying its attributes.
  */
-public class TextualViewStop extends VBox implements Observer {
+public class TextualViewStop extends VBox {
 
+    /**
+     * The parent ScrollPane containing all the textual stops.
+     */
     private ScrollPane scrollPane;
+    /**
+     * Tracker used to keep track of the modifications made
+     * to the textual stop's text fields.
+     */
     private String inputValueTracker;
+    /**
+     * The graphical stop icon contained within the textual view stop.
+     */
+    private GraphicalViewStop labelGraphic;
+    /**
+     * The highlight level of the textual stop.
+     * 2 = highlighted by selection.
+     * 1 = highlighted by association.
+     * 0 = not highlighted.
+     */
+    private int highlightLevel;
 
     /**
      * TextualViewStop constructor.
      * Populates the graphical object.
      * @param stop The corresponding Stop model object.
+     * @param parent The parent TextualView instance.
      * @param editable Whether the component has edit buttons or not.
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
-        stop.addObserver(this);
+        long startTime = System.currentTimeMillis();
 
         this.scrollPane = (ScrollPane) parent.getComponent();
 
@@ -70,7 +94,6 @@ public class TextualViewStop extends VBox implements Observer {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             departureTimeString = formatter.format(departureTime);
         }
-        int stopNumber = stop.getStopNumber();
 
         BorderPane panel = new BorderPane();
         BorderPane contentPane = new BorderPane();
@@ -81,7 +104,7 @@ public class TextualViewStop extends VBox implements Observer {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        GraphicalViewStop labelGraphic = new GraphicalViewStop(stop, null,14, stopNumber, false);
+        labelGraphic = new GraphicalViewStop(stop, null,14, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -231,30 +254,23 @@ public class TextualViewStop extends VBox implements Observer {
 
             VBox controls = new VBox(6);
             // Delete button
-            Image deleteIcon = new Image("deleteIcon.png", 20, 20, true, true);
-            ImageView deleteIconView = new ImageView(deleteIcon);
             Button deleteButton = new Button();
-            deleteButton.setGraphic(deleteIconView);
+            deleteButton.setGraphic(new ImageView(ViewUtilities.DELETE_ICON));
             deleteButton.getStyleClass().add("control-button");
             deleteButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().deleteRequest(stop.getRequest())
             );
             // Arrow up
-            Image upIcon = new Image("arrowIcon.png", 20, 20, true, true);
-            ImageView upIconView = new ImageView(upIcon);
             Button upButton = new Button();
-            upButton.setGraphic(upIconView);
+            upButton.setGraphic(new ImageView(ViewUtilities.UP_ARROW_ICON));
             upButton.getStyleClass().add("control-button");
             upButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderUp(stop)
             );
             upButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, -1));
             // Arrow down
-            Image downIcon = new Image("arrowIcon.png", 20, 20, true, true);
-            ImageView downIconView = new ImageView(downIcon);
-            downIconView.setRotate(180);
             Button downButton = new Button();
-            downButton.setGraphic(downIconView);
+            downButton.setGraphic(new ImageView(ViewUtilities.DOWN_ARROW_ICON));
             downButton.getStyleClass().add("control-button");
             downButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderDown(stop)
@@ -273,51 +289,92 @@ public class TextualViewStop extends VBox implements Observer {
             Color.TRANSPARENT,
             BorderStrokeStyle.SOLID,
             new CornerRadii(10),
-            new BorderWidths(2)
+            new BorderWidths(3)
         )));
         this.setOnMouseClicked(
-            e -> parent.getWindow().getController().clickOnTextualStop(stop)
+            e -> {
+                Window w = parent.getWindow();
+                w.unhighlightStops();
+                if (stop.getRequest() != null) {
+                    Stop pickup = stop.getRequest().getPickup();
+                    Stop delivery = stop.getRequest().getDelivery();
+                    GraphicalViewStop pickupGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(pickup)[0];
+                    GraphicalViewStop deliveryGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(delivery)[0];
+                    TextualViewStop pickupTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(pickup)[1];
+                    TextualViewStop deliveryTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(delivery)[1];
+                    if (this.equals(pickupTextualView)) {
+                        pickupGraphicalView.setHighlight(2);
+                        pickupTextualView.setHighlight(2);
+                        deliveryGraphicalView.setHighlight(1);
+                        deliveryTextualView.setHighlight(1);
+                    } else {
+                        pickupGraphicalView.setHighlight(1);
+                        pickupTextualView.setHighlight(1);
+                        deliveryGraphicalView.setHighlight(2);
+                        deliveryTextualView.setHighlight(2);
+                    }
+                }
+                else {
+                    GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
+                    TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
+                    stopGraphicalView.setHighlight(2);
+                    stopTextualView.setHighlight(2);
+                }
+            }
         );
 
-        setHighlight(stop);
+        TextualViewStop oldTextualViewStop = null;
+        HashMap<Stop, Node[]> graphicalStopsMap = parent.getWindow().getGraphicalStopsMap();
+        if (graphicalStopsMap.containsKey(stop)) {
+            oldTextualViewStop = (TextualViewStop) graphicalStopsMap.get(stop)[1];
+            graphicalStopsMap.get(stop)[1] = this;
+        } else {
+            graphicalStopsMap.put(stop, new Node[] {null, this});
+        }
+
+        if (oldTextualViewStop != null) {
+            setHighlight(oldTextualViewStop.getHighlightLevel());
+        } else {
+            setHighlight(0);
+        }
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + "ms");
 
     }
 
     /**
-     * Highlights or un-highlights the graphical object
-     * based on the stop's highlight status.
-     * @param stop The stop to base the highlight on.
+     * Getter for attribute highlightLevel.
+     * @return highlightLevel
      */
-    private void setHighlight(Stop stop) {
-        if (stop.getHighlighted() > 0) {
+    public int getHighlightLevel() {
+        return highlightLevel;
+    }
+
+    /**
+     * Highlights or un-highlights the graphical object.
+     * @param highlightLevel The level of highlight (2 = primary; 1 = secondary; 0 = none).
+     */
+    public void setHighlight(int highlightLevel) {
+        this.highlightLevel = highlightLevel;
+        labelGraphic.setHighlight(highlightLevel);
+        if (highlightLevel > 0) {
             this.setBorder(new Border(new BorderStroke(
-                    ViewUtilities.ORANGE,
+                    ViewUtilities.COLOURS.get("ORANGE"),
                     BorderStrokeStyle.SOLID,
                     new CornerRadii(10),
-                    new BorderWidths(2)
+                    new BorderWidths(3)
             )));
-            //ViewUtilities.ensureVisible(scrollPane, this);
+            if (highlightLevel > 1) {
+                ViewUtilities.ensureVisible(scrollPane, this);
+            }
         } else {
             this.setBorder(new Border(new BorderStroke(
                     Color.TRANSPARENT,
                     BorderStrokeStyle.SOLID,
                     new CornerRadii(10),
-                    new BorderWidths(2)
+                    new BorderWidths(3)
             )));
         }
     }
-
-    @Override
-    public void update(Observable observed, UpdateType updateType) {
-
-        switch (updateType) {
-            case STOP_HIGHLIGHT -> {
-                Stop stop = (Stop) observed;
-                setHighlight(stop);
-            }
-        }
-
-    }
-
 
 }

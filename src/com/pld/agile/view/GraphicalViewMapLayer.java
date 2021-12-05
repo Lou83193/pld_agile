@@ -36,7 +36,7 @@ public class GraphicalViewMapLayer extends Pane {
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
                 .withPressedDurationThreshold(150)
                 .setOnMouseClickedNotDragged((mouseEvent) -> {
-                    System.out.println(mouseEvent.getX() + "; " + mouseEvent.getY());
+                    graphicalView.getWindow().unhighlightStops();
                     double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
                             mouseEvent.getX(),
                             mouseEvent.getY(),
@@ -60,7 +60,7 @@ public class GraphicalViewMapLayer extends Pane {
 
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
-                0, 1000,
+                0, 1080,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(
@@ -78,7 +78,7 @@ public class GraphicalViewMapLayer extends Pane {
             Line graphicalViewSegment = new GraphicalViewSegment(
                     graphicalView,
                     segment,
-                    2 * screenScale * mapScale,
+                    3 * screenScale * mapScale,
                     graphicalView.getWindow().getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);

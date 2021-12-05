@@ -6,10 +6,17 @@
 
 package com.pld.agile.utils.tsp;
 
+import com.pld.agile.model.tour.TourData;
+
 import java.util.Collection;
 import java.util.Iterator;
 
 public class TSP2 extends TemplateTSP {
+
+    public TSP2(TourData tourData){
+        addObserver(tourData);
+    }
+
     @Override
     protected double bound(Integer currentVertex, Collection<Integer> unvisited) {
         return (unvisited.size()+1)*g.getMinCost();

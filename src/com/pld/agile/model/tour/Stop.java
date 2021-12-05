@@ -8,11 +8,8 @@ package com.pld.agile.model.tour;
 
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.utils.observer.Observable;
-import com.pld.agile.utils.observer.UpdateType;
 
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Represents a stop in a tour.
@@ -42,11 +39,6 @@ public class Stop extends Observable {
      */
     private Request request;
     /**
-     * Whether the stop is highlighted in the view or not.
-     * 0 = not highlighted; 1 = semi-highlighted; 2 = highlighted
-     */
-    private int highlighted;
-    /**
      * The time of arrival at the stop
      */
     private LocalTime arrivalTime;
@@ -72,7 +64,6 @@ public class Stop extends Observable {
         this.type = type;
         this.address = address;
         this.duration = duration;
-        this.highlighted = 0;
         idCounter++;
     }
 
@@ -176,15 +167,6 @@ public class Stop extends Observable {
         return request;
     }
 
-    public int getHighlighted() {
-        return highlighted;
-    }
-
-    public void setHighlighted(int highlighted) {
-        this.highlighted = highlighted;
-        notifyObservers(UpdateType.STOP_HIGHLIGHT);
-    }
-
     /**
      * Generates a String which describes the object.
      * @return type String
@@ -196,5 +178,12 @@ public class Stop extends Observable {
                 ", address=" + address +
                 ", duration=" + duration +
                 '}';
+    }
+
+    /**
+     * Resets the ID counter;
+     */
+    public static void resetIdCounter() {
+        idCounter = 0;
     }
 }
