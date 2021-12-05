@@ -109,9 +109,9 @@ public class ComputedTourState implements State {
      * @param stop the stop to shift
      */
     @Override
-    public void doShiftStopOrderDown(Controller c, Window w, ListOfCommands l, Stop stop) {
+    public void doShiftStopOrderDown(Controller c, Window w, ListOfCommands loc, Stop stop) {
         TourData tourData = w.getTourData();
-        l.add(new ShiftStopOrderCommand(tourData, stop, +1));
+        loc.add(new ShiftStopOrderCommand(tourData, stop, +1));
     }
 
     /**
@@ -120,14 +120,8 @@ public class ComputedTourState implements State {
      * @param w the application window
      */
     @Override
-    public void doStartAddRequest(Controller c, Window w) {
-        w.unhighlightStops();
-        w.getScene().setCursor(Cursor.CROSSHAIR);
-        w.toggleMenuItem(0, 0, false);
-        w.toggleMenuItem(0, 1, false);
-        w.toggleMenuItem(0, 2, false);
-        w.toggleMainSceneButton(false);
-        c.setCurrState(c.addingRequestState1);
+    public void doStartAddRequest(Controller c, Window w, ListOfCommands loc) {
+        loc.add(new StartAddRequestCommand(c, w));
     }
 
     /**
