@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TourDataTest {
     private final MapData mapData = new MapData ();
     private final MapLoader mapLoader = new MapLoader("test/resources/loadMap_loadRequestsBase.xml", mapData);
-    private TourData tourDataInit = new TourData();
     private RequestLoader requestLoader;
     private TourData tourData = new TourData();
 
@@ -35,7 +34,6 @@ public class TourDataTest {
     public void loadMap (){
         try {
             mapLoader.load();
-            tourDataInit.setAssociatedMap(mapData);
             tourData.setAssociatedMap(mapData);
             requestLoader = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", tourData);
             requestLoader.load();
@@ -90,11 +88,16 @@ public class TourDataTest {
         Stop delivery = new Stop (newRequest,deliveryAddress,0,StopType.DELIVERY);
         newRequest.setDelivery(delivery);
         newRequest.setPickup(pickup);
+
+        tourData.getRequestList().add(newRequest);
         try {
             tourData.addRequest(newRequest);
         } catch (Exception e) {}
 
-        assertEquals(newRequest.toString(),tourData.getRequestList().get(tourData.getRequestList().size()-1).toString());
+        //stops
+        assertEquals(newRequest.getDelivery().getAddress().getId(),tourData.getStops().get(tourData.getStops().size()-1));
+        //stopsMap
+        assertEquals(newRequest.getDelivery(),tourData.getStopMap().get(newRequest.getDelivery().getAddress().getId()));
     }
     @Test
     public void testConstructNewRequest(){
@@ -138,11 +141,24 @@ public class TourDataTest {
 
     @Test
     public void testComputeTour (){
-        tourDataInit = tourData;
+
+        int[] stops = new int[(tourData.getRequestList().size()*2)+1];
+        stops [0] = tourData.getWarehouse().getAddress().getId();
+        for (int i = 1; i<stops.length-1;i++){
+            stops[i] = tourData.getRequestList().get(i).getPickup().getAddress().getId();
+            stops[i+1] = tourData.getRequestList().get(i).getDelivery().getAddress().getId();
+        }
+        String stopsString = "[";
+        for (int i = 0; i<stops.length-2;i++){
+            stopsString += stops[i]+", ";
+        }
+        stopsString += stops[stops.length-1]+"]";
+        System.out.println("Avant: "+stopsString);
         try {
             tourData.computeTour();
         } catch (Exception e) {}
-        assertNotEquals(tourData.getStops().toString(), tourDataInit.getStops().toString());
+        System.out.println("Resultat: "+tourData.getStops());
+        assertNotEquals(tourData.getStops().toString(),stopsString);
     }
 
 /*
