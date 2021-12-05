@@ -95,17 +95,17 @@ public class Controller {
     /**
      * Getter for attribute window.
      */
-    public Window getWindow() {return window;}
+    public Window getWindow() { return window; }
 
     /**
      * Getter for attribute currState.
      */
-    public State getCurrState() {return currState;}
+    public State getCurrState() { return currState; }
 
     /**
      * Getter for attribute awaitMapState.
      */
-    public State getInitialState() {return initialState;}
+    public State getInitialState() { return initialState; }
 
     /**
      * Setter for attribute currState.
