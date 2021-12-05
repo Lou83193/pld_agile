@@ -154,7 +154,7 @@ public interface State {
      * @param c the controller
      * @param w the application window
      */
-    default void doStartAddRequest(Controller c, Window w, ListOfCommands loc) {
+    default void doStartAddRequest(Controller c, Window w) {
     }
 
     /**

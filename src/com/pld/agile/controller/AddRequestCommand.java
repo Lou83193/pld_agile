@@ -1,13 +1,11 @@
 /*
- * AddRequestDeliveryCommand
+ * AddRequestCommand
  *
  * Copyright (c) 2021. Hexanomnom
  */
 
 package com.pld.agile.controller;
 
-import com.pld.agile.model.map.Intersection;
-import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.PathException;
@@ -16,13 +14,11 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-import java.util.List;
-
 /**
  * Command continuing the construction of the new request with a delivery positioned at the closest intersection of the given position.
  * The new request is then added to the tour.
  */
-public class AddRequestDeliveryCommand implements Command {
+public class AddRequestCommand implements Command {
 
     /**
      * The Controller instance
@@ -33,37 +29,31 @@ public class AddRequestDeliveryCommand implements Command {
      */
     private Window window;
     /**
-     * The MapData instance the command is operating on.
-     */
-    private MapData mapData;
-    /**
      * The TourData instance the command is operating on.
      */
     private TourData tourData;
     /**
-     * The desired position of the new request's delivery stop.
-     */
-    private double[] latLonPos;
-    /**
      * The request that is added
      */
-    private Request newRequest;
+    private Request request;
+    /**
+     * Whether the request needs to be reconstructed or not
+     */
+    private boolean reconstructRequest;
 
     /**
      * Constructor for AddRequestPickupCommand.
      * @param controller The Controller instance.
      * @param window The Window instance.
-     * @param mapData The MapData instance the command is operating on.
      * @param tourData The TourData instance the command is operating on.
-     * @param latLonPos The desired position of the new request's delivery stop.
+     * @param request The new request to be added.
      */
-    public AddRequestDeliveryCommand(Controller controller, Window window, MapData mapData, TourData tourData, double[] latLonPos) {
+    public AddRequestCommand(Controller controller, Window window, TourData tourData, Request request) {
         this.controller = controller;
         this.window = window;
-        this.mapData = mapData;
         this.tourData = tourData;
-        this.latLonPos = latLonPos;
-        this.newRequest = null;
+        this.request = request;
+        reconstructRequest = false;
     }
 
     /**
@@ -71,10 +61,13 @@ public class AddRequestDeliveryCommand implements Command {
      */
     @Override
     public void doCommand() {
-        Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        newRequest = tourData.constructNewRequest2(intersection);
+        if (reconstructRequest) {
+            tourData.getStopsList().add(request.getPickup());
+            tourData.getStopsList().add(request.getDelivery());
+            reconstructRequest = false;
+        }
         try {
-            tourData.addRequest(newRequest);
+            tourData.addLatestRequest();
         } catch (PathException e) {
             undoCommand();
             e.printStackTrace();
@@ -96,15 +89,8 @@ public class AddRequestDeliveryCommand implements Command {
      */
     @Override
     public void undoCommand() {
-        tourData.deleteRequest(newRequest);
-        newRequest = tourData.constructNewRequest1(newRequest.getPickup().getAddress());
-        window.unhighlightStops();
-        window.getScene().setCursor(Cursor.CROSSHAIR);
-        window.toggleMenuItem(0, 0, false);
-        window.toggleMenuItem(0, 1, false);
-        window.toggleMenuItem(0, 2, false);
-        window.toggleMainSceneButton(false);
-        controller.setCurrState(controller.addingRequestState2);
+        tourData.deleteRequest(request);
+        reconstructRequest = true;
     }
 
 }

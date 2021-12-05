@@ -47,9 +47,7 @@ public class DeleteRequestCommand implements Command {
      */
     @Override
     public void undoCommand() {
-        try {
-            tourData.addRequest(request);
-        } catch (PathException e) {}
+        //hmm...
     }
 
 }

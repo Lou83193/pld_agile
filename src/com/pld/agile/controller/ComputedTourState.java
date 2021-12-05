@@ -110,8 +110,14 @@ public class ComputedTourState implements State {
      * @param w the application window
      */
     @Override
-    public void doStartAddRequest(Controller c, Window w, ListOfCommands loc) {
-        loc.add(new StartAddRequestCommand(c, w));
+    public void doStartAddRequest(Controller c, Window w) {
+        w.unhighlightStops();
+        w.getScene().setCursor(Cursor.CROSSHAIR);
+        w.toggleMenuItem(0, 0, false);
+        w.toggleMenuItem(0, 1, false);
+        w.toggleMenuItem(0, 2, false);
+        w.toggleMainSceneButton(false);
+        c.setCurrState(c.addingRequestState1);
     }
 
     /**

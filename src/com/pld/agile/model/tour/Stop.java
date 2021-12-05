@@ -181,9 +181,17 @@ public class Stop extends Observable {
     }
 
     /**
-     * Resets the ID counter;
+     * Resets the ID counter.
      */
     public static void resetIdCounter() {
         idCounter = 0;
+    }
+
+    /**
+     * Decreases the ID counter by X steps
+     * @param x The number of steps to decrease the counter with.
+     */
+    public static void decreaseIdCounter(int x) {
+        idCounter -= x;
     }
 }

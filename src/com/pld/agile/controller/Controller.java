@@ -173,7 +173,7 @@ public class Controller {
      * Calls method startAddRequest() of the current state.
      */
     public void startAddRequest() {
-        currState.doStartAddRequest(this, window, listOfCommands);
+        currState.doStartAddRequest(this, window);
     }
     /**
      * Calls method dragOnGraphicalStop() of the current state.

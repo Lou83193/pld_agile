@@ -138,7 +138,7 @@ public class TourData extends Observable implements Observer {
 
     /**
      * Creates a new request with a pickup which is created at the given intersection,
-     * and adds it to the list of requests.
+     * stores it in the list of stops.
      * @param intersection The intersection of the pickup.
      * @return The new request.
      */
@@ -152,7 +152,8 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Adds a delivery to the new request (the last one in the list) which is created at the given intersection.
+     * Adds a delivery to the new request (the last one in the list) which is created at the given intersection,
+     * stores it in the list of stops.
      * @param intersection The intersection of the delivery.
      * @return The new request.
      */
@@ -160,24 +161,16 @@ public class TourData extends Observable implements Observer {
         Request newRequest = stopsList.get(stopsList.size()-1).getRequest();
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
+        stopsList.add(newDelivery);
         notifyObservers(UpdateType.TOUR);
         return newRequest;
     }
 
     /**
-     * Removes the latest request from the requestList.
-     */
-    /*public void deconstructNewRequest() {
-        requestList.remove(requestList.size() - 1);
-        notifyObservers(UpdateType.TOUR);
-    }*/
-
-    /**
-     * Adds a request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
-     * @param newRequest The request to be added.
+     * Adds the latest request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
      * @throws PathException If computing dijkstra with the new request caused an exception.
      */
-    public void addRequest(Request newRequest) throws PathException {
+    public void addLatestRequest() throws PathException {
 
         dijkstra();
 
@@ -199,7 +192,9 @@ public class TourData extends Observable implements Observer {
             Path deliveryToWarehouse = stopsGraph.getPath(stopsList.size() - 1, 0);
             tourPaths.add(deliveryToWarehouse);
         }
+
         updateStopsTimesAndNumbers();
+
     }
 
     /**
@@ -254,11 +249,11 @@ public class TourData extends Observable implements Observer {
 
         }
 
-        // Remove from request list
+        // Remove from stops list, decrease Stop Id counter
         stopsList.removeIf(pickup::equals);
         stopsList.removeIf(delivery::equals);
+        Stop.decreaseIdCounter(2);
 
-        // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             updateStopsTimesAndNumbers();
         } else {
