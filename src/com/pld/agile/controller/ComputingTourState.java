@@ -45,7 +45,7 @@ public class ComputingTourState implements State {
     /**
      * Does nothing because it is impossible to load a map in this state.
      * @param c the controller
-     * @param s the application window
+     * @param w the application window
      * @return false.
      */
     @Override
