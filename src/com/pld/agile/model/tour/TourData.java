@@ -370,12 +370,25 @@ public class TourData extends Observable {
     }
 
     /**
-     * when moving a stop, we need to compute the shortest paths with dijkstra and change
-     * the departure and arrival times of each stop
+     * Moves a stop within a tour to a new intersection.
+     * @param stop The stop to be moved.
+     * @param newIntersection The new intersection address of the stop.
      */
-    public void moveStop(){
+    public void moveStop(Stop stop, Intersection newIntersection) {
+
+        Intersection oldIntersection = stop.getAddress();
+        stop.setAddress(newIntersection);
+
+        setStops();
+        stopMap.remove(oldIntersection.getId());
+        stopMap.put(newIntersection.getId(), stop);
 
         dijkstra();
+
+        // TODO:
+        // - iterate through tourPaths, find the stop
+        // - set its paths to the new paths from stopsGraph (which has just been updated by dijkstra)
+
         setStopTimeAndNumber();
     }
 

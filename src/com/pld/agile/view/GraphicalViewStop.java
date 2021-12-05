@@ -191,13 +191,13 @@ public class GraphicalViewStop extends Pane implements Observer {
                 MapData mapData = parent.getWindow().getMapData();
                 this.setOnMouseReleased((t) -> {
                     if (isDragged) {
-                        System.out.println(this.getBoundsInParent().getMinX() + "; " + this.getBoundsInParent().getMinY() + "| " + pointerCenterX + "; " + pointerCenterY + "; " + pointerH);
+                        int offset = 7;
                         double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
-                                this.getBoundsInParent().getMinX() + pointerCenterX,
-                                this.getBoundsInParent().getMinY() + pointerCenterY + pointerH,
+                                this.getBoundsInParent().getMinX() + offset + pointerCenterX,
+                                this.getBoundsInParent().getMinY() + offset + pointerCenterY + pointerH,
                                 mapData.getMinLat(),
-                                mapData.getMaxLat(),
                                 mapData.getMinLon(),
+                                mapData.getMaxLat(),
                                 mapData.getMaxLon(),
                                 ((ScrollPane) parent.getComponent()).getHeight()
                         );
