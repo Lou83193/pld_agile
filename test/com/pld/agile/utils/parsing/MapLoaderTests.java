@@ -163,7 +163,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of segment with nonexistent origin or destination is implemented")
     @Test
     public void testNonexistentOrigin() {
         String filePath = "test/resources/loadMap_noOriginSegment.xml";
@@ -194,7 +193,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no id is implemented")
     @Test
     public void testIntersectionNoId() {
         String filePath = "test/resources/loadMap_noId.xml";
@@ -225,7 +223,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of second intersection with same id is implemented")
     @Test
     public void testIntersectionsSameId() {
         String filePath = "test/resources/loadMap_sameId.xml";
@@ -256,7 +253,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no latitude is implemented")
     @Test
     public void testNoLatitude() {
         String filePath = "test/resources/loadMap_noLat.xml";
@@ -288,7 +284,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with no longitude is implemented")
     @Test
     public void testNoLongitude() {
         String filePath = "test/resources/loadMap_noLong.xml";
@@ -320,7 +315,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with invalid id is implemented")
     @Test
     public void testInvalidId() {
         String filePath = "test/resources/loadMap_invalidId.xml";
@@ -352,7 +346,6 @@ public class MapLoaderTests {
     }
 
 
-    @Disabled("Disabled until removal of intersection with invalid coordinates is implemented")
     @Test
     public void testInvalidCoords() {
         String filePath = "test/resources/loadMap_invalidId.xml";
