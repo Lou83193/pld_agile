@@ -16,6 +16,8 @@ public class MovingStopState implements State {
         // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
         // find the smallest distance
         // change the intersection of the currently dragged stop to that
+        w.toggleMenuItem(1, 0, true);
+        w.toggleMenuItem(1, 1, true);
         c.setCurrState(c.computedTourState);
     }
 

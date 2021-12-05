@@ -241,8 +241,8 @@ public class Window extends Application {
         editMenu2.setOnAction(
                 new ButtonListener(controller, ButtonEventType.REDO)
         );
-        //editMenu1.setDisable(true);
-        //editMenu2.setDisable(true);
+        editMenu1.setDisable(true);
+        editMenu2.setDisable(true);
         editMenu.getItems().addAll(editMenu1, editMenu2);
 
         // About menu
@@ -265,13 +265,13 @@ public class Window extends Application {
     }
 
     /**
-     * Toggles file menu items to either enabled or disabled.
-     * @param num The id of the file menu item.
-     * @param enabled Whether the file menu item should be enabled or disabled.
+     * Toggles menu items to be either enabled or disabled.
+     * @param menuId The id of the menu.
+     * @param itemId The id of menu item within the menu.
+     * @param enabled Whether the menu item should be enabled or disabled.
      */
-    public void toggleFileMenuItem(final int num,
-                                   final boolean enabled) {
-        menuBar.getMenus().get(0).getItems().get(num).setDisable(!enabled);
+    public void toggleMenuItem(final int menuId, final int itemId, final boolean enabled) {
+        menuBar.getMenus().get(menuId).getItems().get(itemId).setDisable(!enabled);
     }
 
     /**

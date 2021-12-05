@@ -42,14 +42,15 @@ public interface State {
                 w.getTourData().setRequestList(new ArrayList<>());
                 w.getTourData().setAssociatedMap(w.getMapData());
                 w.switchToMainPane();
-                w.toggleFileMenuItem(1, true);
-                w.toggleFileMenuItem(2, false);
+                w.toggleMenuItem(0, 1, true);
+                w.toggleMenuItem(0, 2, false);
                 w.setMainSceneButton(
                         "Load requests",
                         new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
                 );
                 w.placeMainSceneButton(true);
-                // switch controller state to Await RequestsState
+                w.toggleMenuItem(1, 0, false);
+                w.toggleMenuItem(1, 1, false);
                 c.setCurrState(c.loadedMapState);
                 return true;
             } catch (IOException | SyntaxException e) {

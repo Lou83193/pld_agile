@@ -42,9 +42,9 @@ public class AddingRequestState2 implements State {
         }
         w.getScene().setCursor(Cursor.DEFAULT);
         w.toggleMainSceneButton(true);
-        w.toggleFileMenuItem(0, true);
-        w.toggleFileMenuItem(1, true);
-        w.toggleFileMenuItem(2, false);
+        w.toggleMenuItem(0, 0, true);
+        w.toggleMenuItem(0, 1, true);
+        w.toggleMenuItem(0, 2, false);
         c.setCurrState(c.computedTourState);
     }
 

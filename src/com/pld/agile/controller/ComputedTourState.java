@@ -43,12 +43,14 @@ public class ComputedTourState implements State {
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                w.toggleFileMenuItem(2, true);
+                w.toggleMenuItem(0, 2, true);
                 w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
                 );
                 w.placeMainSceneButton(false);
+                w.toggleMenuItem(1, 0, false);
+                w.toggleMenuItem(1, 1, false);
                 c.setCurrState(c.loadedRequestsState);
 
                 return true;
@@ -76,8 +78,8 @@ public class ComputedTourState implements State {
         boolean success = tourData.deleteRequest(request);
         if (!success) {
             w.switchToMainPane();
-            w.toggleFileMenuItem(1, true);
-            w.toggleFileMenuItem(2, false);
+            w.toggleMenuItem(0, 1, true);
+            w.toggleMenuItem(0, 2, false);
             w.setMainSceneButton(
                     "Load requests",
                     new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
@@ -121,9 +123,9 @@ public class ComputedTourState implements State {
     public void doStartAddRequest(Controller c, Window w) {
         w.unhighlightStops();
         w.getScene().setCursor(Cursor.CROSSHAIR);
-        w.toggleFileMenuItem(0, false);
-        w.toggleFileMenuItem(1, false);
-        w.toggleFileMenuItem(2, false);
+        w.toggleMenuItem(0, 0, false);
+        w.toggleMenuItem(0, 1, false);
+        w.toggleMenuItem(0, 2, false);
         w.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
     }
@@ -137,6 +139,8 @@ public class ComputedTourState implements State {
     @Override
     public void doDragOnGraphicalStop(Controller c, Window w, Stop stop) {
         w.unhighlightStops();
+        w.toggleMenuItem(1, 0, false);
+        w.toggleMenuItem(1, 1, false);
         c.setCurrState(c.movingStopState);
     }
 

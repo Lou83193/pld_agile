@@ -32,9 +32,11 @@ public class ComputingTourState implements State {
     public void doStopComputingTour(Controller c, Window w) {
         TourData tourData = w.getTourData();
         tourData.stopComputingTour();
-        w.toggleFileMenuItem(0, true);
-        w.toggleFileMenuItem(1, true);
-        w.toggleFileMenuItem(2, false);
+        w.toggleMenuItem(0, 0, true);
+        w.toggleMenuItem(0, 1, true);
+        w.toggleMenuItem(0, 2, false);
+        w.toggleMenuItem(1, 0, true);
+        w.toggleMenuItem(1, 1, true);
         w.setMainSceneButton(
                 "Add request",
                 new ButtonListener(c, ButtonEventType.ADD_REQUEST)

@@ -36,7 +36,7 @@ public class LoadedMapState implements State {
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                w.toggleFileMenuItem(2, true);
+                w.toggleMenuItem(0, 2, true);
                 w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
