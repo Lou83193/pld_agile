@@ -91,12 +91,13 @@ public class ComputedTourState implements State {
      * Shifts a stop's order one stop upwards (earlier) in the tour.
      * @param c the controller
      * @param w the application window
+     * @param l the list of commands
      * @param stop the stop to shift
      */
     @Override
-    public void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
+    public void doShiftStopOrderUp(Controller c, Window w, ListOfCommands l, Stop stop) {
         TourData tourData = w.getTourData();
-        tourData.shiftStopOrder(stop, -1);
+        l.add(new ShiftStopOrderCommand(tourData, stop, -1));
     }
 
     /**
@@ -106,9 +107,9 @@ public class ComputedTourState implements State {
      * @param stop the stop to shift
      */
     @Override
-    public void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
+    public void doShiftStopOrderDown(Controller c, Window w, ListOfCommands l, Stop stop) {
         TourData tourData = w.getTourData();
-        tourData.shiftStopOrder(stop, +1);
+        l.add(new ShiftStopOrderCommand(tourData, stop, +1));
     }
 
     /**
@@ -164,6 +165,22 @@ public class ComputedTourState implements State {
         TourData tourData = w.getTourData();
         tourData.setDepartureTime(time);
         tourData.updateStopsTimesAndNumbers();
+    }
+
+    /**
+     * Undoes the last command.
+     */
+    @Override
+    public void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Redoes the last command.
+     */
+    @Override
+    public void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
     }
 
 }

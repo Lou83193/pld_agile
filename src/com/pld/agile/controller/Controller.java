@@ -89,6 +89,7 @@ public class Controller {
     public Controller(Window window) {
         this.window = window;
         this.currState = initialState;
+        this.listOfCommands = new ListOfCommands();
     }
 
     /**
@@ -154,13 +155,13 @@ public class Controller {
      * Calls method shiftStopOrderUp() of the current state.
      */
     public void shiftStopOrderUp(Stop stop) {
-        currState.doShiftStopOrderUp(this, window, stop);
+        currState.doShiftStopOrderUp(this, window, listOfCommands, stop);
     }
     /**
      * Calls method shiftStopOrderDown() of the current state.
      */
     public void shiftStopOrderDown(Stop stop) {
-        currState.doShiftStopOrderDown(this, window, stop);
+        currState.doShiftStopOrderDown(this, window, listOfCommands, stop);
     }
     /**
      * Calls method changeStopDuration() of the current state.

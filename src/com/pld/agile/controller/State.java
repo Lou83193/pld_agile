@@ -131,18 +131,20 @@ public interface State {
      * Fires when the user clicks on the "up" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param l the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
+    default void doShiftStopOrderUp(Controller c, Window w, ListOfCommands l, Stop stop) {
     }
 
     /**
      * Fires when the user clicks on the "down" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param l the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
+    default void doShiftStopOrderDown(Controller c, Window w, ListOfCommands l, Stop stop) {
     }
 
     /**
@@ -178,15 +180,12 @@ public interface State {
      * Fires when the user requests to undo a command.
      */
     default void undo(ListOfCommands listOfCommands) {
-        listOfCommands.undo();
     }
 
     /**
      * Fires when the user requests to redo a command.
      */
     default void redo(ListOfCommands listOfCommands) {
-        listOfCommands.redo();
-
     }
 
 }

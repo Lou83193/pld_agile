@@ -45,7 +45,7 @@ public class ShiftStopOrderCommand implements Command {
      */
     @Override
     public void doCommand() {
-
+        tourData.shiftStopOrder(stop, dir);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ShiftStopOrderCommand implements Command {
      */
     @Override
     public void undoCommand() {
-
+        tourData.shiftStopOrder(stop, -dir);
     }
 
 }
