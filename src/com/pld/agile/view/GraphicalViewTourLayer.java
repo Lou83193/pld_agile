@@ -47,7 +47,7 @@ public class GraphicalViewTourLayer extends Pane {
 
         double screenScale = ViewUtilities.mapValue(
                 getHeight(),
-                0, 1000,
+                0, 1080,
                 0, 1
         );
         double mapScale = ViewUtilities.mapValue(

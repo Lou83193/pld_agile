@@ -19,12 +19,4 @@ public class MovingStopState implements State {
         c.setCurrState(c.computedTourState);
     }
 
-    @Override
-    public void doClickOnGraphicalStop(Controller c, Window window, Stop stop) {
-    }
-
-    @Override
-    public void doClickOnTextualStop(Controller c, Window window, Stop stop) {
-    }
-
 }

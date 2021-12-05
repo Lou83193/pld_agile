@@ -67,9 +67,6 @@ public class TextualView implements Observer {
         }
 
         VBox warehousePanel = new TextualViewStop(tourData.getWarehouse(), this, false);
-        warehousePanel.setOnMouseClicked(
-            e -> window.getController().clickOnTextualStop(tourData.getWarehouse())
-        );
         requestListContainer.getChildren().add(warehousePanel);
 
         for (Request request : requests) {
@@ -81,11 +78,6 @@ public class TextualView implements Observer {
             );
         }
 
-        VBox oldContent = (VBox) component.getContent();
-        for (Node n : oldContent.getChildren()) {
-            TextualViewStop s = (TextualViewStop) n;
-            s.stopObserving();
-        }
         component.setContent(requestListContainer);
 
     }
@@ -116,10 +108,6 @@ public class TextualView implements Observer {
         }
 
         VBox oldContent = (VBox) component.getContent();
-        for (Node n : oldContent.getChildren()) {
-            TextualViewStop s = (TextualViewStop) n;
-            s.stopObserving();
-        }
         component.setContent(requestListContainer);
 
         if (oldContent.getChildren().size() >= requestListContainer.getChildren().size()) {
