@@ -291,15 +291,15 @@ public class GraphicalViewStop extends Pane {
         this.highlightLevel = highlightLevel;
         if (highlightLevel > 0) {
             DropShadow shadow = new DropShadow();
-            shadow.setColor(ViewUtilities.mixColours(ViewUtilities.ORANGE, Color.WHITE, 0.6));
+            shadow.setColor(ViewUtilities.mixColours(ViewUtilities.COLOURS.get("ORANGE"), Color.WHITE, 0.6));
             shadow.setRadius(5);
             this.setEffect(shadow);
             stopGraphic.setFill(Color.WHITE);
-            stopGraphic.setStroke(ViewUtilities.ORANGE);
+            stopGraphic.setStroke(ViewUtilities.COLOURS.get("ORANGE"));
             if (highlightLevel > 1) {
-                highlightPointerGraphic.setFill(ViewUtilities.ORANGE);
+                highlightPointerGraphic.setFill(ViewUtilities.COLOURS.get("ORANGE"));
                 if (numText != null) {
-                    numText.setFill(ViewUtilities.DARK_ORANGE);
+                    numText.setFill(ViewUtilities.COLOURS.get("DARK_ORANGE"));
                 }
             }
         } else {

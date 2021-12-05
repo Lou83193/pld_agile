@@ -361,7 +361,7 @@ public class TextualViewStop extends VBox {
         labelGraphic.setHighlight(highlightLevel);
         if (highlightLevel > 0) {
             this.setBorder(new Border(new BorderStroke(
-                    ViewUtilities.ORANGE,
+                    ViewUtilities.COLOURS.get("ORANGE"),
                     BorderStrokeStyle.SOLID,
                     new CornerRadii(10),
                     new BorderWidths(3)
