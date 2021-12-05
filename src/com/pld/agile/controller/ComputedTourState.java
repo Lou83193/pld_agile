@@ -2,7 +2,6 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.RequestLoader;
@@ -17,38 +16,39 @@ import javafx.stage.FileChooser;
 import java.io.File;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 /**
- * State when the map and a list of requests are loaded.
- * User can load another map, load another list of requests or ask the app to compute the tour.
+ * State when the map and a list of requests are loaded, and the tour is computed.
+ * User can load another map, load another list of requests or change the tour.
  */
 public class ComputedTourState implements State {
 
     /**
      * Loads the requests to tourData if map is loaded (default doesn't load).
      * @param c the controller
-     * @param window the application window
+     * @param w the application window
      * @return boolean success
      */
     @Override
-    public boolean doLoadRequests(Controller c, Window window) {
+    public boolean doLoadRequests(Controller c, Window w) {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Tour File");
         fileChooser.setInitialDirectory(new File("./src/resources/xml/requests"));
-        File requestsFile = fileChooser.showOpenDialog(window.getStage());
+        File requestsFile = fileChooser.showOpenDialog(w.getStage());
 
         if (requestsFile != null) {
 
-            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), window.getTourData());
+            RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                window.toggleFileMenuItem(2, true);
-                window.setMainSceneButton(
+                w.toggleFileMenuItem(2, true);
+                w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
                 );
-                window.placeMainSceneButton(false);
+                w.placeMainSceneButton(false);
                 c.setCurrState(c.loadedRequestsState);
 
                 return true;
@@ -64,49 +64,106 @@ public class ComputedTourState implements State {
         return false;
     }
 
+    /**
+     * Deletes a request from the tour.
+     * @param c the controller
+     * @param w the application window
+     * @param request the request to delete from the tour
+     */
     @Override
-    public void doDeleteRequest(Controller c, Window window, Request request) {
-        TourData tourData = window.getTourData();
+    public void doDeleteRequest(Controller c, Window w, Request request) {
+        TourData tourData = w.getTourData();
         boolean success = tourData.deleteRequest(request);
         if (!success) {
-            window.switchToMainPane();
-            window.toggleFileMenuItem(1, true);
-            window.toggleFileMenuItem(2, false);
-            window.setMainSceneButton(
+            w.switchToMainPane();
+            w.toggleFileMenuItem(1, true);
+            w.toggleFileMenuItem(2, false);
+            w.setMainSceneButton(
                     "Load requests",
                     new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
             );
-            window.placeMainSceneButton(true);
+            w.placeMainSceneButton(true);
             c.setCurrState(c.loadedMapState);
         }
     }
 
+    /**
+     * Shifts a stop's order one stop upwards (earlier) in the tour.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the stop to shift
+     */
     @Override
-    public boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        boolean success = tourData.shiftStopOrder(stop, -1);
-        return success;
+    public void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
+        TourData tourData = w.getTourData();
+        tourData.shiftStopOrder(stop, -1);
     }
 
+    /**
+     * Shifts a stop's order one stop downwards (later) in the tour.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the stop to shift
+     */
     @Override
-    public boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
-        TourData tourData = window.getTourData();
-        boolean success = tourData.shiftStopOrder(stop, +1);
-        return success;
+    public void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
+        TourData tourData = w.getTourData();
+        tourData.shiftStopOrder(stop, +1);
     }
 
+    /**
+     * Starts adding a request to the tour by entering the adding request state.
+     * @param c the controller
+     * @param w the application window
+     */
     @Override
-    public void doStartAddRequest(Controller c, Window window) {
-        window.unhighlightStops();
-        window.getScene().setCursor(Cursor.CROSSHAIR);
-        window.toggleMainSceneButton(false);
+    public void doStartAddRequest(Controller c, Window w) {
+        w.unhighlightStops();
+        w.getScene().setCursor(Cursor.CROSSHAIR);
+        w.toggleFileMenuItem(0, false);
+        w.toggleFileMenuItem(1, false);
+        w.toggleFileMenuItem(2, false);
+        w.toggleMainSceneButton(false);
         c.setCurrState(c.addingRequestState1);
     }
 
+    /**
+     * Starts moving a stop on the map by entering the moving stop state.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the dragged stop
+     */
     @Override
-    public void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
-        window.unhighlightStops();
+    public void doDragOnGraphicalStop(Controller c, Window w, Stop stop) {
+        w.unhighlightStops();
         c.setCurrState(c.movingStopState);
+    }
+
+    /**
+     * Changes the duration of a stop and recomputes hours of passage.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the modified stop
+     * @param newDuration the new duration of the stop
+     */
+    @Override
+    public void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
+        TourData tourData = w.getTourData();
+        stop.setDuration(newDuration);
+        tourData.updateStopsTimesAndNumbers();
+    }
+
+    /**
+     * Changes the departure time from the warehouse and recomputes hours of passage.
+     * @param c the controller
+     * @param w the application window
+     * @param time the new departure time
+     */
+    @Override
+    public void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
+        TourData tourData = w.getTourData();
+        tourData.setDepartureTime(time);
+        tourData.updateStopsTimesAndNumbers();
     }
 
 }

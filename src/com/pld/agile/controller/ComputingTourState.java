@@ -23,22 +23,44 @@ import java.io.IOException;
  */
 public class ComputingTourState implements State {
 
+    /**
+     * Stops computing the tour and sets the buttons for the new states.
+     * @param c the controller
+     * @param w the application window
+     */
     @Override
-    public void doStopComputingTour(Controller c, Window window) {
-        TourData tourData = window.getTourData();
+    public void doStopComputingTour(Controller c, Window w) {
+        TourData tourData = w.getTourData();
         tourData.stopComputingTour();
-        window.toggleFileMenuItem(0, true);
-        window.toggleFileMenuItem(1, true);
-        window.toggleFileMenuItem(2, false);
-        window.setMainSceneButton(
+        w.toggleFileMenuItem(0, true);
+        w.toggleFileMenuItem(1, true);
+        w.toggleFileMenuItem(2, false);
+        w.setMainSceneButton(
                 "Add request",
                 new ButtonListener(c, ButtonEventType.ADD_REQUEST)
         );
         c.setCurrState(c.computedTourState);
     }
 
+    /**
+     * Does nothing because it is impossible to load a map in this state.
+     * @param c the controller
+     * @param s the application window
+     * @return false.
+     */
     @Override
-    public boolean doLoadMap(Controller c, Window window) {
+    public boolean doLoadMap(Controller c, Window w) {
+        return false;
+    }
+
+    /**
+     * Does nothing because it is impossible to load requests in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadRequests(Controller c, Window w) {
         return false;
     }
 

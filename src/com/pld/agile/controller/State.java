@@ -2,7 +2,6 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
@@ -21,38 +20,37 @@ import java.util.ArrayList;
  * State design pattern interface.
  */
 public interface State {
-
+    
     /**
-     * Loads the map to the mapData object (default loads a map).
-     * @param window the application window
+     * Fires when the user presses on the "Load map" button.
+     * @param w the application window
      * @param c the controller
      * @return boolean success
      */
-    default boolean doLoadMap(Controller c, Window window) {
+    default boolean doLoadMap(Controller c, Window w) {
         // Fetch file
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Map File");
         fileChooser.setInitialDirectory(new File("./src/resources/xml/maps"));
-        File mapFile = fileChooser.showOpenDialog(window.getStage());
+        File mapFile = fileChooser.showOpenDialog(w.getStage());
 
         if (mapFile != null) {
 
-            MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
+            MapLoader mapLoader = new MapLoader(mapFile.getPath(), w.getMapData());
             try {
                 mapLoader.load();
-                window.getTourData().setRequestList(new ArrayList<>());
-                window.getTourData().setAssociatedMap(window.getMapData());
-                window.switchToMainPane();
-                window.toggleFileMenuItem(1, true);
-                window.toggleFileMenuItem(2, false);
-                window.setMainSceneButton(
+                w.getTourData().setRequestList(new ArrayList<>());
+                w.getTourData().setAssociatedMap(w.getMapData());
+                w.switchToMainPane();
+                w.toggleFileMenuItem(1, true);
+                w.toggleFileMenuItem(2, false);
+                w.setMainSceneButton(
                         "Load requests",
                         new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
                 );
-                window.placeMainSceneButton(true);
+                w.placeMainSceneButton(true);
                 // switch controller state to Await RequestsState
                 c.setCurrState(c.loadedMapState);
-
                 return true;
             } catch (IOException | SyntaxException e) {
                 e.printStackTrace();
@@ -67,62 +65,113 @@ public interface State {
     }
 
     /**
-     * Loads the requests to tourData if map is loaded (default doesn't load).
+     * Fires when the user presses the "Load requests" button.
      * @param c the controller
-     * @param window the application window
+     * @param w the application window
      * @return boolean success
      */
-    default boolean doLoadRequests(Controller c, Window window) {
+    default boolean doLoadRequests(Controller c, Window w) {
         return false;
     }
 
     /**
-     * Computes a tour and displays it (default doesn't do it
-     * since there is no guarantee that requests are loaded).
+     * Fires when the user presses the "Compute tour" button.
      * @param c the controller
-     * @param window the application window
+     * @param w the application window
      * @return boolean success
      */
-    default boolean doComputeTour(Controller c, Window window) {
-        return false;
+    default void doComputeTour(Controller c, Window w) {
     }
 
-    default void doStopComputingTour(Controller c, Window window) {
+    /**
+     * Fires when the user presses the "Stop computing" button.
+     * @param c the controller
+     * @param w the application window
+     */
+    default void doStopComputingTour(Controller c, Window w) {
     }
 
-    default void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
+    /**
+     * Fires when a click is triggered on the graphical view.
+     * @param c the controller
+     * @param w the application window
+     * @param latLonPos the position of the click, in lat/lon coordinates
+     */
+    default void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
     }
 
-    default void doDragOnGraphicalStop(Controller c, Window window, Stop stop) {
+    /**
+     * Fires when a graphical stop is dragged across the graphical view.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the concerned stop
+     */
+    default void doDragOnGraphicalStop(Controller c, Window w, Stop stop) {
     }
 
-    default void doDragOffGraphicalStop(Controller c, Window window, double[] latLonPos) {
+    /**
+     * Fires when a graphical stop is dropped on the graphical view (after a drag)
+     * @param c the controller
+     * @param w the application window
+     * @param latLonPos the position where the stop was dropped, in lat/lon coordinates
+     */
+    default void doDragOffGraphicalStop(Controller c, Window w, double[] latLonPos) {
     }
 
-    default void doDeleteRequest(Controller c, Window window, Request request) {
+    /**
+     * Fires when the user clicks on the "delete" icon of a textual view stop.
+     * @param c the controller
+     * @param w the application window
+     * @param request the request to delete.
+     */
+    default void doDeleteRequest(Controller c, Window w, Request request) {
     }
 
-    default boolean doShiftStopOrderUp(Controller c, Window window, Stop stop) {
-        return false;
+    /**
+     * Fires when the user clicks on the "up" arrow of a textual view stop.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the concerned stop.
+     */
+    default void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
     }
 
-    default boolean doShiftStopOrderDown(Controller c, Window window, Stop stop) {
-        return false;
+    /**
+     * Fires when the user clicks on the "down" arrow of a textual view stop.
+     * @param c the controller
+     * @param w the application window
+     * @param stop the concerned stop.
+     */
+    default void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
     }
 
-    default void doChangeStopDuration(Controller c, Window window, Stop stop, int newDuration) {
-        TourData tourData = window.getTourData();
-        stop.setDuration(newDuration);
-        tourData.updateStopsTimesAndNumbers();
+    /**
+     * Fires when the user clicks on the "Add request" button.
+     * @param c the controller
+     * @param w the application window
+     */
+    default void doStartAddRequest(Controller c, Window w) {
     }
 
-    default void doStartAddRequest(Controller c, Window window) {
+    /**
+     * Fires when the user has modified the duration of a stop
+     * (after pressing enter or clicking out of the text field)
+     * @param c the controller
+     * @param w the application window
+     * @param stop the concerned stop
+     * @param newDuration the new duration of the stop
+     */
+    default void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
     }
 
-    default void doChangeWarehouseDepartureTime(Controller c, Window window, LocalTime time) {
-        TourData tourData = window.getTourData();
-        tourData.setDepartureTime(time);
-        tourData.updateStopsTimesAndNumbers();
+    /**
+     * Fires when the user has modified the departure time from the warehouse
+     * (after pressing enter or clicking out of the text field)
+     * @param c the controller
+     * @param w the application window
+     * @param time the new departure time
+     */
+    default void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
     }
 
 }

@@ -3,8 +3,11 @@ package com.pld.agile.controller;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.view.Window;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -15,21 +18,56 @@ import javafx.scene.Cursor;
 public class AddingRequestState2 implements State {
 
     /**
-     * Finishes new request setting and returning to displayedTourState.
+     * Adds the delivery point to the new request, adds the new request to the tour,
+     * and goes back to the computed tour state.
      * @param c the controller
-     * @param window the application window
-     * @param latLonPos latitude and longitude of selected point
+     * @param w the application window
+     * @param latLonPos the desired latitude and longitude of the delivery
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window window, double[] latLonPos) {
-        MapData mapData = window.getMapData();
-        TourData tourData = window.getTourData();
-        //Intersection intersection = mapData.getIntersections().get(1022);
+    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+        MapData mapData = w.getMapData();
+        TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        tourData.constructNewRequest2(intersection);
-        window.getScene().setCursor(Cursor.DEFAULT);
-        window.toggleMainSceneButton(true);
+        try {
+            tourData.constructNewRequest2(intersection);
+        } catch (PathException e) {
+            tourData.deleteRequest(tourData.getRequestList().get(tourData.getRequestList().size() - 1));
+            // dijkstra iis broken after this error, try to redo it?
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.setTitle("Error"); // force english
+            alert.setHeaderText("Computing path error");
+            alert.showAndWait();
+        }
+        w.getScene().setCursor(Cursor.DEFAULT);
+        w.toggleMainSceneButton(true);
+        w.toggleFileMenuItem(0, true);
+        w.toggleFileMenuItem(1, true);
+        w.toggleFileMenuItem(2, false);
         c.setCurrState(c.computedTourState);
+    }
+
+    /**
+     * Does nothing because it is impossible to load a map in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadMap(Controller c, Window w) {
+        return false;
+    }
+
+    /**
+     * Does nothing because it is impossible to load requests in this state.
+     * @param c the controller
+     * @param w the application window
+     * @return false.
+     */
+    @Override
+    public boolean doLoadRequests(Controller c, Window w) {
+        return false;
     }
 
 }

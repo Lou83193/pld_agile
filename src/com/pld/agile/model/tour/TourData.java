@@ -9,6 +9,8 @@ package com.pld.agile.model.tour;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
+import com.pld.agile.utils.exception.PathException;
+import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
@@ -157,7 +159,7 @@ public class TourData extends Observable implements Observer {
         notifyObservers(UpdateType.TOUR);
     }
 
-    public void constructNewRequest2(Intersection intersection) {
+    public void constructNewRequest2(Intersection intersection) throws PathException {
         Request newRequest = requestList.get(requestList.size()-1);
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
@@ -165,23 +167,23 @@ public class TourData extends Observable implements Observer {
         System.out.println("Request added : " + newRequest);
     }
 
-    public void addRequest(Request newRequest) {
+    public void addRequest(Request newRequest) throws PathException {
 
         Stop pickup = newRequest.getPickup();
         Stop delivery = newRequest.getDelivery();
 
         stops.add(pickup.getAddress().getId());
         stops.add(delivery.getAddress().getId());
-        stopMap.put(pickup.getAddress().getId(),pickup);
-        stopMap.put(delivery.getAddress().getId(),delivery);
+        stopMap.put(pickup.getAddress().getId(), pickup);
+        stopMap.put(delivery.getAddress().getId(), delivery);
 
         dijkstra();
         tourPaths.remove(tourPaths.size()-1);
         Stop lastStop = tourPaths.get(tourPaths.size()-1).getDestination();
 
         Integer indexLastStop = -1;
-        for(int i = 0; i < stops.size();i++){
-            if(stops.get(i) == lastStop.getAddress().getId()){
+        for (int i = 0; i < stops.size();i++) {
+            if (stops.get(i) == lastStop.getAddress().getId()) {
                 indexLastStop = i;
                 break;
             }
@@ -369,7 +371,7 @@ public class TourData extends Observable implements Observer {
         System.out.println("stops=" + stops);
     }
 
-    public void computeTour() {
+    public void computeTour() throws PathException {
         setStops();
         dijkstra();
         tsp();
@@ -382,7 +384,7 @@ public class TourData extends Observable implements Observer {
         }
     }
 
-    private void dijkstra() {
+    private void dijkstra() throws PathException {
 
         int nbIntersections = associatedMap.getIntersections().size();
         int[][] predecessors = new int[stops.size()][nbIntersections];
@@ -476,8 +478,11 @@ public class TourData extends Observable implements Observer {
                     Intersection initialIntersection = associatedMap.getIntersections().get(stops.get(i));
                     int predecessor = predecessors[stopIndex][stops.get(i)];
                     Intersection currIntersection = associatedMap.getIntersections().get(predecessor);
-                    pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
-
+                    Segment segmentTo = currIntersection.findSegmentTo(initialIntersection);
+                    if (!currIntersection.equals(initialIntersection) && segmentTo == null) {
+                        throw new PathException("Unable to compute paths for this request");
+                    }
+                    pathSegments.add(segmentTo);
                     Stop nextStop = stopMap.get(stops.get(i));
                     Path path = new Path(currStop,nextStop);
 
@@ -485,7 +490,11 @@ public class TourData extends Observable implements Observer {
                     while (predecessor != stops.get(stopIndex)) {
                         predecessor = predecessors[stopIndex][predecessor];
                         Intersection nextIntersection = associatedMap.getIntersections().get(predecessor);
-                        pathSegments.add(nextIntersection.findSegmentTo(currIntersection));
+                        segmentTo = nextIntersection.findSegmentTo(currIntersection);
+                        if (!currIntersection.equals(nextIntersection) && segmentTo == null) {
+                            throw new PathException("Unable to compute paths for this request");
+                        }
+                        pathSegments.add(segmentTo);
                         currIntersection = associatedMap.getIntersections().get(predecessor);
                     }
 

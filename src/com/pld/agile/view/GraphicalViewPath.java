@@ -17,6 +17,10 @@ import javafx.scene.shape.StrokeLineJoin;
 
 import java.util.List;
 
+/**
+ * Graphical object representing a Path in the graphical view.
+ * A Path is represented (in the graphical view) by a thick polyline.
+ */
 public class GraphicalViewPath extends Polyline {
 
     /**
