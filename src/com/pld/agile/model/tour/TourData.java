@@ -158,6 +158,14 @@ public class TourData extends Observable implements Observer {
     public List<Path> getTourPaths() { return tourPaths; }
 
     /**
+     * Setter for attribute tourPaths.
+     * @param tourPaths list of tour's path
+     */
+    public void setTourPaths(List<Path> tourPaths) {
+        this.tourPaths = tourPaths;
+    }
+
+    /**
      * Getter for attribute stops.
      * @return stops
      */
@@ -166,11 +174,27 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Setter for attribute tourComputingThread.
-     * @param thread the thread computing the tour
+     * Setter for attribute stops.
+     * @param stops list of stops index in order of visit
      */
-    public void setTourComputingThread(Thread thread) {
-        tourComputingThread = thread;
+    public void setStops(List<Integer> stops) {
+        this.stops = stops;
+    }
+
+    /**
+     * Setter for attribute stopsGraph.
+     * @param stopsGraph tour's stops graph
+     */
+    public void setStopsGraph(Graph stopsGraph) {
+        this.stopsGraph = stopsGraph;
+    }
+
+    /**
+     * Setter for attribute tourComputingThread.
+     * @param tourComputingThread tour' computingThread
+     */
+    public void setTourComputingThread(Thread tourComputingThread) {
+        this.tourComputingThread = tourComputingThread;
     }
 
     /**
