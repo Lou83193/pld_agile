@@ -3,6 +3,7 @@ package com.pld.agile.controller;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.parsing.RequestLoader;
@@ -76,7 +77,15 @@ public class LoadedRequestsState implements State {
     public boolean doComputeTour(Controller c, Window window) {
         TourData tourData = window.getTourData();
         Thread computingThread = new Thread(() -> {
-            tourData.computeTour();
+            try {
+                tourData.computeTour();
+            } catch (PathException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error"); // force english
+                alert.setHeaderText("Computing path error");
+                alert.showAndWait();
+            }
             Platform.runLater(() -> {
                 c.computingTourState.doStopComputingTour(c, window);
             });

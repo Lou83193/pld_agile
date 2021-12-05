@@ -3,8 +3,11 @@ package com.pld.agile.controller;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.view.Window;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -26,7 +29,16 @@ public class AddingRequestState2 implements State {
         TourData tourData = window.getTourData();
         //Intersection intersection = mapData.getIntersections().get(1022);
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        tourData.constructNewRequest2(intersection);
+        try {
+            tourData.constructNewRequest2(intersection);
+        } catch (PathException e) {
+            tourData.deleteRequest(tourData.getRequestList().get(tourData.getRequestList().size() - 1));
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.setTitle("Error"); // force english
+            alert.setHeaderText("Computing path error");
+            alert.showAndWait();
+        }
         window.getScene().setCursor(Cursor.DEFAULT);
         window.toggleMainSceneButton(true);
         c.setCurrState(c.computedTourState);
