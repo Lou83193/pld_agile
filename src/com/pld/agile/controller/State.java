@@ -41,7 +41,7 @@ public interface State {
             MapLoader mapLoader = new MapLoader(mapFile.getPath(), window.getMapData());
             try {
                 mapLoader.load();
-                window.getTourData().setRequestList(new ArrayList<>());
+                window.getTourData().setStopsList(new ArrayList<>());
                 window.getTourData().setAssociatedMap(window.getMapData());
                 window.switchToMainPane();
                 window.toggleFileMenuItem(1, true);

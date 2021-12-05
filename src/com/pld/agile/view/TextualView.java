@@ -59,26 +59,11 @@ public class TextualView implements Observer {
         VBox requestListContainer = new VBox(20);
         requestListContainer.getStyleClass().add("white-background");
 
-        List<Request> requests = tourData.getRequestList();
+        List<Stop> stops = tourData.getStopsList();
 
-        Stop warehouse = tourData.getWarehouse();
-        if (warehouse == null) {
-            return;
-        }
-
-        VBox warehousePanel = new TextualViewStop(warehouse, this, false);
-        warehousePanel.setOnMouseClicked(
-            e -> window.getController().clickOnTextualStop(warehouse)
-        );
-        requestListContainer.getChildren().add(warehousePanel);
-
-        for (Request request : requests) {
-            VBox requestPanel1 = new TextualViewStop(request.getPickup(), this, false);
-            VBox requestPanel2 = new TextualViewStop(request.getDelivery(), this, false);
-            requestListContainer.getChildren().addAll(
-                    requestPanel1,
-                    requestPanel2
-            );
+        for (Stop stop : stops) {
+            VBox stopPanel = new TextualViewStop(stop, this, false);
+            requestListContainer.getChildren().add(stopPanel);
         }
 
         component.setContent(requestListContainer);

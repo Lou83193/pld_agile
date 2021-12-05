@@ -70,10 +70,8 @@ public class RequestLoader {
             List<Node> requestNodes = tourXmlDocument.selectNodes("/planningRequest/request");
             Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
 
-            List<Request> requestList = new ArrayList<>();
             List<Stop> stopList = new ArrayList<>();
 
-            int currId = 0;
             Element warehouseElement = (Element) warehouseNode;
             String[] time = warehouseElement.attributeValue("departureTime").split(":");
             LocalTime departureTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
@@ -100,7 +98,6 @@ public class RequestLoader {
                     Stop delivery = new Stop(request, deliveryLocation, deliveryDuration, StopType.DELIVERY);
                     request.setPickup(pickup);
                     request.setDelivery(delivery);
-                    requestList.add(request);
                     stopList.add(pickup);
                     stopList.add(delivery);
 
@@ -108,7 +105,6 @@ public class RequestLoader {
             }
 
             tour.setStopsList(stopList);
-            tour.setRequestList(requestList);
         } catch(SyntaxException e) {
             throw e;
         } catch (Exception e) {
@@ -117,7 +113,7 @@ public class RequestLoader {
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 
-        if (tour.getRequestList().size() == 0) {
+        if (tour.getStopsList().size() == 0) {
             throw new SyntaxException("Invalid file - couldn't use it to load a request (all might be out loaded map).");
         }
     }

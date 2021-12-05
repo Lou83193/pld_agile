@@ -47,50 +47,29 @@ public class GraphicalViewRequestsLayer extends Group {
                 1.25, 0.75
         );
 
-        List<Request> requests = tourData.getRequestList();
+        List<Stop> stops = tourData.getStopsList();
         this.getChildren().clear();
 
-        Stop warehouse = tourData.getWarehouse();
+        /*Stop warehouse = tourData.getWarehouse();
         if (warehouse == null) {
             return;
-        }
+        }*/
 
         double graphicSize = 24 * screenScale * mapScale;
 
-        GraphicalViewStop warehouseGraphic = new GraphicalViewStop(warehouse, graphicalView, graphicSize, 0, false);
-        double[] warehousePos = graphicalView.projectLatLon(warehouse.getAddress());
-        warehouseGraphic.place(warehousePos);
-        this.getChildren().add(warehouseGraphic);
+        for (Stop stop : stops) {
 
-        for (Request request : requests) {
+            GraphicalViewStop stopGraphic = new GraphicalViewStop(
+                stop,
+                graphicalView,
+                graphicSize,
+                stop.getStopNumber(),
+                stop.getStopNumber() > 0
+            );
+            double[] stopPos = graphicalView.projectLatLon(stop.getAddress());
+            stopGraphic.place(stopPos);
+            this.getChildren().add(stopGraphic);
 
-            Stop pickup = request.getPickup();
-            if (pickup != null) {
-                GraphicalViewStop pickupGraphic = new GraphicalViewStop(
-                        pickup,
-                        graphicalView,
-                        graphicSize,
-                        pickup.getStopNumber(),
-                        pickup.getStopNumber() > 0
-                );
-                double[] pickupPos = graphicalView.projectLatLon(pickup.getAddress());
-                pickupGraphic.place(pickupPos);
-                this.getChildren().add(pickupGraphic);
-            }
-
-            Stop delivery = request.getDelivery();
-            if (delivery != null) {
-                GraphicalViewStop deliveryGraphic = new GraphicalViewStop(
-                        delivery,
-                        graphicalView,
-                        graphicSize,
-                        delivery.getStopNumber(),
-                        pickup.getStopNumber() > 0
-                );
-                double[] deliveryPos = graphicalView.projectLatLon(delivery.getAddress());
-                deliveryGraphic.place(deliveryPos);
-                this.getChildren().add(deliveryGraphic);
-            }
         }
 
     }

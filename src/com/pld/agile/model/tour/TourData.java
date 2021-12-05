@@ -23,10 +23,7 @@ import static com.pld.agile.model.tour.StopType.PICKUP;
  * Stores the data of a loaded requests list.
  */
 public class TourData extends Observable {
-    /**
-     * List of requests composing the tour.
-     */
-    private List<Request> requestList;
+
     /**
      * List of stops composing the tour.
      */
@@ -58,30 +55,12 @@ public class TourData extends Observable {
      */
     public TourData() {
         super();
-        requestList = new ArrayList<>();
+        //requestList = new ArrayList<>();
         stopsList = new ArrayList<>();
         tourPaths = new ArrayList<>();
         associatedMap = null;
         departureTime = null;
         warehouse = null;
-    }
-
-    /**
-     * Getter for attribute requestList.
-     * @return requestList
-     */
-    public List<Request> getRequestList() {
-        return requestList;
-    }
-
-    /**
-     * Setter for attribute requestList.
-     * @param requestList List of requests composing the tour
-     */
-    public void setRequestList(List<Request> requestList) {
-        this.requestList = requestList;
-        notifyObservers(UpdateType.MAP);
-        notifyObservers(UpdateType.REQUESTS);
     }
 
     /**
@@ -136,10 +115,8 @@ public class TourData extends Observable {
      * Unhighlights every stop.
      */
     public void unHighlightStops() {
-        warehouse.setHighlighted(0);
-        for (Request request : requestList) {
-            request.getPickup().setHighlighted(0);
-            request.getDelivery().setHighlighted(0);
+        for (Stop s : stopsList) {
+            s.setHighlighted(0);
         }
     }
 
@@ -147,14 +124,15 @@ public class TourData extends Observable {
         Request newRequest = new Request();
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
         newRequest.setPickup(newPickup);
-        requestList.add(newRequest);
+        stopsList.add(newPickup);
         notifyObservers(UpdateType.TOUR);
     }
 
     public void constructNewRequest2 (Intersection intersection) {
-        Request newRequest = requestList.get(requestList.size()-1);
+        Request newRequest = stopsList.get(stopsList.size()-1).getRequest();
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
+        stopsList.add(newDelivery);
         addRequest(newRequest);
         System.out.println("Request added : " + newRequest);
     }
@@ -164,12 +142,6 @@ public class TourData extends Observable {
      * @param newRequest the request to add at the end of the tour
      */
     public void addRequest (Request newRequest) {
-
-        Stop pickup = newRequest.getPickup();
-        Stop delivery = newRequest.getDelivery();
-
-        stopsList.add(pickup);
-        stopsList.add(delivery);
         
         dijkstra();
 
@@ -247,7 +219,8 @@ public class TourData extends Observable {
         }
 
         // Remove from request list
-        requestList.removeIf(request::equals);
+        stopsList.removeIf(pickup::equals);
+        stopsList.removeIf(delivery::equals);
 
         // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
@@ -357,6 +330,7 @@ public class TourData extends Observable {
 
     public void setStopsList(List<Stop> stopsList) {
         this.stopsList = stopsList;
+        notifyObservers(UpdateType.REQUESTS);
     }
 
     /**
@@ -390,6 +364,7 @@ public class TourData extends Observable {
 
         System.out.println("Dijkstra START");
         for (int currStopId : stops) {
+
             // Current Stop Variables
             double [] dist = new double[nbIntersections]; //index = intersection id in map data
             int [] pi = new int[nbIntersections]; //index = intersection id in map data
@@ -466,6 +441,8 @@ public class TourData extends Observable {
 
                 if (i != stopIndex) {
 
+                    System.out.println(stopIndex + " to " + i + " out of " + stopsList.size());
+
                     List<Segment> pathSegments = new ArrayList<>();
 
                     // Add initial segment
@@ -475,7 +452,7 @@ public class TourData extends Observable {
                     pathSegments.add(currIntersection.findSegmentTo(initialIntersection));
 
                     Stop nextStop = stopsList.get(i);
-                    Path path = new Path(currStop,nextStop);
+                    Path path = new Path(currStop, nextStop);
 
                     // Get intermediary segments
                     while (predecessor != stops.get(stopIndex)) {
@@ -497,17 +474,9 @@ public class TourData extends Observable {
             stopIndex++;
 
         }
-        //TESTS :
-        System.out.println("stops graph : ");
-        for (int i = 0; i < stopsList.size(); i++) {
-            for (int j = 0; j < stopsList.size(); j++) {
-                System.out.println(stopsGraph.getCost(i, j) + " ");
-            }
-            System.out.println();
-        }
         System.out.println("END Dijkstra");
 
-    } // ---- END of dijkstra
+    }
 
     public void setStopTimeAndNumber() {
 
@@ -569,7 +538,7 @@ public class TourData extends Observable {
     @Override
     public String toString() {
         return "TourData{"
-                + "requestList=" + requestList
+                + "stopsList=" + stopsList
                 + ", associatedMap=" + associatedMap
                 + ", warehouse=" + warehouse
                 + ", departureTime='" + departureTime + '\''
