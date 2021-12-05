@@ -13,21 +13,21 @@ import java.util.List;
  * Represents an intersection on the map.
  */
 public class Intersection {
+
+    private static int idCounter = 0;
+
     /**
      * ID of the intersection.
      */
     private int id;
-
     /**
      * Geographical latitude of the intersection.
      */
     private double latitude;
-
     /**
      * Geographical longitude of the intersection.
      */
     private double longitude;
-
     /**
      * List of segments with this intersection as an origin.
      */
@@ -35,15 +35,15 @@ public class Intersection {
 
     /**
      * Constructor of the class Intersection, initialises the attributes
-     * @param id ID of the intersection
      * @param latitude geographical latitude of the intersection
      * @param longitude geographical longitude of the intersection
      */
-    public Intersection(int id, double latitude, double longitude) {
-        this.id = id;
+    public Intersection(double latitude, double longitude) {
+        this.id = idCounter;
         this.latitude = latitude;
         this.longitude = longitude;
         this.originOf = new ArrayList<>();
+        idCounter++;
     }
 
     // GETTERS
@@ -134,5 +134,12 @@ public class Intersection {
                 ", longitude=" + longitude +
                 //", originOf=" + originOf +
                 '}';
+    }
+
+    /**
+     * Resets the ID counter;
+     */
+    public static void resetIdCounter() {
+        idCounter = 0;
     }
 }

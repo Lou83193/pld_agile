@@ -32,7 +32,6 @@ public class AddingRequestState2 implements State {
         try {
             tourData.constructNewRequest2(intersection);
         } catch (PathException e) {
-            tourData.deleteRequest(tourData.getRequestList().get(tourData.getRequestList().size() - 1));
             // dijkstra iis broken after this error, try to redo it?
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);

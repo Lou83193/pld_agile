@@ -16,6 +16,12 @@ import java.time.LocalTime;
  */
 public class Stop extends Observable {
 
+    private static int idCounter = 0;
+
+    /**
+     * ID of the stop.
+     */
+    private int id;
     /**
      * Intersection where the Stop is located.
      */
@@ -47,14 +53,26 @@ public class Stop extends Observable {
 
     /**
      * Stop constructor.
+     * @param request associated request
      * @param address the address
      * @param duration the duration
+     * @param type the type of the stop
      */
     public Stop(Request request, Intersection address, long duration, StopType type) {
+        this.id = idCounter;
         this.request = request;
         this.type = type;
         this.address = address;
         this.duration = duration;
+        idCounter++;
+    }
+
+    /**
+     * Getter for attribute ID
+     * @return returns the ID of the Stop
+     */
+    public int getId() {
+        return id;
     }
 
     /**
@@ -156,8 +174,16 @@ public class Stop extends Observable {
     @Override
     public String toString() {
         return "Stop{" +
-                "address=" + address +
+                "id=" + id +
+                ", address=" + address +
                 ", duration=" + duration +
                 '}';
+    }
+
+    /**
+     * Resets the ID counter;
+     */
+    public static void resetIdCounter() {
+        idCounter = 0;
     }
 }

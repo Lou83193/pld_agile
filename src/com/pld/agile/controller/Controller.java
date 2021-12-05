@@ -172,14 +172,14 @@ public class Controller {
     /**
      * Calls method dragOnGraphicalStop() of the current state.
      */
-    public void dragOnGraphicalStop(Stop stop) {
-        currState.doDragOnGraphicalStop(this, window, stop);
+    public void dragOnGraphicalStop() {
+        currState.doDragOnGraphicalStop(this, window);
     }
     /**
      * Calls method releaseOnGraphicalView() of the current state.
      */
-    public void dragOffGraphicalStop(double[] latLonPos) {
-        currState.doDragOffGraphicalStop(this, window, latLonPos);
+    public void dragOffGraphicalStop(Stop stop, double[] latLonPos) {
+        currState.doDragOffGraphicalStop(this, window, stop, latLonPos);
     }
     /**
      * Calls method changeWarehouseDepartureTime() of the current state.

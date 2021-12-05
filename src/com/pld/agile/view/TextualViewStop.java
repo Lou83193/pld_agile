@@ -74,8 +74,6 @@ public class TextualViewStop extends VBox {
      */
     public TextualViewStop(Stop stop, TextualView parent, boolean editable) {
 
-        long startTime = System.currentTimeMillis();
-
         this.scrollPane = (ScrollPane) parent.getComponent();
 
         double lat = stop.getAddress().getLatitude();
@@ -337,8 +335,6 @@ public class TextualViewStop extends VBox {
         } else {
             setHighlight(0);
         }
-
-        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + "ms");
 
     }
 

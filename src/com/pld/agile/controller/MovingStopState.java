@@ -1,7 +1,13 @@
 package com.pld.agile.controller;
 
+import com.pld.agile.model.map.Intersection;
+import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
+import com.pld.agile.model.tour.TourData;
+import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.view.Window;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -11,11 +17,19 @@ import com.pld.agile.view.Window;
 public class MovingStopState implements State {
 
     @Override
-    public void doDragOffGraphicalStop(Controller c, Window w, double[] latLonPos) {
-        // loop through all intersections
-        // calculate distance between latLonPos and the intersection's pos, using ViewUtilities.distanceLatLon()
-        // find the smallest distance
-        // change the intersection of the currently dragged stop to that
+    public void doDragOffGraphicalStop(Controller c, Window window, Stop stop, double[] latLonPos) {
+        MapData mapData = window.getMapData();
+        TourData tourData = window.getTourData();
+        Intersection intersection = mapData.findClosestIntersection(latLonPos);
+        try {
+            tourData.moveStop(stop, intersection);
+        } catch (PathException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.setTitle("Error"); // force english
+            alert.setHeaderText("Computing path error");
+            alert.showAndWait();
+        }
         c.setCurrState(c.computedTourState);
     }
 
