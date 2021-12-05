@@ -143,7 +143,7 @@ public class Controller {
      * Calls method clickOnGraphicalView() of the current state.
      */
     public void clickOnGraphicalView(double[] latLonPos) {
-        currState.doClickOnGraphicalView(this, window, latLonPos);
+        currState.doClickOnGraphicalView(this, window, listOfCommands, latLonPos);
     }
     /**
      * Calls method deleteRequest() of the current state.

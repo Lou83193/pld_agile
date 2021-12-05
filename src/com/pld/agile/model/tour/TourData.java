@@ -201,6 +201,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
+     * Removes the latest request from the requestList.
+     */
+    public void deconstructNewRequest() {
+        requestList.remove(requestList.size() - 1);
+        notifyObservers(UpdateType.TOUR);
+    }
+
+    /**
      * Adds a request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
      * @param newRequest The request to be added.
      * @throws PathException If computing dijkstra with the new request caused an exception.

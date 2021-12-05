@@ -17,15 +17,14 @@ public class AddingRequestState1 implements State {
      * and goes to addingRequestState2.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param latLonPos the desired latitude and longitude of the pickup
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    public void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
         MapData mapData = w.getMapData();
         TourData tourData = w.getTourData();
-        Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        tourData.constructNewRequest1(intersection);
-        c.setCurrState(c.addingRequestState2);
+        loc.add(new AddRequestPickupCommand(c, mapData, tourData, latLonPos));
     }
 
     /**

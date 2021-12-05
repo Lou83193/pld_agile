@@ -25,27 +25,10 @@ public class AddingRequestState2 implements State {
      * @param latLonPos the desired latitude and longitude of the delivery
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    public void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
         MapData mapData = w.getMapData();
         TourData tourData = w.getTourData();
-        Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        try {
-            tourData.constructNewRequest2(intersection);
-        } catch (PathException e) {
-            tourData.deleteRequest(tourData.getRequestList().get(tourData.getRequestList().size() - 1));
-            // dijkstra iis broken after this error, try to redo it?
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
-            alert.setTitle("Error"); // force english
-            alert.setHeaderText("Computing path error");
-            alert.showAndWait();
-        }
-        w.getScene().setCursor(Cursor.DEFAULT);
-        w.toggleMainSceneButton(true);
-        w.toggleMenuItem(0, 0, true);
-        w.toggleMenuItem(0, 1, true);
-        w.toggleMenuItem(0, 2, false);
-        c.setCurrState(c.computedTourState);
+        loc.add(new AddRequestDeliveryCommand(c, w, mapData, tourData, latLonPos));
     }
 
     /**

@@ -96,9 +96,10 @@ public interface State {
      * Fires when a click is triggered on the graphical view.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param latLonPos the position of the click, in lat/lon coordinates
      */
-    default void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    default void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
     }
 
     /**
@@ -132,20 +133,20 @@ public interface State {
      * Fires when the user clicks on the "up" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
-     * @param l the list of commands
+     * @param loc the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderUp(Controller c, Window w, ListOfCommands l, Stop stop) {
+    default void doShiftStopOrderUp(Controller c, Window w, ListOfCommands loc, Stop stop) {
     }
 
     /**
      * Fires when the user clicks on the "down" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
-     * @param l the list of commands
+     * @param loc the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderDown(Controller c, Window w, ListOfCommands l, Stop stop) {
+    default void doShiftStopOrderDown(Controller c, Window w, ListOfCommands loc, Stop stop) {
     }
 
     /**
