@@ -36,6 +36,7 @@ public class GraphicalViewMapLayer extends Pane {
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
                 .withPressedDurationThreshold(150)
                 .setOnMouseClickedNotDragged((mouseEvent) -> {
+                    System.out.println(mouseEvent.getX() + "; " + mouseEvent.getY());
                     double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
                             mouseEvent.getX(),
                             mouseEvent.getY(),

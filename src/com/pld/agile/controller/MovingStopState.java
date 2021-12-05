@@ -15,15 +15,10 @@ public class MovingStopState implements State {
 
     @Override
     public void doDragOffGraphicalStop(Controller c, Window window, Stop stop, double[] latLonPos) {
-        // find closest intersection to latlonpos
-        // change the intersection of the currently dragged stop to that
-        System.out.println("DRAG AND DROP STOP DETECTED, STOP : "+stop.getStopNumber());
         MapData mapData = window.getMapData();
         TourData tourData = window.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        stop.setAddress(intersection);
-        tourData.moveStop();
-        // recalculate dijkstra
+        tourData.moveStop(stop, intersection);
         c.setCurrState(c.displayedTourState);
     }
 
