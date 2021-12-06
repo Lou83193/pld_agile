@@ -13,11 +13,22 @@ import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.tsp.*;
+import com.pld.agile.utils.tsp.CompleteGraph;
+import com.pld.agile.utils.tsp.Graph;
+import com.pld.agile.utils.tsp.TemplateTSP;
+import com.pld.agile.utils.tsp.TSP;
+//import com.pld.agile.utils.tsp.TSP1;
+//import com.pld.agile.utils.tsp.TSP2;
+import com.pld.agile.utils.tsp.TSP3;
 import javafx.application.Platform;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 /**
  * Stores the data of a loaded requests list.
@@ -41,16 +52,16 @@ public class TourData extends Observable implements Observer {
      */
     private LocalTime departureTime;
     /**
-     * Graph containing the minimal length between each stop of the request list,
-     * as well as the Path object between them. Computed with dijkstra.
+     * Graph containing the minimal length between each stop of the request
+     * list, as well as the Path object between them. Computed with dijkstra.
      */
     private Graph stopsGraph;
     /**
-     * The list of Paths composing the tour
+     * The list of Paths composing the tour.
      */
     private List<Path> tourPaths;
     /**
-     * The thread computing the tour (both dijkstra and tsp)
+     * The thread computing the tour (both dijkstra and tsp).
      */
     private Thread tourComputingThread;
 
@@ -68,14 +79,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute associatedMap
+     * Getter for attribute associatedMap.
      * @return associatedMap
      */
     public MapData getAssociatedMap() {
         return associatedMap;
     }
     /**
-     * Setter for attribute associatedMap
+     * Setter for attribute associatedMap.
      * @param associatedMap the map on which the tour takes place
      */
     public void setAssociatedMap(MapData associatedMap) {
@@ -83,14 +94,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute warehouse
+     * Getter for attribute warehouse.
      * @return warehouse
      */
     public Stop getWarehouse() {
         return warehouse;
     }
     /**
-     * Setter for attribute warehouse
+     * Setter for attribute warehouse.
      * @param warehouse the warehouse (start & end) Stop
      */
     public void setWarehouse(Stop warehouse) {
@@ -98,14 +109,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute departureTime
+     * Getter for attribute departureTime.
      * @return departureTime
      */
     public LocalTime getDepartureTime() {
         return departureTime;
     }
     /**
-     * Setter for attribute departureTime
+     * Setter for attribute departureTime.
      * @param departureTime the departure time from the warehouse
      */
     public void setDepartureTime(LocalTime departureTime) {
@@ -137,8 +148,8 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Creates a new request with a pickup which is created at the given intersection,
-     * and adds it to the list of requests.
+     * Creates a new request with a pickup which is created at
+     * the given intersection, and adds it to the list of requests.
      * @param intersection The intersection of the pickup.
      */
     public void constructNewRequest1(Intersection intersection) {
@@ -150,14 +161,18 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Adds a delivery to the new request (the last one in the list) which is created at the given intersection.
+     * Adds a delivery to the new request (the last one in the list) which
+     * is created at the given intersection.
      * Adds the new request to the tour.
      * @param intersection The intersection of the delivery.
-     * @throws PathException If adding the request to the tour caused an exception.
+     * @throws PathException If adding the request to the tour caused
+     * an exception.
      */
-    public void constructNewRequest2 (Intersection intersection) throws PathException {
-        Request newRequest = stopsList.get(stopsList.size()-1).getRequest();
-        Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
+    public void constructNewRequest2(Intersection intersection)
+            throws PathException {
+        Request newRequest = stopsList.get(stopsList.size() - 1).getRequest();
+        Stop newDelivery =
+                new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
         stopsList.add(newDelivery);
         addRequest(newRequest);
