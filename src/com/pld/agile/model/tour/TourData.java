@@ -676,7 +676,6 @@ public class TourData extends Observable implements Observer {
 
         TSP tsp = new TSP3(this);
         long startTime = System.currentTimeMillis();
-        System.out.println("TSP START");
         tsp.searchSolution(120000, stopsGraph);
         Platform.runLater(() -> {
             if (tourComputingThread != null && !tourComputingThread.isInterrupted()) {

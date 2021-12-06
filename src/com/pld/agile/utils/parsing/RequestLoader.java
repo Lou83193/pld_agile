@@ -60,7 +60,6 @@ public class RequestLoader {
             generateDocument();
         } catch (DocumentException e) {
             // invalid XML file
-            e.printStackTrace();
             throw new IOException("Invalid specified file.");
         }
         // DOM can be handled
@@ -110,7 +109,6 @@ public class RequestLoader {
             throw e;
         } catch (Exception e) {
             // parsing exception happens when an attribute is missing or invalid
-            e.printStackTrace();
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 

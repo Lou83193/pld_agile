@@ -56,7 +56,6 @@ public interface State {
                 c.setCurrState(c.loadedMapState);
                 return true;
             } catch (IOException | SyntaxException e) {
-                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Map loading error");

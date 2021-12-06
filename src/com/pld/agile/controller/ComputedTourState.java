@@ -55,7 +55,6 @@ public class ComputedTourState implements State {
 
                 return true;
             } catch (SyntaxException | IOException e) {
-                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
                 alert.setTitle("Error"); // force english
                 alert.setHeaderText("Requests loading error");

@@ -139,7 +139,6 @@ public class MapLoader {
             generateDocument();
         } catch (DocumentException e) {
             // invalid XML file
-            e.printStackTrace();
             throw new IOException("Invalid specified file.");
         }
         // DOM can be handled
@@ -211,7 +210,6 @@ public class MapLoader {
             map.setSegments(segments);
         } catch (Exception e) {
             // parsing exception happens when an attribute is missing or invalid
-            e.printStackTrace();
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 
