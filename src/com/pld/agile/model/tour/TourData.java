@@ -158,6 +158,7 @@ public class TourData extends Observable implements Observer {
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
         newRequest.setPickup(newPickup);
         stopsList.add(newPickup);
+        recomputeStopIDs();
         notifyObservers(UpdateType.TOUR);
         return newRequest;
     }
@@ -173,6 +174,7 @@ public class TourData extends Observable implements Observer {
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
         stopsList.add(newDelivery);
+        recomputeStopIDs();
         notifyObservers(UpdateType.TOUR);
         return newRequest;
     }
@@ -216,6 +218,15 @@ public class TourData extends Observable implements Observer {
 
         updateStopsTimesAndNumbers();
 
+    }
+
+    /**
+     * Recalculates the stop IDs so that they match their position in the stopsList.
+     */
+    private void recomputeStopIDs() {
+        for (int i = 0; i < stopsList.size(); i++) {
+            stopsList.get(i).setId(i);
+        }
     }
 
     /**
@@ -273,7 +284,7 @@ public class TourData extends Observable implements Observer {
         // Remove from stops list, decrease Stop Id counter
         stopsList.removeIf(pickup::equals);
         stopsList.removeIf(delivery::equals);
-        Stop.decreaseIdCounter(2);
+        recomputeStopIDs();
 
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             updateStopsTimesAndNumbers();

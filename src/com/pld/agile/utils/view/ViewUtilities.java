@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class providing static methods for various purposes.
@@ -169,6 +170,15 @@ public class ViewUtilities {
         double g = ((hash & 0x00FF00) >> 8) / 255.0;
         double b = (hash & 0x0000FF) / 255.0;
         return new Color(r, g, b, 1.0).brighter();
+    }
+
+    public static Color getRandomColour(final int seed) {
+        Random rand = new Random(seed);
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        Color randomColor = new Color(r, g, b, 1.0);
+        return randomColor;
     }
 
     /**
