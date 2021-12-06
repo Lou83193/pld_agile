@@ -352,12 +352,18 @@ public class TourData extends Observable implements Observer {
     public void moveStop(Stop stop, Intersection newIntersection) throws PathException {
 
         stop.setAddress(newIntersection);
-
         dijkstra();
 
-        // TODO:
-        // - iterate through tourPaths, find the stop
-        // - set its paths to the new paths from stopsGraph (which has just been updated by dijkstra)
+        for (int i = 0; i < tourPaths.size() ; i++) {
+            if (tourPaths.get(i).getDestination() == stop) {
+                int stopIdBefore = tourPaths.get(i).getOrigin().getId();
+                int stopIdAfter = tourPaths.get(i+1).getDestination().getId();
+                tourPaths.remove(tourPaths.get(i));
+                tourPaths.remove(tourPaths.get(i));
+                tourPaths.add(i, stopsGraph.getPath(stopIdBefore, stop.getId()));
+                tourPaths.add(i+1,stopsGraph.getPath(stop.getId(), stopIdAfter));
+            }
+        }
 
         updateStopsTimesAndNumbers();
     }
