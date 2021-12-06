@@ -174,7 +174,7 @@ public interface State {
      * @param stop the concerned stop
      * @param newDuration the new duration of the stop
      */
-    default void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
+    default void doChangeStopDuration(Controller c, Window w, ListOfCommands loc, Stop stop, long newDuration) {
     }
 
     /**
