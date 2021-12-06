@@ -165,9 +165,11 @@ public class Controller {
     }
     /**
      * Calls method changeStopDuration() of the current state.
+     * @param stop the stop to edit.
+     * @param newDuration the new duration of the stop.
      */
     public void changeStopDuration(Stop stop, int newDuration) {
-        currState.doChangeStopDuration(this, window, listOfCommands, stop, newDuration);
+        currState.doChangeStopDuration(window, listOfCommands, stop, newDuration);
     }
     /**
      * Calls method startAddRequest() of the current state.
@@ -195,9 +197,10 @@ public class Controller {
     }
     /**
      * Calls method changeWarehouseDepartureTime() of the current state.
+     * @param time new departure time
      */
-    public void changeWarehouseDepartureTime(LocalTime time) {
-        currState.doChangeWarehouseDepartureTime(this, window, time);
+    public void changeWarehouseDepartureTime(final LocalTime time) {
+        currState.doChangeWarehouseDepartureTime(window, listOfCommands, time);
     }
     /**
      * Calls method undo() of the current state.

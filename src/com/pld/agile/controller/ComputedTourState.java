@@ -145,8 +145,8 @@ public class ComputedTourState implements State {
      * @param newDuration the new duration of the stop
      */
     @Override
-    public void doChangeStopDuration(Controller c, Window w, ListOfCommands loc, Stop stop, long newDuration) {
-        loc.add(new ChangeStopDurationCommand(c, w, stop, newDuration));
+    public void doChangeStopDuration(Window w, ListOfCommands loc, Stop stop, long newDuration) {
+        loc.add(new ChangeStopDurationCommand(w.getTourData(), stop, newDuration));
     }
 
     /**
@@ -156,10 +156,8 @@ public class ComputedTourState implements State {
      * @param time the new departure time
      */
     @Override
-    public void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
-        TourData tourData = w.getTourData();
-        tourData.setDepartureTime(time);
-        tourData.updateStopsTimesAndNumbers();
+    public void doChangeWarehouseDepartureTime(Window w, ListOfCommands loc, LocalTime time) {
+        loc.add(new ChangeWarehouseDepartureTimeCommand(w.getTourData(), time));
     }
 
     /**

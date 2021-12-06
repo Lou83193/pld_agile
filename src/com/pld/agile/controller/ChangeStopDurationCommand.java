@@ -8,25 +8,36 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.view.Window;
 
 public class ChangeStopDurationCommand implements Command {
-    private Controller controller;
-    private Window window;
-    private Stop stop;
-    private long newDuration;
-    private long lastDuration = -1;
+    /**
+     * Tour data of the application.
+     */
+    private final TourData tourData;
 
     /**
-     * Constructor for {@link ChangeStopDurationCommand}
-     * @param c controller
-     * @param w the application window
-     * @param stop the stop that is to be edited
-     * @param newDuration the new duration assigned to the stop
+     * The Stop that is to be edited.
      */
-    public ChangeStopDurationCommand(Controller c, Window w, Stop stop, long newDuration) {
-        this.controller = c;
-        this.window = w;
+    private final Stop stop;
+
+    /**
+     * The new duration assigned to the stop.
+     */
+    private final long newDuration;
+
+    /**
+     * Stores the duration of the stop before change made by the command.
+     */
+    private final long lastDuration;
+
+    /**
+     * Constructor for {@link ChangeStopDurationCommand}.
+     * @param td the tour data of the application.
+     * @param stop the stop that is to be edited.
+     * @param newDuration the new duration assigned to the stop.
+     */
+    public ChangeStopDurationCommand(final TourData td, final Stop stop, final long newDuration) {
+        this.tourData = td;
         this.stop = stop;
         this.newDuration = newDuration;
         this.lastDuration = stop.getDuration();
@@ -37,17 +48,15 @@ public class ChangeStopDurationCommand implements Command {
      */
     @Override
     public void doCommand() {
-        TourData tourData = window.getTourData();
         stop.setDuration(newDuration);
         tourData.updateStopsTimesAndNumbers();
     }
 
     /**
-     * undoes the command.
+     * Undoes the command.
      */
     @Override
     public void undoCommand() {
-        TourData tourData = window.getTourData();
         stop.setDuration(lastDuration);
         tourData.updateStopsTimesAndNumbers();
     }
