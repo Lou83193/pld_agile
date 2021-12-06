@@ -33,7 +33,7 @@ public class RequestLoaderTests {
             mapLoader.load();
             tourData.setAssociatedMap(mapData);
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -64,9 +64,8 @@ public class RequestLoaderTests {
         try {
             requestLoader.load();
         } catch (SyntaxException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
 
         double[] expectedRequestArray = {

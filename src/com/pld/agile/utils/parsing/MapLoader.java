@@ -139,7 +139,6 @@ public class MapLoader {
             generateDocument();
         } catch (DocumentException e) {
             // invalid XML file
-            e.printStackTrace();
             throw new IOException("Invalid specified file.");
         }
         // DOM can be handled
@@ -186,10 +185,8 @@ public class MapLoader {
 
             // remove intersections that are in no segment
             List<String> intersectionsToBeRemoved = new ArrayList<>();
-            for (Intersection intersection : intersections) {
-                String intersectionId = Integer.toString(intersection.getId());
-            /*for (Map.Entry<String, Intersection> entry : intersectionsById.entrySet()) {
-                String intersectionId = entry.getKey();*/
+            for (Map.Entry<String, Intersection> entry : intersectionsById.entrySet()) {
+                String intersectionId = entry.getKey();
                 if (!intersectionIdsInGraph.contains(intersectionId)) {
                     // intersection in no segment
                     intersectionsToBeRemoved.add(intersectionId);
@@ -199,13 +196,20 @@ public class MapLoader {
                 intersections.remove(intersectionsById.get(intersectionId));
                 intersectionsById.remove(intersectionId);
             }
+            // after deletions, reindex all intersections
+            if (!intersectionsToBeRemoved.isEmpty()) {
+                int id = 0;
+                for (Intersection i : intersections) {
+                    i.setId(id);
+                    id++;
+                }
+            }
 
             map.setIntersectionsByOldID(intersectionsById);
             map.setIntersections(intersections);
             map.setSegments(segments);
         } catch (Exception e) {
             // parsing exception happens when an attribute is missing or invalid
-            e.printStackTrace();
             throw new SyntaxException("Invalid XML file : invalid or missing attributes.");
         }
 

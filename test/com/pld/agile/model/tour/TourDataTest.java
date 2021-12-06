@@ -72,7 +72,6 @@ public class TourDataTest {
             }
             tourData.setStopsGraph(stopsGraph);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

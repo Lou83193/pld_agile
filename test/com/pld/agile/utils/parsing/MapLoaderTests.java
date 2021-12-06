@@ -34,7 +34,6 @@ public class MapLoaderTests {
         try {
             mapLoader.load();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
