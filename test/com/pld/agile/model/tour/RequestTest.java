@@ -23,8 +23,8 @@ class RequestTest {
     @Test
     public void testRequests(){
         Request emptyRequest = new Request();
-        Stop pickup = new Stop(emptyRequest,new Intersection(1,45,85),852,StopType.PICKUP);
-        Stop delivery = new Stop(emptyRequest,new Intersection(2,963,98),46,StopType.DELIVERY);
+        Stop pickup = new Stop(emptyRequest,new Intersection(45,85),852,StopType.PICKUP);
+        Stop delivery = new Stop(emptyRequest,new Intersection(963,98),46,StopType.DELIVERY);
         Request request = new Request(pickup,delivery);
 
         assertEquals(pickup,request.getPickup());

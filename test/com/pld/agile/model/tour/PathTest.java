@@ -16,8 +16,8 @@ class PathTest {
     @Test
     public void testPath(){
         Request request = new Request();
-        Stop origin = new Stop(request,new Intersection(1,45,85),852,StopType.PICKUP);
-        Stop destination = new Stop(request,new Intersection(2,963,98),46,StopType.DELIVERY);
+        Stop origin = new Stop(request,new Intersection(45,85),852,StopType.PICKUP);
+        Stop destination = new Stop(request,new Intersection(963,98),46,StopType.DELIVERY);
         Path path = new Path(origin,destination);
 
         assertEquals(origin,path.getOrigin());
