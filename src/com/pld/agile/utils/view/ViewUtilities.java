@@ -247,7 +247,7 @@ public class ViewUtilities {
         }
         double v = ViewUtilities.mapValue(desiredY, contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight(), pane.getVmin(), pane.getVmax());
         pane.setVvalue(ViewUtilities.clamp(v, pane.getVmin(), pane.getVmax()));
-        node.requestFocus();
+        //node.requestFocus();
     }
 
 }
