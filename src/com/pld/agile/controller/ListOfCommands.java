@@ -34,6 +34,9 @@ public class ListOfCommands {
     public void add(Command command) {
         lastCommandIndex++;
         list.add(lastCommandIndex, command);
+        for (int i = lastCommandIndex + 1; i < list.size(); i++) {
+            list.remove(i);
+        }
         command.doCommand();
     }
 

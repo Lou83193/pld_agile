@@ -214,13 +214,13 @@ public class Window extends Application {
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);
 
-        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (undoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(0).fire();
             }
         });
-        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (redoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(1).fire();
