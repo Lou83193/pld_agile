@@ -41,7 +41,7 @@ public class TourDataTest {
     private RequestLoader requestLoader;
     private TourData tourData = new TourData();
 
-    @BeforeEach
+    /*@BeforeEach
     public void loadMap (){
         try {
             mapLoader.load();
@@ -195,14 +195,14 @@ public class TourDataTest {
            }
            if (!reqExists) { requests.add(tempRequest); }
        }
+       System.out.println();
+       unInitTourData.setStopsGraph(stopsGraph);
+        unInitTourData.processTSPUpdate(new TSP3(unInitTourData));
+        assertNotNull(unInitTourData.getTourPaths());
+   }
 
-       HashMap<Integer,Stop> stopMap = new HashMap<>() {{
-            put(unInitTourData.getWarehouse().getAddress().getId(), unInitTourData.getWarehouse());
-            put(requests.get(0).getDelivery().getAddress().getId(),requests.get(0).getDelivery());
-            put(requests.get(1).getPickup().getAddress().getId(),requests.get(1).getPickup());
-            put(requests.get(2).getPickup().getAddress().getId(),requests.get(2).getPickup());
-            put(requests.get(2).getDelivery().getAddress().getId(),requests.get(2).getDelivery());
-       }};
+*/
+
 
         Graph stopsGraph = new CompleteGraph(stops.size());
         for (int i = 0; i<stops.size();i++) {

@@ -71,6 +71,7 @@ public class MapData extends Observable {
      * Constructor for the class MapData, initializes the attributes intersections and segments.
      */
     public MapData() {
+        Intersection.resetIdCounter();
         intersectionsByOldID = new HashMap<>();
         segments = new ArrayList<>();
     }
