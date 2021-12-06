@@ -186,10 +186,8 @@ public class MapLoader {
 
             // remove intersections that are in no segment
             List<String> intersectionsToBeRemoved = new ArrayList<>();
-            for (Intersection intersection : intersections) {
-                String intersectionId = Integer.toString(intersection.getId());
-            /*for (Map.Entry<String, Intersection> entry : intersectionsById.entrySet()) {
-                String intersectionId = entry.getKey();*/
+            for (Map.Entry<String, Intersection> entry : intersectionsById.entrySet()) {
+                String intersectionId = entry.getKey();
                 if (!intersectionIdsInGraph.contains(intersectionId)) {
                     // intersection in no segment
                     intersectionsToBeRemoved.add(intersectionId);
@@ -198,6 +196,14 @@ public class MapLoader {
             for (String intersectionId : intersectionsToBeRemoved) {
                 intersections.remove(intersectionsById.get(intersectionId));
                 intersectionsById.remove(intersectionId);
+            }
+            // after deletions, reindex all intersections
+            if (!intersectionsToBeRemoved.isEmpty()) {
+                int id = 0;
+                for (Intersection i : intersections) {
+                    i.setId(id);
+                    id++;
+                }
             }
 
             map.setIntersectionsByOldID(intersectionsById);
