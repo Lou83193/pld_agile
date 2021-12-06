@@ -65,7 +65,7 @@ public class RequestLoader {
         }
         // DOM can be handled
         try {
-            Map<String, Intersection> interectionsByOldId = tour.getAssociatedMap().getIntersectionsByOldID();
+            Map<String, Intersection> intersectionsByOldId = tour.getAssociatedMap().getIntersectionsByOldID();
 
             List<Node> requestNodes = tourXmlDocument.selectNodes("/planningRequest/request");
             Node warehouseNode = tourXmlDocument.selectNodes("/planningRequest/depot").get(0);
@@ -77,22 +77,22 @@ public class RequestLoader {
             String[] time = warehouseElement.attributeValue("departureTime").split(":");
             LocalTime departureTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
             tour.setDepartureTime(departureTime);
-            if (!interectionsByOldId.containsKey(warehouseElement.attributeValue("address"))) {
+            if (!intersectionsByOldId.containsKey(warehouseElement.attributeValue("address"))) {
                 // the warehouse isn't on the map
                 throw new SyntaxException("The warehouse is on an adress that doesn't exist on the loaded map.");
             }
-            Intersection warehouseLocation = interectionsByOldId.get(warehouseElement.attributeValue("address"));
+            Intersection warehouseLocation = intersectionsByOldId.get(warehouseElement.attributeValue("address"));
             Stop warehouse = new Stop(null, warehouseLocation, 0, StopType.WAREHOUSE);
             tour.setWarehouse(warehouse);
             stopList.add(warehouse);
 
             for (Node requestNode : requestNodes) {
                 Element requestElement = (Element) requestNode;
-                if (interectionsByOldId.containsKey(requestElement.attributeValue("pickupAddress")) && interectionsByOldId.containsKey(requestElement.attributeValue("deliveryAddress"))) {
+                if (intersectionsByOldId.containsKey(requestElement.attributeValue("pickupAddress")) && intersectionsByOldId.containsKey(requestElement.attributeValue("deliveryAddress"))) {
                     // we only take a request into account if both its stops are on known intersections
-                    Intersection pickupLocation = interectionsByOldId.get(requestElement.attributeValue("pickupAddress"));
+                    Intersection pickupLocation = intersectionsByOldId.get(requestElement.attributeValue("pickupAddress"));
                     long pickupDuration = Long.parseLong(requestElement.attributeValue("pickupDuration"));
-                    Intersection deliveryLocation = interectionsByOldId.get(requestElement.attributeValue("deliveryAddress"));
+                    Intersection deliveryLocation = intersectionsByOldId.get(requestElement.attributeValue("deliveryAddress"));
                     long deliveryDuration = Long.parseLong(requestElement.attributeValue("deliveryDuration"));
                     Request request = new Request();
                     Stop pickup = new Stop(request, pickupLocation, pickupDuration, StopType.PICKUP);

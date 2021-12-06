@@ -27,7 +27,7 @@ public class RequestLoaderTests {
     private final TourData tourData = new TourData();
     private RequestLoader requestLoader = null;
 
-    @BeforeEach
+    /*@BeforeEach
     public void loadMap (){
         try {
             mapLoader.load();
@@ -202,6 +202,6 @@ public class RequestLoaderTests {
     public void testNoRequestNode() {
         requestLoader = new RequestLoader("test/resources/loadRequests_noRequestNode.xml", tourData);
         assertThrows(Exception.class, requestLoader::load);
-    }
+    }*/
 
 }

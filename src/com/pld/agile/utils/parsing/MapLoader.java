@@ -46,6 +46,31 @@ public class MapLoader {
         this.map = map;
     }
 
+    //GETTER
+    /**
+     * Getter for attribute mapFilePath.
+     * @return mapFilePath
+     */
+    public String getMapFilePath() {
+        return mapFilePath;
+    }
+
+    /**
+     * Getter for attribute getMapXmlDocument.
+     * @return getMapXmlDocument
+     */
+    public Document getMapXmlDocument() {
+        return mapXmlDocument;
+    }
+
+    /**
+     * Getter for attribute getMapXmlDocument.
+     * @return getMapXmlDocument
+     */
+    public MapData getMap() {
+        return map;
+    }
+
     /**
      * Adds a segment to the application model : Used to guarantee that there is only one segment of same origin & destination - makes up keep the shortest one in that case.
      * @param segments
