@@ -206,6 +206,7 @@ public class Window extends Application {
             new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR)
         );
         mainSceneButton.prefWidthProperty().bind(sidePanelWidth);
+        mainSceneButton.setCursor(Cursor.DEFAULT);
         buttonWrapper.getChildren().add(mainSceneButton);
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);

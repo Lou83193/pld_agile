@@ -116,7 +116,10 @@ public class ComputedTourState implements State {
         w.toggleMenuItem(0, 0, false);
         w.toggleMenuItem(0, 1, false);
         w.toggleMenuItem(0, 2, false);
-        w.toggleMainSceneButton(false);
+        w.setMainSceneButton(
+                "Cancel",
+                new ButtonListener(c, ButtonEventType.CANCEL_ADD_REQUEST)
+        );
         c.setCurrState(c.addingRequestState1);
     }
 

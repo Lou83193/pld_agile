@@ -25,6 +25,10 @@ public enum ButtonEventType {
      */
     ADD_REQUEST,
     /**
+     * Event invoked to cancel adding a request to the tour.
+     */
+    CANCEL_ADD_REQUEST,
+    /**
      * Event invoked to undo an action
      */
     UNDO,

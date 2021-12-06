@@ -176,6 +176,12 @@ public class Controller {
         currState.doStartAddRequest(this, window);
     }
     /**
+     * Calls method doCancelAddRequest() of the current state.
+     */
+    public void cancelAddRequest() {
+        currState.doCancelAddRequest(this, window);
+    }
+    /**
      * Calls method dragOnGraphicalStop() of the current state.
      */
     public void dragOnGraphicalStop() {
