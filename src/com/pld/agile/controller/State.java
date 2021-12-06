@@ -108,9 +108,8 @@ public interface State {
     /**
      * Fires when a graphical stop is dragged across the graphical view.
      * @param c the controller
-     * @param w the application window
      */
-    default void doDragOnGraphicalStop(Controller c, Window w) {
+    default void doDragOnGraphicalStop(Controller c) {
     }
 
     /**

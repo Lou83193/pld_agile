@@ -127,19 +127,14 @@ public class ComputedTourState implements State {
     /**
      * Starts moving a stop on the map by entering the moving stop state.
      * @param c the controller
-     * @param w the application window
      */
     @Override
-    public void doDragOnGraphicalStop(Controller c, Window w) {
-        w.unhighlightStops();
-        w.toggleMenuItem(1, 0, false);
-        w.toggleMenuItem(1, 1, false);
+    public void doDragOnGraphicalStop(Controller c) {
         c.setCurrState(c.movingStopState);
     }
 
     /**
      * Changes the duration of a stop and recomputes hours of passage.
-     * @param c the controller
      * @param w the application window
      * @param stop the modified stop
      * @param newDuration the new duration of the stop
@@ -151,7 +146,6 @@ public class ComputedTourState implements State {
 
     /**
      * Changes the departure time from the warehouse and recomputes hours of passage.
-     * @param c the controller
      * @param w the application window
      * @param time the new departure time
      */

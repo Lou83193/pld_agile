@@ -187,7 +187,7 @@ public class Controller {
      * Calls method dragOnGraphicalStop() of the current state.
      */
     public void dragOnGraphicalStop() {
-        currState.doDragOnGraphicalStop(this, window);
+        currState.doDragOnGraphicalStop(this);
     }
     /**
      * Calls method releaseOnGraphicalView() of the current state.
