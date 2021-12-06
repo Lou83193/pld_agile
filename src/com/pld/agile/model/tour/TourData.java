@@ -196,41 +196,31 @@ public class TourData extends Observable implements Observer {
      * @throws PathException If computing dijkstra with the new request caused an exception.
      */
     public void addLatestRequest(int pickupNumber, int deliveryNumber) throws PathException {
-        
-        dijkstra();
+
         Stop newPickup = stopsList.get(stopsList.size() - 2);
         Stop newDelivery = stopsList.get(stopsList.size() - 1);
 
-        int i = pickupNumber - 1;
-        boolean deliveryFound = false;
-        // première fois
-        int stopIndexOrigin = tourPaths.get(i).getOrigin().getId();
-        int stopIndexDestination = tourPaths.get(i).getDestination().getId();
-        tourPaths.remove(tourPaths.get(i));
-        tourPaths.add(i, stopsGraph.getPath(stopIndexOrigin,newPickup.getId()));
+        dijkstra();
 
-        if (deliveryNumber == pickupNumber + 1) {
-            tourPaths.add(i + 1, stopsGraph.getPath(newPickup.getId(), newDelivery.getId()));
-            i++;
-            tourPaths.add(i + 2, stopsGraph.getPath(newDelivery.getId(),stopIndexDestination));
-            i++;
-            deliveryFound = true;
-        } else {
-            tourPaths.add(i + 1, stopsGraph.getPath(newPickup.getId(), stopIndexDestination));
-            i++;
+        //Build a list of all the stops in the tour in order
+        ArrayList<Stop> tourStops = new ArrayList<>();
+        for (int i = 0; i < tourPaths.size(); i++) {
+            Stop currStop = tourPaths.get(i).getOrigin();
+            tourStops.add(currStop);
         }
 
-         while (!deliveryFound) {
+        tourStops.add(pickupNumber, newPickup);
+        tourStops.add(deliveryNumber, newDelivery);
 
-            if (i == deliveryNumber - 1) {
-                stopIndexOrigin = tourPaths.get(i).getOrigin().getId();
-                stopIndexDestination = tourPaths.get(i).getDestination().getId();
-                tourPaths.remove(tourPaths.get(i));
-                tourPaths.add(i, stopsGraph.getPath(stopIndexOrigin,newDelivery.getId()));
-                tourPaths.add(i + 1, stopsGraph.getPath(newDelivery.getId(), stopIndexDestination));
-                deliveryFound=true;
-            }
-            i++;
+        //Reconstruct tourPaths
+        tourPaths.clear();
+        int n = tourStops.size();
+        for (int i = 0; i < n; i++) {
+            int indexOrigin = tourStops.get(i).getId();
+            int indexDestination = tourStops.get((i + 1) % n).getId();
+            Path path = stopsGraph.getPath(indexOrigin, indexDestination);
+            tourPaths.add(path);
+            System.out.println(tourStops.get(i).getStopNumber() + "; " + tourStops.get((i + 1) % n).getStopNumber());
         }
 
         updateStopsTimesAndNumbers();
@@ -271,7 +261,7 @@ public class TourData extends Observable implements Observer {
     /**
      * Recalculates the stop IDs so that they match their position in the stopsList.
      */
-    private void recomputeStopIDs() {
+    public void recomputeStopIDs() {
         for (int i = 0; i < stopsList.size(); i++) {
             stopsList.get(i).setId(i);
         }

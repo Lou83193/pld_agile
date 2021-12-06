@@ -185,6 +185,7 @@ public class Stop extends Observable {
                 "id=" + id +
                 ", address=" + address +
                 ", duration=" + duration +
+                ", stopNumber=" + stopNumber +
                 '}';
     }
 

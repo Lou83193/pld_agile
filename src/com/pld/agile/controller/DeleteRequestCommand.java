@@ -49,9 +49,10 @@ public class DeleteRequestCommand implements Command {
     public void undoCommand() {
        tourData.getStopsList().add(request.getPickup());
        tourData.getStopsList().add(request.getDelivery());
-      try {
-          tourData.addLatestRequest(request.getId(), request.getId());
-      } catch (Exception e) {}
+       tourData.recomputeStopIDs();
+        try {
+          tourData.addLatestRequest(request.getPickup().getStopNumber(), request.getDelivery().getStopNumber());
+        } catch (Exception e) {}
     }
 
 }
