@@ -167,7 +167,7 @@ public class Controller {
      * Calls method changeStopDuration() of the current state.
      */
     public void changeStopDuration(Stop stop, int newDuration) {
-        currState.doChangeStopDuration(this, window, stop, newDuration);
+        currState.doChangeStopDuration(this, window, listOfCommands, stop, newDuration);
     }
     /**
      * Calls method startAddRequest() of the current state.

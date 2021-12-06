@@ -554,7 +554,7 @@ public class TourData extends Observable implements Observer {
             currentTime = currentTime.plusSeconds(currentStop.getDuration());
             currentStop.setDepartureTime(currentTime);
             double d = tourPaths.get(i).getLength();
-            int t = (int)(d/(15/3.6)) + 1;
+            int t = (int) (d / (15 / 3.6)) + 1;
             currentTime = currentTime.plusSeconds(t);
         }
         if (tourPaths.size() > 0) {

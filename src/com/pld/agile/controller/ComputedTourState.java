@@ -141,10 +141,8 @@ public class ComputedTourState implements State {
      * @param newDuration the new duration of the stop
      */
     @Override
-    public void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
-        TourData tourData = w.getTourData();
-        stop.setDuration(newDuration);
-        tourData.updateStopsTimesAndNumbers();
+    public void doChangeStopDuration(Controller c, Window w, ListOfCommands loc, Stop stop, long newDuration) {
+        loc.add(new ChangeStopDurationCommand(c, w, stop, newDuration));
     }
 
     /**
