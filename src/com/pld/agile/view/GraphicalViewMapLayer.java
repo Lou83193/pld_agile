@@ -79,6 +79,7 @@ public class GraphicalViewMapLayer extends Pane {
                     graphicalView,
                     segment,
                     3 * screenScale * mapScale,
+                    null,
                     graphicalView.getWindow().getStreetNameLabel()
             );
             this.getChildren().add(graphicalViewSegment);

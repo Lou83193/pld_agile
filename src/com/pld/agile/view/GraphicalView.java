@@ -150,6 +150,13 @@ public class GraphicalView implements Observer {
         return graphicalViewMapLayer;
     }
     /**
+     * Getter for graphicalViewTourLayer.
+     * @return graphicalViewTourLayer
+     */
+    public GraphicalViewTourLayer getGraphicalViewTourLayer() {
+        return graphicalViewTourLayer;
+    }
+    /**
      * Getter for window.
      * @return window
      */

@@ -7,6 +7,7 @@
 package com.pld.agile.view;
 
 import com.pld.agile.model.map.Segment;
+import com.pld.agile.model.tour.Path;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -25,14 +26,18 @@ public class GraphicalViewSegment extends Line {
      * @param graphicalView The parent GraphicalView instance.
      * @param segment The associated Segment model object.
      * @param strokeWidth The segment's line thickness.
+     * @param associatedPath The path the segmen's associated to (if any). A non-null path will make the segment invisible
      * @param displayer TextField in which to display the segment's street name
      *                  (when hovered).
      */
     public GraphicalViewSegment(final GraphicalView graphicalView,
                                 final Segment segment,
                                 final double strokeWidth,
+                                final GraphicalViewPath associatedPath,
                                 final TextField displayer) {
         super();
+        boolean isVisible = (associatedPath == null);
+        Color color = (isVisible) ? ViewUtilities.COLOURS.get("GREY") : Color.TRANSPARENT;
         double[] originPos = graphicalView.projectLatLon(segment.getOrigin());
         double[] destinationPos = graphicalView.projectLatLon(segment.getDestination());
         this.setStartX(originPos[0]);
@@ -40,20 +45,26 @@ public class GraphicalViewSegment extends Line {
         this.setEndX(destinationPos[0]);
         this.setEndY(destinationPos[1]);
         this.setStrokeWidth(strokeWidth);
-        this.setStroke(ViewUtilities.COLOURS.get("GREY"));
+        this.setStroke(color);
         this.setStrokeLineCap(StrokeLineCap.ROUND);
         if (displayer != null) {
             this.addEventHandler(MouseEvent.MOUSE_ENTERED,
                 e -> {
                     displayer.setText(segment.getName());
-                    this.setStroke(ViewUtilities.COLOURS.get("GREY").brighter());
+                    this.setStroke(color.brighter());
+                    if (associatedPath != null) {
+                        associatedPath.highlight();
+                    }
                     e.consume();
                 }
             );
             this.addEventHandler(MouseEvent.MOUSE_EXITED,
                 e -> {
                     displayer.setText("");
-                    this.setStroke(ViewUtilities.COLOURS.get("GREY"));
+                    this.setStroke(color);
+                    if (associatedPath != null) {
+                        associatedPath.unhighlight();
+                    }
                     e.consume();
                 }
             );

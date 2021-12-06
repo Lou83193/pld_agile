@@ -35,6 +35,24 @@ public class GraphicalViewTourLayer extends Pane {
     public GraphicalViewTourLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
         this.setPickOnBounds(false);
+
+        MapData mapData = graphicalView.getWindow().getMapData();
+        MouseClickNotDragDetector.clickNotDragDetectingOn(this)
+                .withPressedDurationThreshold(150)
+                .setOnMouseClickedNotDragged((mouseEvent) -> {
+                    graphicalView.getWindow().unhighlightStops();
+                    double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
+                            mouseEvent.getX(),
+                            mouseEvent.getY(),
+                            mapData.getMinLat(),
+                            mapData.getMinLon(),
+                            mapData.getMaxLat(),
+                            mapData.getMaxLon(),
+                            ((ScrollPane) graphicalView.getComponent()).getHeight()
+                    );
+                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
+                });
+
     }
 
     /**
@@ -62,13 +80,33 @@ public class GraphicalViewTourLayer extends Pane {
 
         for (Path path : tourPaths) {
 
+            // Create path
             GraphicalViewPath graphicalViewPath = new GraphicalViewPath(
                 graphicalView,
                 path,
                 6 * screenScale * mapScale,
-                    finished
+                finished
             );
             this.getChildren().add(graphicalViewPath);
+
+            // Create invisible segments
+            List<Segment> segments = path.getSegments();
+            for (Segment segment : segments) {
+
+                if (segment == null) {
+                    continue;
+                }
+
+                GraphicalViewSegment hitboxSegment = new GraphicalViewSegment(
+                        graphicalView,
+                        segment,
+                        6 * screenScale * mapScale,
+                        graphicalViewPath,
+                        graphicalView.getWindow().getStreetNameLabel()
+                );
+                this.getChildren().add(hitboxSegment);
+
+            }
 
         }
 
