@@ -170,7 +170,7 @@ public class TourData extends Observable implements Observer {
      * @return The new request.
      */
     public Request constructNewRequest2(Intersection intersection) {
-        Request newRequest = stopsList.get(stopsList.size()-1).getRequest();
+        Request newRequest = stopsList.get(stopsList.size() - 1).getRequest();
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
         stopsList.add(newDelivery);
@@ -180,7 +180,7 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Removes the latest stop from the list of stops
+     * Removes the latest stop from the list of stops.
      */
     public void deconstructNewRequest1() {
         if (stopsList.size() > 1) {
@@ -270,7 +270,6 @@ public class TourData extends Observable implements Observer {
     /**
      * Removes a request from the tour.
      * @param request The request to be removed.
-     * @return boolean success.
      */
     public void deleteRequest(Request request) {
 
@@ -355,7 +354,9 @@ public class TourData extends Observable implements Observer {
         for (int i = 0; i < tourPaths.size(); i++) {
             Stop currStop = tourPaths.get(i).getDestination();
             listStops.add(currStop);
-            if (currStop.equals(stop)) { stopIndex = i+1; }
+            if (currStop.equals(stop)) {
+                stopIndex = i + 1;
+            }
         }
 
         //Check if the stop is allowed to move in the direction
@@ -391,7 +392,9 @@ public class TourData extends Observable implements Observer {
         for (int i = 0; i < tourPaths.size(); i++) {
             Stop currStop = tourPaths.get(i).getDestination();
             tourStops.add(currStop);
-            if (currStop.equals(stop)) { stopIndex = i+1; }
+            if (currStop.equals(stop)) {
+                stopIndex = i + 1;
+            }
         }
 
         if (stopIsShiftable(stop, dir)) {
@@ -401,7 +404,7 @@ public class TourData extends Observable implements Observer {
 
             //Reconstruct tourPaths
             tourPaths.clear();
-            int n = tourStops.size()-1;
+            int n = tourStops.size() - 1;
             for (int i = 0; i < n; i++) {
                 int indexOrigin = tourStops.get(i).getId();
                 int indexDestination = tourStops.get((i + 1) % n).getId();
@@ -428,14 +431,14 @@ public class TourData extends Observable implements Observer {
         stop.setAddress(newIntersection);
         dijkstra();
 
-        for (int i = 0; i < tourPaths.size() ; i++) {
+        for (int i = 0; i < tourPaths.size(); i++) {
             if (tourPaths.get(i).getDestination() == stop) {
                 int stopIdBefore = tourPaths.get(i).getOrigin().getId();
-                int stopIdAfter = tourPaths.get(i+1).getDestination().getId();
+                int stopIdAfter = tourPaths.get(i + 1).getDestination().getId();
                 tourPaths.remove(tourPaths.get(i));
                 tourPaths.remove(tourPaths.get(i));
                 tourPaths.add(i, stopsGraph.getPath(stopIdBefore, stop.getId()));
-                tourPaths.add(i+1,stopsGraph.getPath(stop.getId(), stopIdAfter));
+                tourPaths.add(i + 1, stopsGraph.getPath(stop.getId(), stopIdAfter));
             }
         }
 
@@ -443,10 +446,18 @@ public class TourData extends Observable implements Observer {
 
     }
 
+    /**
+     * Getter for attribute stopsList.
+     * @return stopsList the list of stops composing the requests and the warehouse
+     */
     public List<Stop> getStopsList() {
         return stopsList;
     }
 
+    /**
+     * Setter for attribute stopsList.
+     * @param stopsList the List of stops composing the requests and the warehouse
+     */
     public void setStopsList(List<Stop> stopsList) {
         this.stopsList = stopsList;
         notifyObservers(UpdateType.REQUESTS);
@@ -462,7 +473,7 @@ public class TourData extends Observable implements Observer {
 
     /**
      * Computes a tour, by first computing the paths between all stops with dijkstra,
-     * then finding the best tour with tsp
+     * then finding the best tour with tsp.
      * @throws PathException If computing dijkstra caused an exception.
      */
     public void computeTour() throws PathException {
@@ -505,8 +516,8 @@ public class TourData extends Observable implements Observer {
         for (int currStopId : stops) {
 
             // Current Stop Variables
-            double [] dist = new double[nbIntersections]; //index = intersection id in map data
-            int [] pi = new int[nbIntersections]; //index = intersection id in map data
+            double[] dist = new double[nbIntersections]; //index = intersection id in map data
+            int[] pi = new int[nbIntersections]; //index = intersection id in map data
             Set<Integer> settled = new HashSet<>();
 
             PriorityQueue<Integer> pq = new PriorityQueue<>(
@@ -560,8 +571,8 @@ public class TourData extends Observable implements Observer {
 
                     settled.add(node);
 
-                    if(stops.contains(node)) {
-                        nbStopCalculated ++;
+                    if (stops.contains(node)) {
+                        nbStopCalculated++;
                     }
             }
 
@@ -680,17 +691,17 @@ public class TourData extends Observable implements Observer {
     /**
      * Processes a TSP result (algorithm giving an intermediary or final result)
      * by populating tourPaths with the appropriate Paths from the stopsGraph
-     * and setting the stop's times / order of passage
+     * and setting the stop's times / order of passage.
      * @param tsp The TSP instance holding the result
      */
     public void processTSPUpdate(TSP tsp) {
         System.out.println("Solution cost: " + tsp.getSolutionCost());
         tourPaths = new ArrayList<>();
         int n = stopsGraph.getNbVertices();
-        for(int i = 0; i < n-1; i++) {
-            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i),tsp.getSolution(i+1)));
+        for (int i = 0; i < n - 1; i++) {
+            tourPaths.add(stopsGraph.getPath(tsp.getSolution(i), tsp.getSolution(i + 1)));
         }
-        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n-1), tsp.getSolution(0)));
+        tourPaths.add(stopsGraph.getPath(tsp.getSolution(n - 1), tsp.getSolution(0)));
         setStopsTimesAndNumbers();
     }
 
@@ -711,7 +722,7 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Generates a String which describes the object
+     * Generates a String which describes the object.
      * @return type String
      */
     @Override
