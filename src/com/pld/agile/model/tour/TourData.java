@@ -70,7 +70,6 @@ public class TourData extends Observable implements Observer {
      */
     public TourData() {
         super();
-        //requestList = new ArrayList<>();
         stopsList = new ArrayList<>();
         tourPaths = new ArrayList<>();
         associatedMap = null;
@@ -204,8 +203,8 @@ public class TourData extends Observable implements Observer {
 
         //Build a list of all the stops in the tour in order
         ArrayList<Stop> tourStops = new ArrayList<>();
-        for (int i = 0; i < tourPaths.size(); i++) {
-            Stop currStop = tourPaths.get(i).getOrigin();
+        for (Path tourPath : tourPaths) {
+            Stop currStop = tourPath.getOrigin();
             tourStops.add(currStop);
         }
 

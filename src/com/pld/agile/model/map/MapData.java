@@ -225,7 +225,6 @@ public class MapData extends Observable {
         double shortest = Double.MAX_VALUE;
         Intersection closestIntersection = null;
         double distanceToIntersection;
-        int bound = intersections.size();
 
         // loop through all intersections
         for (Intersection intersection : intersections) {

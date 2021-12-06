@@ -85,7 +85,9 @@ class MapDataTest {
         segments.add(seg2To3);
 
         MapData mapData = new MapData(intersections,segments);
-
-        assertEquals(inter1.toString(),mapData.findClosestIntersection(new double[] {50,58}).toString());
+        double[] coord = {50,58};
+        System.out.println(mapData);
+        Intersection res = mapData.findClosestIntersection(coord);
+        assertEquals(inter1.toString(),res.toString());
     }
 }

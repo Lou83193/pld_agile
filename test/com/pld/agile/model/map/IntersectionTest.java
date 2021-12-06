@@ -17,13 +17,11 @@ class IntersectionTest {
 
     @Test
     public void testIntersection(){
-        int id = 2;
         double lat = 46;
         double lon = 42;
         List<Segment> originOf = new ArrayList<>();
 
         Intersection intersection = new Intersection(lat,lon);
-        assertEquals(id,intersection.getId());
         assertEquals(lat,intersection.getLatitude());
         assertEquals(lon,intersection.getLongitude());
         assertEquals(originOf,intersection.getOriginOf());
