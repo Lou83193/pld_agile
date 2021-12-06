@@ -167,6 +167,16 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
+     * Removes the latest stop from the list of stops
+     */
+    public void deconstructNewRequest1() {
+        if (stopsList.size() > 1) {
+            stopsList.remove(stopsList.size() - 1);
+            notifyObservers(UpdateType.TOUR);
+        }
+    }
+
+    /**
      * Adds the latest request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
      * @throws PathException If computing dijkstra with the new request caused an exception.
      */
@@ -593,7 +603,7 @@ public class TourData extends Observable implements Observer {
         tsp.searchSolution(120000, stopsGraph);
         Platform.runLater(() -> {
             if (tourComputingThread != null && !tourComputingThread.isInterrupted()) {
-                System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+                System.out.println("TSP solution found in " + (System.currentTimeMillis() - startTime) + "ms");
                 processTSPUpdate(tsp);
             }
         });
@@ -607,6 +617,7 @@ public class TourData extends Observable implements Observer {
      * @param tsp The TSP instance holding the result
      */
     public void processTSPUpdate(TSP tsp) {
+        System.out.println("Solution cost: " + tsp.getSolutionCost());
         tourPaths = new ArrayList<>();
         int n = stopsGraph.getNbVertices();
         for(int i = 0; i < n-1; i++) {

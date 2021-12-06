@@ -158,6 +158,14 @@ public interface State {
     }
 
     /**
+     * Fires when the user clicks on the "Cancel" button.
+     * @param c the controller
+     * @param w the application window
+     */
+    default void doCancelAddRequest(Controller c, Window w) {
+    }
+
+    /**
      * Fires when the user has modified the duration of a stop
      * (after pressing enter or clicking out of the text field)
      * @param c the controller

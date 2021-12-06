@@ -9,6 +9,8 @@ package com.pld.agile.controller;
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.PathException;
+import com.pld.agile.view.ButtonEventType;
+import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
@@ -77,10 +79,13 @@ public class AddRequestCommand implements Command {
             alert.showAndWait();
         }
         window.getScene().setCursor(Cursor.DEFAULT);
-        window.toggleMainSceneButton(true);
         window.toggleMenuItem(0, 0, true);
         window.toggleMenuItem(0, 1, true);
         window.toggleMenuItem(0, 2, false);
+        window.setMainSceneButton(
+                "Cancel",
+                new ButtonListener(controller, ButtonEventType.ADD_REQUEST)
+        );
         controller.setCurrState(controller.computedTourState);
     }
 
