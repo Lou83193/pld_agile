@@ -173,6 +173,9 @@ public class GraphicalViewStop extends Pane {
                     if (stop.getRequest() != null) {
                         Stop pickup = stop.getRequest().getPickup();
                         Stop delivery = stop.getRequest().getDelivery();
+                        if (pickup == null || delivery == null) {
+                            return;
+                        }
                         GraphicalViewStop pickupGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(pickup)[0];
                         GraphicalViewStop deliveryGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(delivery)[0];
                         TextualViewStop pickupTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(pickup)[1];

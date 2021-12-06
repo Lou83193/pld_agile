@@ -62,7 +62,7 @@ public class MoveStopCommand implements Command {
         try {
             tourData.moveStop(stop, newIntersection);
         } catch (PathException e) {
-            e.printStackTrace();
+            undoCommand();
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.setTitle("Error"); // force english
             alert.setHeaderText("Computing path error");

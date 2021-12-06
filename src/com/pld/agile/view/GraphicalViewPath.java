@@ -38,6 +38,9 @@ public class GraphicalViewPath extends Polyline {
         int count = 0;
         List<Segment> pathSegments = path.getSegments();
         for (Segment segment : pathSegments) {
+            if (segment == null) {
+                continue;
+            }
             if (count == 0) {
                 double[] originPos = graphicalView.projectLatLon(segment.getOrigin());
                 this.getPoints().addAll(originPos[0], originPos[1]);

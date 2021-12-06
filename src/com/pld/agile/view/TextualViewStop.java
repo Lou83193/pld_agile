@@ -160,6 +160,7 @@ public class TextualViewStop extends VBox {
                 arrivalHourInput.setMouseTransparent(true);
                 arrivalHourInput.setPrefWidth(60);
                 arrivalHourInput.getStyleClass().add("textual-view-stop-panel-hour");
+                arrivalHourInput.getStyleClass().add("uneditable-textfield");
                 // Adding them together
                 labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText, arrivalHourInput);
             } else {
@@ -191,7 +192,7 @@ public class TextualViewStop extends VBox {
         contentPane.setTop(labelPanel);
 
         // Position
-        Text posText = new Text("Position:");
+        Text posText = new Text("Position (lat/lon):");
         TextField posInput = new TextField("(" + lat + "; " + lon + ")");
         posInput.setEditable(false);
         posInput.setMouseTransparent(true);
@@ -202,7 +203,7 @@ public class TextualViewStop extends VBox {
 
         // Duration
         if (type != StopType.WAREHOUSE) {
-            Text durationText = new Text("Duration:");
+            Text durationText = new Text("Duration (sec):");
             TextField durationInput = new TextField((int)duration + "");
             durationInput.setFocusTraversable(false);
             if (editable) {

@@ -72,7 +72,6 @@ public class AddRequestCommand implements Command {
             tourData.addLatestRequest();
         } catch (PathException e) {
             undoCommand();
-            e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.setTitle("Error"); // force english
             alert.setHeaderText("Computing path error");
