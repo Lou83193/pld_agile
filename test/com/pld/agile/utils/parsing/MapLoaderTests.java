@@ -28,13 +28,13 @@ public class MapLoaderTests {
         assertNotNull(mapLoader.getMapFilePath());
     }
 
+
     public void loadMap (String filePath){
         mapData = new MapData();
         mapLoader = new MapLoader(filePath, mapData);
         try {
             mapLoader.load();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     @Test
@@ -68,8 +68,8 @@ public class MapLoaderTests {
     @Test
     public void test4Intersection4Segments() {
         loadMap("test/resources/loadMap_4Inter4Seg.xml");
-        assertFalse( mapData.getIntersections().size()==5);
-        assertTrue(mapData.getSegments().size()==4);
+        assertNotEquals(5, mapData.getIntersections().size());
+        assertEquals(4, mapData.getSegments().size());
     }
 
 
@@ -90,35 +90,35 @@ public class MapLoaderTests {
     @Test
     public void testSameIntersectionSegment() {
         loadMap("test/resources/loadMap_sameIntersectionsSegment.xml");
-        assertFalse(mapData.getSegments().size()==4);
+        assertNotEquals(4, mapData.getSegments().size());
     }
 
 
     @Test
     public void testSegmentLengthZero() {
         loadMap("test/resources/loadMap_segmentLength0.xml");
-        assertFalse(mapData.getSegments().size()==4);
+        assertNotEquals(4, mapData.getSegments().size());
     }
 
 
     @Test
     public void testNonexistentOrigin() {
         loadMap("test/resources/loadMap_noOriginSegment.xml");
-        assertFalse(mapData.getSegments().size()==4);
+        assertNotEquals(4, mapData.getSegments().size());
     }
 
 
     @Test
     public void testIntersectionNoId() {
         loadMap("test/resources/loadMap_noId.xml");
-        assertFalse(mapData.getIntersections().size()==5);
+        assertNotEquals(5, mapData.getIntersections().size());
     }
 
 
     @Test
     public void testIntersectionsSameId() {
         loadMap("test/resources/loadMap_sameId.xml");
-        assertFalse(mapData.getIntersections().size()==5);
+        assertNotEquals(5, mapData.getIntersections().size());
         assertFalse(mapData.getIntersections().contains(new Intersection(45.0009,4.0)));
     }
 
@@ -126,29 +126,29 @@ public class MapLoaderTests {
     @Test
     public void testNoLatitude() {
         loadMap("test/resources/loadMap_noLat.xml");
-        assertFalse(mapData.getIntersections().size()==5);
+        assertNotEquals(5, mapData.getIntersections().size());
     }
 
 
     @Test
     public void testNoLongitude() {
         loadMap("test/resources/loadMap_noLong.xml");
-        assertFalse(mapData.getIntersections().size()==5);
+        assertNotEquals(5, mapData.getIntersections().size());
     }
 
 
     @Test
     public void testInvalidId() {
         loadMap("test/resources/loadMap_invalidId.xml");
-        assertFalse(mapData.getIntersections().size()==5);
-        assertFalse(mapData.getSegments().size()==4);
+        assertNotEquals(5, mapData.getIntersections().size());
+        assertNotEquals(4, mapData.getSegments().size());
     }
 
 
     @Test
     public void testInvalidCoords() {
         loadMap("test/resources/loadMap_invalidId.xml");
-        assertFalse(mapData.getIntersections().size()==5);
+        assertNotEquals(5, mapData.getIntersections().size());
     }
 
 }
