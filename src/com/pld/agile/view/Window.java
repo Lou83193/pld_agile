@@ -5,6 +5,7 @@ import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,7 +26,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Window class of the application.
@@ -128,7 +131,7 @@ public class Window extends Application {
      * Constructs the content pane of the home page.
      * Directly sets the homePane attribute.
      */
-    public void constructHomePane() {
+    private void constructHomePane() {
 
         homePane = new BorderPane();
         homePane.setId("home-pane");
@@ -153,7 +156,7 @@ public class Window extends Application {
         homePane.setCenter(homePage);
 
         // Bottom text
-        Text bottomText = new Text("v0.1 • by Hexanom-nom");
+        Text bottomText = new Text("v2.0 • by Hexanom-nom");
         bottomText.setFont(new Font(16));
         HBox bottom = new HBox();
         bottom.setPadding(new Insets(20));
@@ -167,7 +170,7 @@ public class Window extends Application {
      * Constructs the content pane of the main page.
      * Directly sets the mainPane attribute.
      */
-    public void constructMainPane() {
+    private void constructMainPane() {
 
         graphicalStopsMap = new HashMap<>();
 
@@ -230,7 +233,7 @@ public class Window extends Application {
      * Constructs the application's menu bar.
      * Directly sets the menuBar attribute.
      */
-    public void constructMenuBar() {
+    private void constructMenuBar() {
 
         // File menu
         Menu fileMenu = new Menu("File");
@@ -268,12 +271,62 @@ public class Window extends Application {
         Menu aboutMenu = new Menu("About");
         MenuItem aboutMenu1 = new MenuItem("Help");
         MenuItem aboutMenu2 = new MenuItem("Credits");
+        aboutMenu1.setOnAction((e) -> {
+            String path = "/sample_pdf.pdf";
+            HostServices hostServices = getHostServices();
+            hostServices.showDocument(getClass().getResource(path).toString());
+        });
+        aboutMenu2.setOnAction((e) -> {
+            Stage creditsStage = new Stage();
+            creditsStage.setTitle("Credits");
+            VBox creditsPane = constructCreditsPane();
+            creditsStage.setScene(new Scene(creditsPane, 400, 560));
+            creditsStage.show();
+        });
         aboutMenu.getItems().addAll(aboutMenu1, aboutMenu2);
 
         // Menu bar
         menuBar = new MenuBar();
         menuBar.setCursor(Cursor.DEFAULT);
         menuBar.getMenus().addAll(fileMenu, editMenu, aboutMenu);
+
+    }
+
+    private VBox constructCreditsPane() {
+
+        List<String[]> creditsStrings = new ArrayList<>();
+        creditsStrings.add(new String[] {"Daniel Blasko", "Scrum Master"});
+        creditsStrings.add(new String[] {"Emilien Marchet", "Quality Manager"});
+        creditsStrings.add(new String[] {"Laetitia Dodo", "Lead Tests Engineer"});
+        creditsStrings.add(new String[] {"Nolwenn Deschand", "Backend Developer"});
+        creditsStrings.add(new String[] {"Lou Bezzina", "Backend Developer"});
+        creditsStrings.add(new String[] {"Damien-Joseph Rispal", "Algorithms Developer"});
+        creditsStrings.add(new String[] {"Marcus Toma", "Frontend Developer"});
+
+        VBox pane = new VBox(25);
+        pane.setAlignment(Pos.CENTER);
+
+        Text header = new Text("Made with love by:");
+        header.getStyleClass().add("credit-header");
+        pane.getChildren().add(header);
+
+        VBox listPane = new VBox(8);
+        listPane.setAlignment(Pos.CENTER);
+        for (String[] credit : creditsStrings) {
+            VBox creditPane = new VBox(2);
+            creditPane.setAlignment(Pos.CENTER);
+            Text name = new Text(credit[0]);
+            Text role = new Text(credit[1]);
+            name.getStyleClass().add("credit-name");
+            role.getStyleClass().add("credit-role");
+            creditPane.getChildren().addAll(name, role);
+            listPane.getChildren().add(creditPane);
+        }
+        pane.getChildren().add(listPane);
+
+        pane.getStylesheets().add("stylesheet.css");
+
+        return pane;
 
     }
 
@@ -326,13 +379,6 @@ public class Window extends Application {
                 topNode.setPadding(new Insets(0, 20, 20, 20));
             }
         }
-    }
-
-    /**
-     * Deactivates the main scene's button
-     */
-    public void toggleMainSceneButton(boolean enabled) {
-        mainSceneButton.setDisable(!enabled);
     }
 
     /**

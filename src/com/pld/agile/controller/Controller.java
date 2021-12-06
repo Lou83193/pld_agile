@@ -203,13 +203,13 @@ public class Controller {
         currState.doChangeWarehouseDepartureTime(window, listOfCommands, time);
     }
     /**
-     * Calls method undo() of the current state.
+     * Calls method doUndo() of the current state.
      */
     public void undo() {
         currState.doUndo(window, listOfCommands);
     }
     /**
-     * Calls method redo() of the current state.
+     * Calls method doRedo() of the current state.
      */
     public void redo() {
         currState.doRedo(window, listOfCommands);

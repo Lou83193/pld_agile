@@ -71,3 +71,19 @@
     -fx-font-weight: bold;
     -fx-font-size: 11pt;
 }
+
+.credit-header {
+    -fx-font-weight: bold;
+    -fx-font-size: 16pt;
+    -fx-fill: #ED6A08;
+}
+
+.credit-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+
+.credit-role {
+    -fx-font-size: 12pt;
+    -fx-fill: #434343;
+}

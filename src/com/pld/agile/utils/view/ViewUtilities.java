@@ -172,6 +172,11 @@ public class ViewUtilities {
         return new Color(r, g, b, 1.0).brighter();
     }
 
+    /**
+     * Returns a random colour based on the given random seed.
+     * @param seed The random seed.
+     * @return A random colour.
+     */
     public static Color getRandomColour(final int seed) {
         Random rand = new Random(seed);
         float r = rand.nextFloat();

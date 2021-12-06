@@ -33,7 +33,7 @@ public enum ButtonEventType {
      */
     UNDO,
     /**
-     * Event invooked to redo an action
+     * Event invoked to redo an action
      */
-    REDO
+    REDO,
 }
