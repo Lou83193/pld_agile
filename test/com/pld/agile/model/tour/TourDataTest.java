@@ -51,13 +51,13 @@ public class TourDataTest {
             //compute tour
             List<Path> paths = new ArrayList<>();
 
-            paths.add(new Path(tourData.getWarehouse(),tourData.getStopsList().get(0)));
-            paths.add(new Path(tourData.getStopsList().get(0),tourData.getStopsList().get(1)));
+            paths.add(new Path(tourData.getWarehouse(),tourData.getStopsList().get(1)));
             paths.add(new Path(tourData.getStopsList().get(1),tourData.getStopsList().get(2)));
             paths.add(new Path(tourData.getStopsList().get(2),tourData.getStopsList().get(3)));
             paths.add(new Path(tourData.getStopsList().get(3),tourData.getStopsList().get(4)));
             paths.add(new Path(tourData.getStopsList().get(4),tourData.getStopsList().get(5)));
-            paths.add(new Path(tourData.getStopsList().get(5),tourData.getWarehouse()));
+            paths.add(new Path(tourData.getStopsList().get(5),tourData.getStopsList().get(6)));
+            paths.add(new Path(tourData.getStopsList().get(6),tourData.getWarehouse()));
             tourData.setTourPaths(paths);
 
             Graph stopsGraph = new CompleteGraph(tourData.getStopsList().size());
@@ -90,7 +90,7 @@ public class TourDataTest {
     @Test
     public void testDeleteRequest (){
         tourData.deleteRequest(tourData.getStopsList().get(1).getRequest());
-        assertEquals(4,tourData.getStopsList().size());
+        assertEquals(5,tourData.getStopsList().size());
     }
 
     @Test
@@ -100,18 +100,20 @@ public class TourDataTest {
         Request newRequest = new Request ();
         Stop pickup = new Stop (newRequest,pickupAddress,0,StopType.PICKUP);
         Stop delivery = new Stop (newRequest,deliveryAddress,0,StopType.DELIVERY);
-        newRequest.setDelivery(delivery);
         newRequest.setPickup(pickup);
+        newRequest.setDelivery(delivery);
 
         //tourData.getRequestList().add(newRequest);
         try {
-            tourData.addRequest(newRequest);
+            tourData.getStopsList().add(pickup);
+            tourData.getStopsList().add(delivery);
+            tourData.recomputeStopIDs();
+
+            tourData.addLatestRequest();
         } catch (Exception e) {}
 
         //stopsList
-        assertEquals(newRequest.getDelivery().getAddress().getId(),tourData.getStopsList().get(tourData.getStopsList().size()-1).getId());
-        //stopsMap
-        //assertEquals(newRequest.getDelivery(),tourData.getStopsList().get(newRequest.getDelivery().getAddress().getId()));
+        assertEquals(newRequest.getDelivery().getId(),tourData.getStopsList().get(tourData.getStopsList().size()-1).getId());
     }
 
     @Test
@@ -125,26 +127,26 @@ public class TourDataTest {
         newRequest.setPickup(pickup);
 
         tourData.constructNewRequest1(pickupAddress);
-        try {
-            tourData.constructNewRequest2(deliveryAddress);
-        } catch (PathException e) {}
+        tourData.constructNewRequest2(deliveryAddress);
 
-        assertEquals(newRequest.toString(),tourData.getStopsList().get(tourData.getStopsList().size()-1).toString());
+        tourData.recomputeStopIDs();
+
+        assertEquals(newRequest.toString(),tourData.getStopsList().get(tourData.getStopsList().size()-1).getRequest().toString());
 
     }
 
     @Test
     public void testStopIsShiftable() {
-        Stop stop = tourData.getTourPaths().get(0).getDestination();
-        assertTrue(tourData.stopIsShiftable(stop,2));
-        assertFalse(tourData.stopIsShiftable(stop,-2));
+        Stop stop = tourData.getStopsList().get(2);
+        assertTrue(tourData.stopIsShiftable(stop,1));
+        assertFalse(tourData.stopIsShiftable(stop,-1));
     }
 
     @Test
     public void testShiftStopOrder() {
-        Stop stop = tourData.getTourPaths().get(0).getDestination();
-        assertFalse(tourData.shiftStopOrder(stop,-2));
-        assertTrue(tourData.shiftStopOrder(stop,2));
+        Stop stop = tourData.getTourPaths().get(3).getDestination();
+        assertFalse(tourData.shiftStopOrder(stop,-1));
+        assertTrue(tourData.shiftStopOrder(stop,1));
 
     }
 
@@ -154,70 +156,6 @@ public class TourDataTest {
         assertFalse(tourDataEmpty.stopComputingTour());
         tourData.setTourComputingThread(new Thread());
         assertTrue(tourData.stopComputingTour());
-    }
-
-    @Test
-    public void testComputeTour(){
-
-    }
-
-    @Test
-    public void testProcessTSPUpdate(){
-        TourData unInitTourData = new TourData();
-        unInitTourData.setAssociatedMap(mapData);
-        RequestLoader requestLoader2 = new RequestLoader("test/resources/computeTour_notOptimalTour.xml", unInitTourData);
-        try {
-            requestLoader2.load();
-        } catch (SyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Integer> stops = new ArrayList<>();
-        stops.add(0);
-        stops.add(0);
-        stops.add(4);
-        stops.add(1);
-        stops.add(3);
-        stops.add(2);
-
-        List<Request> requests = new ArrayList<>();
-        for (int i = 0; i < tourData.getStopsList().size(); i++) {
-            Stop tempStop = tourData.getStopsList().get(i);
-            Request tempRequest = tempStop.getRequest();
-            boolean reqExists = false;
-            for (int j = 0; j < requests.size(); j++) {
-                if (requests.get(j).equals(tempRequest)) {
-                    reqExists = true;
-                    break;
-                }
-            }
-            if (!reqExists) { requests.add(tempRequest); }
-        }
-
-        HashMap<Integer,Stop> stopMap = new HashMap<>() {{
-            put(unInitTourData.getWarehouse().getAddress().getId(), unInitTourData.getWarehouse());
-            put(requests.get(0).getDelivery().getAddress().getId(),requests.get(0).getDelivery());
-            put(requests.get(1).getPickup().getAddress().getId(),requests.get(1).getPickup());
-            put(requests.get(2).getPickup().getAddress().getId(),requests.get(2).getPickup());
-            put(requests.get(2).getDelivery().getAddress().getId(),requests.get(2).getDelivery());
-        }};
-
-        Graph stopsGraph = new CompleteGraph(stops.size());
-        for (int i = 0; i<stops.size();i++) {
-            for (int j = 0; j<unInitTourData.getStopsList().size(); j++){
-                if(i!=j){
-                    Path path = new Path(stopMap.get(i),stopMap.get(j));
-                    stopsGraph.setPath(i, j, path);
-                    stopsGraph.setCost(i, j, path.getLength());
-                }
-            }
-        }
-        System.out.println();
-        unInitTourData.setStopsGraph(stopsGraph);
-        unInitTourData.processTSPUpdate(new TSP3(unInitTourData));
-        assertNotNull(unInitTourData.getTourPaths());
     }
 
 }
