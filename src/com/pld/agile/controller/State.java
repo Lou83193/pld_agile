@@ -125,9 +125,10 @@ public interface State {
      * Fires when the user clicks on the "delete" icon of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param request the request to delete.
      */
-    default void doDeleteRequest(Controller c, Window w, Request request) {
+    default void doDeleteRequest(Controller c, Window w, ListOfCommands loc, Request request) {
     }
 
     /**

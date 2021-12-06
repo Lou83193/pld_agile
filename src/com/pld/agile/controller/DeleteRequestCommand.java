@@ -47,7 +47,11 @@ public class DeleteRequestCommand implements Command {
      */
     @Override
     public void undoCommand() {
-        //hmm...
+       tourData.getStopsList().add(request.getPickup());
+       tourData.getStopsList().add(request.getDelivery());
+      try {
+          tourData.addLatestRequest(request.getId(), request.getId());
+      } catch (Exception e) {}
     }
 
 }

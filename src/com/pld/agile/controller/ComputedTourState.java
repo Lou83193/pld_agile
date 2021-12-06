@@ -70,12 +70,13 @@ public class ComputedTourState implements State {
      * Deletes a request from the tour.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param request the request to delete from the tour
      */
     @Override
-    public void doDeleteRequest(Controller c, Window w, Request request) {
+    public void doDeleteRequest(Controller c, Window w, ListOfCommands loc, Request request) {
         TourData tourData = w.getTourData();
-        tourData.deleteRequest(request);
+        loc.add(new DeleteRequestCommand(tourData, request));
     }
 
     /**

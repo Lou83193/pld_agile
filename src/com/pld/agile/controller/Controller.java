@@ -149,7 +149,7 @@ public class Controller {
      * Calls method deleteRequest() of the current state.
      */
     public void deleteRequest(Request request) {
-        currState.doDeleteRequest(this, window, request);
+        currState.doDeleteRequest(this, window, listOfCommands, request);
     }
     /**
      * Calls method shiftStopOrderUp() of the current state.
