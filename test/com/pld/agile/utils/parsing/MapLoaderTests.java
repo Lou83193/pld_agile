@@ -18,6 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MapLoaderTests {
 
     @Test
+    public void testMapLoader() {
+        MapLoader mapLoader = new MapLoader("test/resources/loadMap_5Inter4Seg.xml", new MapData());
+        assertNotNull(mapLoader.getMap());
+        assertNotNull(mapLoader.getMapFilePath());
+    }
+
+    @Test
     public void test5Intersections4Segments() {
         String filePath = "test/resources/loadMap_5Inter4Seg.xml";
         MapData actualMapData = new MapData();

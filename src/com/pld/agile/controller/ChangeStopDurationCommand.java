@@ -29,6 +29,7 @@ public class ChangeStopDurationCommand implements Command {
         this.window = w;
         this.stop = stop;
         this.newDuration = newDuration;
+        this.lastDuration = stop.getDuration();
     }
 
     /**
@@ -37,7 +38,6 @@ public class ChangeStopDurationCommand implements Command {
     @Override
     public void doCommand() {
         TourData tourData = window.getTourData();
-        lastDuration = stop.getDuration();
         stop.setDuration(newDuration);
         tourData.updateStopsTimesAndNumbers();
     }

@@ -16,8 +16,8 @@ class SegmentTest {
     public void testSegment(){
         String name = "Rue Jolie";
         double length = 42;
-        Intersection origin = new Intersection(2,852,963);
-        Intersection destination = new Intersection(1,52,93);
+        Intersection origin = new Intersection(852,963);
+        Intersection destination = new Intersection(52,93);
 
         Segment segment = new Segment(name,length,origin,destination);
 

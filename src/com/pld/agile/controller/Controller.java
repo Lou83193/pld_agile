@@ -191,7 +191,7 @@ public class Controller {
      * Calls method releaseOnGraphicalView() of the current state.
      */
     public void dragOffGraphicalStop(Stop stop, double[] latLonPos) {
-        currState.doDragOffGraphicalStop(this, window, stop, latLonPos);
+        currState.doDragOffGraphicalStop(this, window, listOfCommands, stop, latLonPos);
     }
     /**
      * Calls method changeWarehouseDepartureTime() of the current state.

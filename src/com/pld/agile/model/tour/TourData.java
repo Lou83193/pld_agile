@@ -13,11 +13,22 @@ import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.Observer;
 import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.tsp.*;
+import com.pld.agile.utils.tsp.CompleteGraph;
+import com.pld.agile.utils.tsp.Graph;
+import com.pld.agile.utils.tsp.TemplateTSP;
+import com.pld.agile.utils.tsp.TSP;
+//import com.pld.agile.utils.tsp.TSP1;
+//import com.pld.agile.utils.tsp.TSP2;
+import com.pld.agile.utils.tsp.TSP3;
 import javafx.application.Platform;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 /**
  * Stores the data of a loaded requests list.
@@ -41,16 +52,16 @@ public class TourData extends Observable implements Observer {
      */
     private LocalTime departureTime;
     /**
-     * Graph containing the minimal length between each stop of the request list,
-     * as well as the Path object between them. Computed with dijkstra.
+     * Graph containing the minimal length between each stop of the request
+     * list, as well as the Path object between them. Computed with dijkstra.
      */
     private Graph stopsGraph;
     /**
-     * The list of Paths composing the tour
+     * The list of Paths composing the tour.
      */
     private List<Path> tourPaths;
     /**
-     * The thread computing the tour (both dijkstra and tsp)
+     * The thread computing the tour (both dijkstra and tsp).
      */
     private Thread tourComputingThread;
 
@@ -68,14 +79,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute associatedMap
+     * Getter for attribute associatedMap.
      * @return associatedMap
      */
     public MapData getAssociatedMap() {
         return associatedMap;
     }
     /**
-     * Setter for attribute associatedMap
+     * Setter for attribute associatedMap.
      * @param associatedMap the map on which the tour takes place
      */
     public void setAssociatedMap(MapData associatedMap) {
@@ -83,14 +94,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute warehouse
+     * Getter for attribute warehouse.
      * @return warehouse
      */
     public Stop getWarehouse() {
         return warehouse;
     }
     /**
-     * Setter for attribute warehouse
+     * Setter for attribute warehouse.
      * @param warehouse the warehouse (start & end) Stop
      */
     public void setWarehouse(Stop warehouse) {
@@ -98,14 +109,14 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Getter for attribute departureTime
+     * Getter for attribute departureTime.
      * @return departureTime
      */
     public LocalTime getDepartureTime() {
         return departureTime;
     }
     /**
-     * Setter for attribute departureTime
+     * Setter for attribute departureTime.
      * @param departureTime the departure time from the warehouse
      */
     public void setDepartureTime(LocalTime departureTime) {
@@ -147,6 +158,7 @@ public class TourData extends Observable implements Observer {
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
         newRequest.setPickup(newPickup);
         stopsList.add(newPickup);
+        recomputeStopIDs();
         notifyObservers(UpdateType.TOUR);
         return newRequest;
     }
@@ -162,6 +174,7 @@ public class TourData extends Observable implements Observer {
         Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
         stopsList.add(newDelivery);
+        recomputeStopIDs();
         notifyObservers(UpdateType.TOUR);
         return newRequest;
     }
@@ -250,6 +263,15 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
+     * Recalculates the stop IDs so that they match their position in the stopsList.
+     */
+    private void recomputeStopIDs() {
+        for (int i = 0; i < stopsList.size(); i++) {
+            stopsList.get(i).setId(i);
+        }
+    }
+
+    /**
      * Removes a request from the tour.
      * @param request The request to be removed.
      * @return boolean success.
@@ -304,7 +326,7 @@ public class TourData extends Observable implements Observer {
         // Remove from stops list, decrease Stop Id counter
         stopsList.removeIf(pickup::equals);
         stopsList.removeIf(delivery::equals);
-        Stop.decreaseIdCounter(2);
+        recomputeStopIDs();
 
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             updateStopsTimesAndNumbers();
@@ -408,14 +430,21 @@ public class TourData extends Observable implements Observer {
     public void moveStop(Stop stop, Intersection newIntersection) throws PathException {
 
         stop.setAddress(newIntersection);
-
         dijkstra();
 
-        // TODO:
-        // - iterate through tourPaths, find the stop
-        // - set its paths to the new paths from stopsGraph (which has just been updated by dijkstra)
+        for (int i = 0; i < tourPaths.size() ; i++) {
+            if (tourPaths.get(i).getDestination() == stop) {
+                int stopIdBefore = tourPaths.get(i).getOrigin().getId();
+                int stopIdAfter = tourPaths.get(i+1).getDestination().getId();
+                tourPaths.remove(tourPaths.get(i));
+                tourPaths.remove(tourPaths.get(i));
+                tourPaths.add(i, stopsGraph.getPath(stopIdBefore, stop.getId()));
+                tourPaths.add(i+1,stopsGraph.getPath(stop.getId(), stopIdAfter));
+            }
+        }
 
         updateStopsTimesAndNumbers();
+
     }
 
     public List<Stop> getStopsList() {

@@ -114,10 +114,11 @@ public interface State {
      * Fires when a graphical stop is dropped on the graphical view (after a drag)
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the stop that is being dropped
      * @param latLonPos the position where the stop was dropped, in lat/lon coordinates
      */
-    default void doDragOffGraphicalStop(Controller c, Window w, Stop stop, double[] latLonPos) {
+    default void doDragOffGraphicalStop(Controller c, Window w, ListOfCommands loc, Stop stop, double[] latLonPos) {
     }
 
     /**

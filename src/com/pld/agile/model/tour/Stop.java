@@ -76,6 +76,14 @@ public class Stop extends Observable {
     }
 
     /**
+     * Setter for attribute ID.
+     * @param id ID of the stop.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Getter for attribute address.
      * @return address
      */

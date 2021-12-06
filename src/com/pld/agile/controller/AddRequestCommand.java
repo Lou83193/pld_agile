@@ -83,7 +83,7 @@ public class AddRequestCommand implements Command {
         window.toggleMenuItem(0, 1, true);
         window.toggleMenuItem(0, 2, false);
         window.setMainSceneButton(
-                "Cancel",
+                "Add request",
                 new ButtonListener(controller, ButtonEventType.ADD_REQUEST)
         );
         controller.setCurrState(controller.computedTourState);
