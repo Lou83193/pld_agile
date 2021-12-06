@@ -176,11 +176,53 @@ public class TourData extends Observable implements Observer {
         }
     }
 
+    public void redoAddRequest(int pickupNumber, int deliveryNumber) throws PathException {
+
+        dijkstra();
+        Stop newPickup = stopsList.get(stopsList.size() - 2);
+        Stop newDelivery = stopsList.get(stopsList.size() - 1);
+
+        int i = pickupNumber - 1;
+        boolean deliveryFound = false;
+        // première fois
+        int stopIndexOrigin = tourPaths.get(i).getOrigin().getId();
+        int stopIndexDestination = tourPaths.get(i).getDestination().getId();
+        tourPaths.remove(tourPaths.get(i));
+        tourPaths.add(i, stopsGraph.getPath(stopIndexOrigin,newPickup.getId()));
+
+        if (deliveryNumber == pickupNumber + 1) {
+            tourPaths.add(i + 1, stopsGraph.getPath(newPickup.getId(), newDelivery.getId());
+            i++;
+            tourPaths.add(i + 2, stopsGraph.getPath(newDelivery.getId(),stopIndexDestination));
+            i++;
+            deliveryFound = true;
+        } else {
+            tourPaths.add(i + 1, stopsGraph.getPath(newPickup.getId(), stopIndexDestination);
+            i++;
+        }
+
+         while (!deliveryFound) {
+
+            if (i == deliveryNumber - 1) {
+                stopIndexOrigin = tourPaths.get(i).getOrigin().getId();
+                stopIndexDestination = tourPaths.get(i).getDestination().getId();
+                tourPaths.remove(tourPaths.get(i));
+                tourPaths.add(i, stopsGraph.getPath(stopIndexOrigin,newDelivery.getId()));
+                tourPaths.add(i + 1, stopsGraph.getPath(newDelivery.getId(), stopIndexDestination);
+                deliveryFound=true;
+            }
+            i++;
+        }
+
+        updateStopsTimesAndNumbers();
+
+    }
+
     /**
      * Adds the latest request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
      * @throws PathException If computing dijkstra with the new request caused an exception.
      */
-    public void addLatestRequest() throws PathException {
+    public void addLatestRequest(int pickupId, int deliveryId) throws PathException {
 
         dijkstra();
 
