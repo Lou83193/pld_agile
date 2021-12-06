@@ -41,7 +41,7 @@ public class TourDataTest {
     private RequestLoader requestLoader;
     private TourData tourData = new TourData();
 
-    @BeforeEach
+    /*@BeforeEach
     public void loadMap (){
         try {
             mapLoader.load();
@@ -216,7 +216,7 @@ public class TourDataTest {
         assertNotNull(unInitTourData.getTourPaths());
    }
 
-
+*/
 
 
 }
