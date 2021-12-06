@@ -27,7 +27,7 @@ public class MapLoader {
     /**
      * Path to the XML file.
      */
-    final private String mapFilePath;
+    private final String mapFilePath;
     /**
      * DOM document of the loaded XML file.
      */
