@@ -7,12 +7,13 @@
 package com.pld.agile.controller;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ListOfCommands {
     /**
      * List that stores all the executed commands up to this point, in order in which they have been executed.
      */
-    private LinkedList<Command> list;
+    private List<Command> list;
 
     /**
      * Index of the last executed command (position in the list).
@@ -34,9 +35,7 @@ public class ListOfCommands {
     public void add(Command command) {
         lastCommandIndex++;
         list.add(lastCommandIndex, command);
-        for (int i = lastCommandIndex + 1; i < list.size(); i++) {
-            list.remove(i);
-        }
+        list.subList(lastCommandIndex + 1, list.size()).clear();
         command.doCommand();
     }
 
