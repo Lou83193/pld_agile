@@ -8,19 +8,11 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
-import com.pld.agile.utils.observer.Observable;
-import com.pld.agile.utils.observer.Observer;
-import com.pld.agile.utils.observer.UpdateType;
-import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.Shadow;
-import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -90,7 +82,7 @@ public class GraphicalViewStop extends Pane {
      * TextualViewStop constructor.
      * Populates the graphical object.
      * @param stop The corresponding Stop model object.
-     * @param parent The GraphicalView instance containing the stop
+     * @param parent The GraphicalView instance containing the stop.
      * @param graphicSize The size of the pointer.
      * @param editable Whether the stop is draggable or not.
      */
@@ -112,9 +104,7 @@ public class GraphicalViewStop extends Pane {
         switch (stop.getType()) {
 
             case PICKUP:
-                fillColour = ViewUtilities.stringToColour(
-                    stop.getRequest().getPickup().getAddress().toString()
-                );
+                fillColour = ViewUtilities.getRandomColour(stop.getRequest().getId());
                 symbol = new Circle(graphicSize / 2);
                 symbol.setTranslateX(graphicSize / 2);
                 symbol.setTranslateY(graphicSize / 2);
@@ -125,9 +115,7 @@ public class GraphicalViewStop extends Pane {
                 break;
 
             case DELIVERY:
-                fillColour = ViewUtilities.stringToColour(
-                    stop.getRequest().getPickup().getAddress().toString()
-                );
+                fillColour = ViewUtilities.getRandomColour(stop.getRequest().getId());
                 symbol = new Rectangle(graphicSize, graphicSize);
                 break;
 

@@ -28,6 +28,11 @@ public class Controller {
      */
     private Window window;
 
+    /**
+     * The list of commands instance.
+     */
+    private ListOfCommands listOfCommands;
+
     // Available states :
     /**
      * Initial state.
@@ -84,22 +89,23 @@ public class Controller {
     public Controller(Window window) {
         this.window = window;
         this.currState = initialState;
+        this.listOfCommands = new ListOfCommands();
     }
 
     /**
      * Getter for attribute window.
      */
-    public Window getWindow() {return window;}
+    public Window getWindow() { return window; }
 
     /**
      * Getter for attribute currState.
      */
-    public State getCurrState() {return currState;}
+    public State getCurrState() { return currState; }
 
     /**
      * Getter for attribute awaitMapState.
      */
-    public State getInitialState() {return initialState;}
+    public State getInitialState() { return initialState; }
 
     /**
      * Setter for attribute currState.
@@ -137,37 +143,45 @@ public class Controller {
      * Calls method clickOnGraphicalView() of the current state.
      */
     public void clickOnGraphicalView(double[] latLonPos) {
-        currState.doClickOnGraphicalView(this, window, latLonPos);
+        currState.doClickOnGraphicalView(this, window, listOfCommands, latLonPos);
     }
     /**
      * Calls method deleteRequest() of the current state.
      */
     public void deleteRequest(Request request) {
-        currState.doDeleteRequest(this, window, request);
+        currState.doDeleteRequest(this, window, listOfCommands, request);
     }
     /**
      * Calls method shiftStopOrderUp() of the current state.
      */
     public void shiftStopOrderUp(Stop stop) {
-        currState.doShiftStopOrderUp(this, window, stop);
+        currState.doShiftStopOrderUp(this, window, listOfCommands, stop);
     }
     /**
      * Calls method shiftStopOrderDown() of the current state.
      */
     public void shiftStopOrderDown(Stop stop) {
-        currState.doShiftStopOrderDown(this, window, stop);
+        currState.doShiftStopOrderDown(this, window, listOfCommands, stop);
     }
     /**
      * Calls method changeStopDuration() of the current state.
+     * @param stop the stop to edit.
+     * @param newDuration the new duration of the stop.
      */
     public void changeStopDuration(Stop stop, int newDuration) {
-        currState.doChangeStopDuration(this, window, stop, newDuration);
+        currState.doChangeStopDuration(window, listOfCommands, stop, newDuration);
     }
     /**
      * Calls method startAddRequest() of the current state.
      */
     public void startAddRequest() {
         currState.doStartAddRequest(this, window);
+    }
+    /**
+     * Calls method doCancelAddRequest() of the current state.
+     */
+    public void cancelAddRequest() {
+        currState.doCancelAddRequest(this, window);
     }
     /**
      * Calls method dragOnGraphicalStop() of the current state.
@@ -179,13 +193,26 @@ public class Controller {
      * Calls method releaseOnGraphicalView() of the current state.
      */
     public void dragOffGraphicalStop(Stop stop, double[] latLonPos) {
-        currState.doDragOffGraphicalStop(this, window, stop, latLonPos);
+        currState.doDragOffGraphicalStop(this, window, listOfCommands, stop, latLonPos);
     }
     /**
      * Calls method changeWarehouseDepartureTime() of the current state.
+     * @param time new departure time
      */
-    public void changeWarehouseDepartureTime(LocalTime time) {
-        currState.doChangeWarehouseDepartureTime(this, window, time);
+    public void changeWarehouseDepartureTime(final LocalTime time) {
+        currState.doChangeWarehouseDepartureTime(window, listOfCommands, time);
+    }
+    /**
+     * Calls method undo() of the current state.
+     */
+    public void undo() {
+        currState.undo(listOfCommands);
+    }
+    /**
+     * Calls method redo() of the current state.
+     */
+    public void redo() {
+        currState.redo(listOfCommands);
     }
 
 }

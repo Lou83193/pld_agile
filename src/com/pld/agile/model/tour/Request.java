@@ -10,6 +10,13 @@ package com.pld.agile.model.tour;
  * Represents a delivery request.
  */
 public class Request {
+
+    private static int idCounter = 0;
+
+    /**
+     * ID of the request.
+     */
+    private int id;
     /**
      * Pickup stop.
      */
@@ -25,11 +32,26 @@ public class Request {
      * @param delivery delivery Stop
      */
     public Request(Stop pickup, Stop delivery) {
+        this.id = idCounter;
         this.pickup = pickup;
         this.delivery = delivery;
+        idCounter++;
     }
 
+    /**
+     * Request constructor.
+     */
     public Request() {
+        this.id = idCounter;
+        idCounter++;
+    }
+
+    /**
+     * Getter for attribute ID
+     * @return ID
+     */
+    public int getId() {
+        return id;
     }
 
     /**

@@ -43,12 +43,14 @@ public class ComputedTourState implements State {
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                w.toggleFileMenuItem(2, true);
+                w.toggleMenuItem(0, 2, true);
                 w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
                 );
                 w.placeMainSceneButton(false);
+                w.toggleMenuItem(1, 0, false);
+                w.toggleMenuItem(1, 1, false);
                 c.setCurrState(c.loadedRequestsState);
 
                 return true;
@@ -68,36 +70,39 @@ public class ComputedTourState implements State {
      * Deletes a request from the tour.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param request the request to delete from the tour
      */
     @Override
-    public void doDeleteRequest(Controller c, Window w, Request request) {
+    public void doDeleteRequest(Controller c, Window w, ListOfCommands loc, Request request) {
         TourData tourData = w.getTourData();
-        tourData.deleteRequest(request);
+        loc.add(new DeleteRequestCommand(tourData, request));
     }
 
     /**
      * Shifts a stop's order one stop upwards (earlier) in the tour.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the stop to shift
      */
     @Override
-    public void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
+    public void doShiftStopOrderUp(Controller c, Window w, ListOfCommands loc, Stop stop) {
         TourData tourData = w.getTourData();
-        tourData.shiftStopOrder(stop, -1);
+        loc.add(new ShiftStopOrderCommand(tourData, stop, -1));
     }
 
     /**
      * Shifts a stop's order one stop downwards (later) in the tour.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the stop to shift
      */
     @Override
-    public void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
+    public void doShiftStopOrderDown(Controller c, Window w, ListOfCommands loc, Stop stop) {
         TourData tourData = w.getTourData();
-        tourData.shiftStopOrder(stop, +1);
+        loc.add(new ShiftStopOrderCommand(tourData, stop, +1));
     }
 
     /**
@@ -109,10 +114,13 @@ public class ComputedTourState implements State {
     public void doStartAddRequest(Controller c, Window w) {
         w.unhighlightStops();
         w.getScene().setCursor(Cursor.CROSSHAIR);
-        w.toggleFileMenuItem(0, false);
-        w.toggleFileMenuItem(1, false);
-        w.toggleFileMenuItem(2, false);
-        w.toggleMainSceneButton(false);
+        w.toggleMenuItem(0, 0, false);
+        w.toggleMenuItem(0, 1, false);
+        w.toggleMenuItem(0, 2, false);
+        w.setMainSceneButton(
+                "Cancel",
+                new ButtonListener(c, ButtonEventType.CANCEL_ADD_REQUEST)
+        );
         c.setCurrState(c.addingRequestState1);
     }
 
@@ -124,6 +132,8 @@ public class ComputedTourState implements State {
     @Override
     public void doDragOnGraphicalStop(Controller c, Window w) {
         w.unhighlightStops();
+        w.toggleMenuItem(1, 0, false);
+        w.toggleMenuItem(1, 1, false);
         c.setCurrState(c.movingStopState);
     }
 
@@ -135,10 +145,8 @@ public class ComputedTourState implements State {
      * @param newDuration the new duration of the stop
      */
     @Override
-    public void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
-        TourData tourData = w.getTourData();
-        stop.setDuration(newDuration);
-        tourData.updateStopsTimesAndNumbers();
+    public void doChangeStopDuration(Window w, ListOfCommands loc, Stop stop, long newDuration) {
+        loc.add(new ChangeStopDurationCommand(w.getTourData(), stop, newDuration));
     }
 
     /**
@@ -148,10 +156,24 @@ public class ComputedTourState implements State {
      * @param time the new departure time
      */
     @Override
-    public void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
-        TourData tourData = w.getTourData();
-        tourData.setDepartureTime(time);
-        tourData.updateStopsTimesAndNumbers();
+    public void doChangeWarehouseDepartureTime(Window w, ListOfCommands loc, LocalTime time) {
+        loc.add(new ChangeWarehouseDepartureTimeCommand(w.getTourData(), time));
+    }
+
+    /**
+     * Undoes the last command.
+     */
+    @Override
+    public void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Redoes the last command.
+     */
+    @Override
+    public void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
     }
 
 }

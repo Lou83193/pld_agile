@@ -25,6 +25,7 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -238,6 +239,14 @@ public class TextualViewStop extends VBox {
                             }
                         }
                 );
+                /*
+                durationInput.addEventFilter(KeyEvent.ANY, (event) -> {
+                    if ((event.getCode() == KeyCode.Z || event.getCode() == KeyCode.Y)
+                            && event.isShortcutDown()) {
+                        event.consume();
+                    }
+                });
+                */
             } else {
                 durationInput.setEditable(false);
                 durationInput.setMouseTransparent(true);

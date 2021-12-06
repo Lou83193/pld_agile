@@ -42,14 +42,15 @@ public interface State {
                 w.getTourData().setStopsList(new ArrayList<>());
                 w.getTourData().setAssociatedMap(w.getMapData());
                 w.switchToMainPane();
-                w.toggleFileMenuItem(1, true);
-                w.toggleFileMenuItem(2, false);
+                w.toggleMenuItem(0, 1, true);
+                w.toggleMenuItem(0, 2, false);
                 w.setMainSceneButton(
                         "Load requests",
                         new ButtonListener(c, ButtonEventType.LOAD_REQUESTS)
                 );
                 w.placeMainSceneButton(true);
-                // switch controller state to Await RequestsState
+                w.toggleMenuItem(1, 0, false);
+                w.toggleMenuItem(1, 1, false);
                 c.setCurrState(c.loadedMapState);
                 return true;
             } catch (IOException | SyntaxException e) {
@@ -95,9 +96,10 @@ public interface State {
      * Fires when a click is triggered on the graphical view.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param latLonPos the position of the click, in lat/lon coordinates
      */
-    default void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    default void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
     }
 
     /**
@@ -112,37 +114,41 @@ public interface State {
      * Fires when a graphical stop is dropped on the graphical view (after a drag)
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the stop that is being dropped
      * @param latLonPos the position where the stop was dropped, in lat/lon coordinates
      */
-    default void doDragOffGraphicalStop(Controller c, Window w, Stop stop, double[] latLonPos) {
+    default void doDragOffGraphicalStop(Controller c, Window w, ListOfCommands loc, Stop stop, double[] latLonPos) {
     }
 
     /**
      * Fires when the user clicks on the "delete" icon of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param request the request to delete.
      */
-    default void doDeleteRequest(Controller c, Window w, Request request) {
+    default void doDeleteRequest(Controller c, Window w, ListOfCommands loc, Request request) {
     }
 
     /**
      * Fires when the user clicks on the "up" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderUp(Controller c, Window w, Stop stop) {
+    default void doShiftStopOrderUp(Controller c, Window w, ListOfCommands loc, Stop stop) {
     }
 
     /**
      * Fires when the user clicks on the "down" arrow of a textual view stop.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param stop the concerned stop.
      */
-    default void doShiftStopOrderDown(Controller c, Window w, Stop stop) {
+    default void doShiftStopOrderDown(Controller c, Window w, ListOfCommands loc, Stop stop) {
     }
 
     /**
@@ -154,24 +160,44 @@ public interface State {
     }
 
     /**
-     * Fires when the user has modified the duration of a stop
-     * (after pressing enter or clicking out of the text field)
+     * Fires when the user clicks on the "Cancel" button.
      * @param c the controller
      * @param w the application window
-     * @param stop the concerned stop
-     * @param newDuration the new duration of the stop
      */
-    default void doChangeStopDuration(Controller c, Window w, Stop stop, int newDuration) {
+    default void doCancelAddRequest(Controller c, Window w) {
     }
 
     /**
-     * Fires when the user has modified the departure time from the warehouse
+     * Fires when the user has modified the duration of a stop.
      * (after pressing enter or clicking out of the text field)
-     * @param c the controller
-     * @param w the application window
-     * @param time the new departure time
+     * @param w the application window.
+     * @param stop the concerned stop.
+     * @param loc the list of commands.
+     * @param newDuration the new duration of the stop.
      */
-    default void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
+    default void doChangeStopDuration(Window w, ListOfCommands loc, Stop stop, long newDuration) {
+    }
+
+    /**
+     * Fires when the user has modified the departure time from the warehouse.
+     * (after pressing enter or clicking out of the text field)
+     * @param w the application window.
+     * @param loc the list of commands.
+     * @param time the new departure time.
+     */
+    default void doChangeWarehouseDepartureTime(Window w, ListOfCommands loc, LocalTime time) {
+    }
+
+    /**
+     * Fires when the user requests to undo a command.
+     */
+    default void undo(ListOfCommands listOfCommands) {
+    }
+
+    /**
+     * Fires when the user requests to redo a command.
+     */
+    default void redo(ListOfCommands listOfCommands) {
     }
 
 }

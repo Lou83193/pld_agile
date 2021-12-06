@@ -2,12 +2,12 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
+import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.exception.PathException;
+import com.pld.agile.view.ButtonEventType;
+import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
 import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -22,28 +22,36 @@ public class AddingRequestState2 implements State {
      * and goes back to the computed tour state.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param latLonPos the desired latitude and longitude of the delivery
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    public void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
         MapData mapData = w.getMapData();
         TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        try {
-            tourData.constructNewRequest2(intersection);
-        } catch (PathException e) {
-            // dijkstra iis broken after this error, try to redo it?
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
-            alert.setTitle("Error"); // force english
-            alert.setHeaderText("Computing path error");
-            alert.showAndWait();
-        }
+        Request newRequest = tourData.constructNewRequest2(intersection);
+        loc.add(new AddRequestCommand(c, w, tourData, newRequest));
+    }
+
+    /**
+     * Removes the newly added stops (pickup and delivery)
+     * and goes back to the computed tour state.
+     * @param c the controller
+     * @param w the application window
+     */
+    @Override
+    public void doCancelAddRequest(Controller c, Window w) {
+        TourData tourData = w.getTourData();
+        tourData.deconstructNewRequest1();
         w.getScene().setCursor(Cursor.DEFAULT);
-        w.toggleMainSceneButton(true);
-        w.toggleFileMenuItem(0, true);
-        w.toggleFileMenuItem(1, true);
-        w.toggleFileMenuItem(2, false);
+        w.toggleMenuItem(0, 0, true);
+        w.toggleMenuItem(0, 1, true);
+        w.toggleMenuItem(0, 2, false);
+        w.setMainSceneButton(
+                "Add request",
+                new ButtonListener(c, ButtonEventType.ADD_REQUEST)
+        );
         c.setCurrState(c.computedTourState);
     }
 
@@ -67,6 +75,22 @@ public class AddingRequestState2 implements State {
     @Override
     public boolean doLoadRequests(Controller c, Window w) {
         return false;
+    }
+
+    /**
+     * Undoes the last command.
+     */
+    @Override
+    public void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Redoes the last command.
+     */
+    @Override
+    public void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
     }
 
 }

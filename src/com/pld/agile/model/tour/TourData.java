@@ -148,42 +148,90 @@ public class TourData extends Observable implements Observer {
     }
 
     /**
-     * Creates a new request with a pickup which is created at
-     * the given intersection, and adds it to the list of requests.
+     * Creates a new request with a pickup which is created at the given intersection,
+     * stores it in the list of stops.
      * @param intersection The intersection of the pickup.
+     * @return The new request.
      */
-    public void constructNewRequest1(Intersection intersection) {
+    public Request constructNewRequest1(Intersection intersection) {
         Request newRequest = new Request();
         Stop newPickup = new Stop(newRequest, intersection, 0, StopType.PICKUP);
         newRequest.setPickup(newPickup);
         stopsList.add(newPickup);
+        recomputeStopIDs();
         notifyObservers(UpdateType.TOUR);
+        return newRequest;
     }
 
     /**
-     * Adds a delivery to the new request (the last one in the list) which
-     * is created at the given intersection.
-     * Adds the new request to the tour.
+     * Adds a delivery to the new request (the last one in the list) which is created at the given intersection,
+     * stores it in the list of stops.
      * @param intersection The intersection of the delivery.
-     * @throws PathException If adding the request to the tour caused
-     * an exception.
+     * @return The new request.
      */
-    public void constructNewRequest2(Intersection intersection)
-            throws PathException {
-        Request newRequest = stopsList.get(stopsList.size() - 1).getRequest();
-        Stop newDelivery =
-                new Stop(newRequest, intersection, 0, StopType.DELIVERY);
+    public Request constructNewRequest2(Intersection intersection) {
+        Request newRequest = stopsList.get(stopsList.size()-1).getRequest();
+        Stop newDelivery = new Stop(newRequest, intersection, 0, StopType.DELIVERY);
         newRequest.setDelivery(newDelivery);
         stopsList.add(newDelivery);
-        addRequest(newRequest);
+        recomputeStopIDs();
+        notifyObservers(UpdateType.TOUR);
+        return newRequest;
     }
 
     /**
-     * Adds a request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
-     * @param newRequest The request to be added.
+     * Removes the latest stop from the list of stops
+     */
+    public void deconstructNewRequest1() {
+        if (stopsList.size() > 1) {
+            stopsList.remove(stopsList.size() - 1);
+            notifyObservers(UpdateType.TOUR);
+        }
+    }
+
+    /**
+     * Adds the latest request at the given order positions (by computing dijkstra again and repopulating the tourPaths list).
+     * @param pickupNumber The order position of the pickup
+     * @param deliveryNumber The order position of the delivery
      * @throws PathException If computing dijkstra with the new request caused an exception.
      */
-    public void addRequest(Request newRequest) throws PathException {
+    public void addLatestRequest(int pickupNumber, int deliveryNumber) throws PathException {
+
+        Stop newPickup = stopsList.get(stopsList.size() - 2);
+        Stop newDelivery = stopsList.get(stopsList.size() - 1);
+
+        dijkstra();
+
+        //Build a list of all the stops in the tour in order
+        ArrayList<Stop> tourStops = new ArrayList<>();
+        for (int i = 0; i < tourPaths.size(); i++) {
+            Stop currStop = tourPaths.get(i).getOrigin();
+            tourStops.add(currStop);
+        }
+
+        tourStops.add(pickupNumber, newPickup);
+        tourStops.add(deliveryNumber, newDelivery);
+
+        //Reconstruct tourPaths
+        tourPaths.clear();
+        int n = tourStops.size();
+        for (int i = 0; i < n; i++) {
+            int indexOrigin = tourStops.get(i).getId();
+            int indexDestination = tourStops.get((i + 1) % n).getId();
+            Path path = stopsGraph.getPath(indexOrigin, indexDestination);
+            tourPaths.add(path);
+            System.out.println(tourStops.get(i).getStopNumber() + "; " + tourStops.get((i + 1) % n).getStopNumber());
+        }
+
+        updateStopsTimesAndNumbers();
+
+    }
+
+    /**
+     * Adds the latest request at the end of the tour (by computing dijkstra again and repopulating the tourPaths list).
+     * @throws PathException If computing dijkstra with the new request caused an exception.
+     */
+    public void addLatestRequest() throws PathException {
 
         dijkstra();
 
@@ -205,7 +253,18 @@ public class TourData extends Observable implements Observer {
             Path deliveryToWarehouse = stopsGraph.getPath(stopsList.size() - 1, 0);
             tourPaths.add(deliveryToWarehouse);
         }
+
         updateStopsTimesAndNumbers();
+
+    }
+
+    /**
+     * Recalculates the stop IDs so that they match their position in the stopsList.
+     */
+    public void recomputeStopIDs() {
+        for (int i = 0; i < stopsList.size(); i++) {
+            stopsList.get(i).setId(i);
+        }
     }
 
     /**
@@ -260,11 +319,11 @@ public class TourData extends Observable implements Observer {
 
         }
 
-        // Remove from request list
+        // Remove from stops list, decrease Stop Id counter
         stopsList.removeIf(pickup::equals);
         stopsList.removeIf(delivery::equals);
+        recomputeStopIDs();
 
-        // Notify controller if there are no requests left (aside from the warehouse)
         if (tourPaths.size() != 1 || tourPaths.get(0) != null) {
             updateStopsTimesAndNumbers();
         } else {
@@ -381,6 +440,7 @@ public class TourData extends Observable implements Observer {
         }
 
         updateStopsTimesAndNumbers();
+
     }
 
     public List<Stop> getStopsList() {
@@ -571,7 +631,7 @@ public class TourData extends Observable implements Observer {
             currentTime = currentTime.plusSeconds(currentStop.getDuration());
             currentStop.setDepartureTime(currentTime);
             double d = tourPaths.get(i).getLength();
-            int t = (int)(d/(15/3.6)) + 1;
+            int t = (int) (d / (15 / 3.6)) + 1;
             currentTime = currentTime.plusSeconds(t);
         }
         if (tourPaths.size() > 0) {
@@ -610,7 +670,7 @@ public class TourData extends Observable implements Observer {
         tsp.searchSolution(120000, stopsGraph);
         Platform.runLater(() -> {
             if (tourComputingThread != null && !tourComputingThread.isInterrupted()) {
-                System.out.println("Solution of cost " + tsp.getSolutionCost() + " found in " + (System.currentTimeMillis() - startTime) + "ms");
+                System.out.println("TSP solution found in " + (System.currentTimeMillis() - startTime) + "ms");
                 processTSPUpdate(tsp);
             }
         });
@@ -624,6 +684,7 @@ public class TourData extends Observable implements Observer {
      * @param tsp The TSP instance holding the result
      */
     public void processTSPUpdate(TSP tsp) {
+        System.out.println("Solution cost: " + tsp.getSolutionCost());
         tourPaths = new ArrayList<>();
         int n = stopsGraph.getNbVertices();
         for(int i = 0; i < n-1; i++) {

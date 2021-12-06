@@ -40,6 +40,9 @@ public class ButtonListener implements EventHandler<ActionEvent> {
             case COMPUTE_TOUR -> controller.computeTour();
             case STOP_COMPUTING_TOUR -> controller.stopComputingTour();
             case ADD_REQUEST -> controller.startAddRequest();
+            case CANCEL_ADD_REQUEST -> controller.cancelAddRequest();
+            case UNDO -> controller.undo();
+            case REDO -> controller.redo();
         }
 
         e.consume();

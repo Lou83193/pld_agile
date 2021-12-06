@@ -17,20 +17,11 @@ import javafx.scene.control.ButtonType;
 public class MovingStopState implements State {
 
     @Override
-    public void doDragOffGraphicalStop(Controller c, Window window, Stop stop, double[] latLonPos) {
-        MapData mapData = window.getMapData();
-        TourData tourData = window.getTourData();
+    public void doDragOffGraphicalStop(Controller c, Window w, ListOfCommands loc, Stop stop, double[] latLonPos) {
+        MapData mapData = w.getMapData();
+        TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
-        try {
-            tourData.moveStop(stop, intersection);
-        } catch (PathException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
-            alert.setTitle("Error"); // force english
-            alert.setHeaderText("Computing path error");
-            alert.showAndWait();
-        }
-        c.setCurrState(c.computedTourState);
+        loc.add(new MoveStopCommand(c, tourData, stop, intersection));
     }
 
 }

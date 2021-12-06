@@ -6,13 +6,19 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -112,7 +118,6 @@ public class Window extends Application {
         wrapperPane.setCenter(homePane);
 
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.setTitle("COLIFFIMO - Route Planner");
         stage.getIcons().add(new Image("icon.png"));
         stage.show();
@@ -201,9 +206,23 @@ public class Window extends Application {
             new ButtonListener(controller, ButtonEventType.COMPUTE_TOUR)
         );
         mainSceneButton.prefWidthProperty().bind(sidePanelWidth);
+        mainSceneButton.setCursor(Cursor.DEFAULT);
         buttonWrapper.getChildren().add(mainSceneButton);
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);
+
+        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
+            if (undoKeyboardShortcut.match(event)) {
+                menuBar.getMenus().get(1).getItems().get(0).fire();
+            }
+        });
+        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
+            if (redoKeyboardShortcut.match(event)) {
+                menuBar.getMenus().get(1).getItems().get(1).fire();
+            }
+        });
 
     }
 
@@ -233,8 +252,14 @@ public class Window extends Application {
 
         // Edit menu
         Menu editMenu = new Menu("Edit");
-        MenuItem editMenu1 = new MenuItem("Undo");
-        MenuItem editMenu2 = new MenuItem("Redo");
+        MenuItem editMenu1 = new MenuItem("Undo (Ctrl+Z)");
+        MenuItem editMenu2 = new MenuItem("Redo (Ctrl+Y)");
+        editMenu1.setOnAction(
+                new ButtonListener(controller, ButtonEventType.UNDO)
+        );
+        editMenu2.setOnAction(
+                new ButtonListener(controller, ButtonEventType.REDO)
+        );
         editMenu1.setDisable(true);
         editMenu2.setDisable(true);
         editMenu.getItems().addAll(editMenu1, editMenu2);
@@ -247,6 +272,7 @@ public class Window extends Application {
 
         // Menu bar
         menuBar = new MenuBar();
+        menuBar.setCursor(Cursor.DEFAULT);
         menuBar.getMenus().addAll(fileMenu, editMenu, aboutMenu);
 
     }
@@ -259,13 +285,13 @@ public class Window extends Application {
     }
 
     /**
-     * Toggles file menu items to either enabled or disabled.
-     * @param num The id of the file menu item.
-     * @param enabled Whether the file menu item should be enabled or disabled.
+     * Toggles menu items to be either enabled or disabled.
+     * @param menuId The id of the menu.
+     * @param itemId The id of menu item within the menu.
+     * @param enabled Whether the menu item should be enabled or disabled.
      */
-    public void toggleFileMenuItem(final int num,
-                                   final boolean enabled) {
-        menuBar.getMenus().get(0).getItems().get(num).setDisable(!enabled);
+    public void toggleMenuItem(final int menuId, final int itemId, final boolean enabled) {
+        menuBar.getMenus().get(menuId).getItems().get(itemId).setDisable(!enabled);
     }
 
     /**

@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class providing static methods for various purposes.
@@ -171,6 +172,15 @@ public class ViewUtilities {
         return new Color(r, g, b, 1.0).brighter();
     }
 
+    public static Color getRandomColour(final int seed) {
+        Random rand = new Random(seed);
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        Color randomColor = new Color(r, g, b, 1.0);
+        return randomColor;
+    }
+
     /**
      * Computes the distance between two world lat/lon coordinates, in meters.
      * @param lat1 The latitude of the first coordinate.
@@ -247,7 +257,7 @@ public class ViewUtilities {
         }
         double v = ViewUtilities.mapValue(desiredY, contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight(), pane.getVmin(), pane.getVmax());
         pane.setVvalue(ViewUtilities.clamp(v, pane.getVmin(), pane.getVmax()));
-        node.requestFocus();
+        //node.requestFocus();
     }
 
 }

@@ -76,6 +76,14 @@ public class Stop extends Observable {
     }
 
     /**
+     * Setter for attribute ID.
+     * @param id ID of the stop.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Getter for attribute address.
      * @return address
      */
@@ -177,13 +185,22 @@ public class Stop extends Observable {
                 "id=" + id +
                 ", address=" + address +
                 ", duration=" + duration +
+                ", stopNumber=" + stopNumber +
                 '}';
     }
 
     /**
-     * Resets the ID counter;
+     * Resets the ID counter.
      */
     public static void resetIdCounter() {
         idCounter = 0;
+    }
+
+    /**
+     * Decreases the ID counter by X steps
+     * @param x The number of steps to decrease the counter with.
+     */
+    public static void decreaseIdCounter(int x) {
+        idCounter -= x;
     }
 }

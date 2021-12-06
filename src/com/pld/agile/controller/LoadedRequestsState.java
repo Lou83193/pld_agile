@@ -39,7 +39,7 @@ public class LoadedRequestsState implements State {
             RequestLoader requestsLoader = new RequestLoader(requestsFile.getPath(), w.getTourData());
             try {
                 requestsLoader.load();
-                w.toggleFileMenuItem(2, true);
+                w.toggleMenuItem(0, 2, true);
                 w.setMainSceneButton(
                         "Compute tour",
                         new ButtonListener(c, ButtonEventType.COMPUTE_TOUR)
@@ -85,9 +85,9 @@ public class LoadedRequestsState implements State {
         tourData.setTourComputingThread(computingThread);
         computingThread.setDaemon(true);
         computingThread.start();
-        w.toggleFileMenuItem(0, false);
-        w.toggleFileMenuItem(1, false);
-        w.toggleFileMenuItem(2, false);
+        w.toggleMenuItem(0, 0, false);
+        w.toggleMenuItem(0, 1, false);
+        w.toggleMenuItem(0, 2, false);
         w.setMainSceneButton(
                 "Stop computing",
                 new ButtonListener(c, ButtonEventType.STOP_COMPUTING_TOUR)

@@ -3,7 +3,10 @@ package com.pld.agile.controller;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.TourData;
+import com.pld.agile.view.ButtonEventType;
+import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
+import javafx.scene.Cursor;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding
@@ -17,15 +20,29 @@ public class AddingRequestState1 implements State {
      * and goes to addingRequestState2.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @param latLonPos the desired latitude and longitude of the pickup
      */
     @Override
-    public void doClickOnGraphicalView(Controller c, Window w, double[] latLonPos) {
+    public void doClickOnGraphicalView(Controller c, Window w, ListOfCommands loc, double[] latLonPos) {
         MapData mapData = w.getMapData();
         TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
         tourData.constructNewRequest1(intersection);
         c.setCurrState(c.addingRequestState2);
+    }
+
+    @Override
+    public void doCancelAddRequest(Controller c, Window w) {
+        w.getScene().setCursor(Cursor.DEFAULT);
+        w.toggleMenuItem(0, 0, true);
+        w.toggleMenuItem(0, 1, true);
+        w.toggleMenuItem(0, 2, false);
+        w.setMainSceneButton(
+                "Add Request",
+                new ButtonListener(c, ButtonEventType.ADD_REQUEST)
+        );
+        c.setCurrState(c.computedTourState);
     }
 
     /**
@@ -48,6 +65,22 @@ public class AddingRequestState1 implements State {
     @Override
     public boolean doLoadRequests(Controller c, Window w) {
         return false;
+    }
+
+    /**
+     * Undoes the last command.
+     */
+    @Override
+    public void undo(ListOfCommands listOfCommands) {
+        listOfCommands.undo();
+    }
+
+    /**
+     * Redoes the last command.
+     */
+    @Override
+    public void redo(ListOfCommands listOfCommands) {
+        listOfCommands.redo();
     }
 
 }
