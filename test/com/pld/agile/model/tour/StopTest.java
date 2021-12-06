@@ -18,7 +18,7 @@ class StopTest {
     @Test
     public void testStop (){
         Request request = new Request();
-        Intersection address = new Intersection(1,52,98);
+        Intersection address = new Intersection(52,98);
         long duration = 845;
 
         Stop stop = new Stop(request,address,duration,StopType.PICKUP);

@@ -19,11 +19,11 @@ class MapDataTest {
     @Test
     public void testMapData(){
         List<Intersection> intersections = new ArrayList<>();
-        Intersection inter1 = new Intersection(1,42,42);
+        Intersection inter1 = new Intersection(42,42);
         intersections.add(inter1);
-        Intersection inter2 = new Intersection(2,46,79);
+        Intersection inter2 = new Intersection(46,79);
         intersections.add(inter2);
-        Intersection inter3 = new Intersection(3,89,39);
+        Intersection inter3 = new Intersection(89,39);
         intersections.add(inter3);
 
         List<Segment> segments = new ArrayList<>();
@@ -69,11 +69,11 @@ class MapDataTest {
     @Test
     public void testFindClosestIntersection (){
         List<Intersection> intersections = new ArrayList<>();
-        Intersection inter1 = new Intersection(1,42,42);
+        Intersection inter1 = new Intersection(42,42);
         intersections.add(inter1);
-        Intersection inter2 = new Intersection(2,42,78);
+        Intersection inter2 = new Intersection(42,78);
         intersections.add(inter2);
-        Intersection inter3 = new Intersection(3,89,39);
+        Intersection inter3 = new Intersection(89,39);
         intersections.add(inter3);
 
         List<Segment> segments = new ArrayList<>();
