@@ -131,13 +131,13 @@ public class Controller {
      * Calls method doComputeTour() of the current state.
      */
     public void computeTour() {
-        currState.doComputeTour(this, window);
+        currState.doComputeTour(this, window, listOfCommands);
     }
     /**
      * Calls method doStopComputingTour() of the current state.
      */
     public void stopComputingTour() {
-        currState.doStopComputingTour(this, window);
+        currState.doStopComputingTour(this, window, listOfCommands);
     }
     /**
      * Calls method clickOnGraphicalView() of the current state.
@@ -206,13 +206,13 @@ public class Controller {
      * Calls method undo() of the current state.
      */
     public void undo() {
-        currState.undo(listOfCommands);
+        currState.doUndo(window, listOfCommands);
     }
     /**
      * Calls method redo() of the current state.
      */
     public void redo() {
-        currState.redo(listOfCommands);
+        currState.doRedo(window, listOfCommands);
     }
 
 }

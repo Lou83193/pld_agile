@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * State when the map and a list of requests are loaded, and the tour is computing.
@@ -29,14 +30,14 @@ public class ComputingTourState implements State {
      * @param w the application window
      */
     @Override
-    public void doStopComputingTour(Controller c, Window w) {
+    public void doStopComputingTour(Controller c, Window w, ListOfCommands loc) {
         TourData tourData = w.getTourData();
         tourData.stopComputingTour();
         w.toggleMenuItem(0, 0, true);
         w.toggleMenuItem(0, 1, true);
         w.toggleMenuItem(0, 2, false);
-        w.toggleMenuItem(1, 0, true);
-        w.toggleMenuItem(1, 1, true);
+        w.toggleMenuItem(1, 0, loc.canUndo());
+        w.toggleMenuItem(1, 1, loc.canRedo());
         w.setMainSceneButton(
                 "Add request",
                 new ButtonListener(c, ButtonEventType.ADD_REQUEST)

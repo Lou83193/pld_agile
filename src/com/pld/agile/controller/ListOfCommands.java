@@ -41,7 +41,7 @@ public class ListOfCommands {
      * Undoes last command of the list.
      */
     public void undo() {
-        if (lastCommandIndex >= 0) {
+        if (canUndo()) {
             list.get(lastCommandIndex).undoCommand();
             lastCommandIndex--;
         }
@@ -51,10 +51,26 @@ public class ListOfCommands {
      * Redoes last undone command, if there is one.
      */
     public void redo() {
-        if (lastCommandIndex < (list.size() - 1)) {
+        if (canRedo()) {
             lastCommandIndex++;
             list.get(lastCommandIndex).doCommand();
         }
+    }
+
+    /**
+     * Checks whether there are any undoable commands.
+     * @return boolean result.
+     */
+    public boolean canUndo() {
+        return (lastCommandIndex >= 0);
+    }
+
+    /**
+     * Checks whether there are any redoable commands.
+     * @return boolean result.
+     */
+    public boolean canRedo() {
+        return (lastCommandIndex < (list.size() - 1));
     }
 
 }

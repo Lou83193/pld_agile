@@ -66,7 +66,7 @@ public class LoadedRequestsState implements State {
      * @param w the application window
      */
     @Override
-    public void doComputeTour(Controller c, Window w) {
+    public void doComputeTour(Controller c, Window w, ListOfCommands loc) {
         TourData tourData = w.getTourData();
         Thread computingThread = new Thread(() -> {
             try {
@@ -79,7 +79,7 @@ public class LoadedRequestsState implements State {
                 alert.showAndWait();
             }
             Platform.runLater(() -> {
-                c.computingTourState.doStopComputingTour(c, w);
+                c.computingTourState.doStopComputingTour(c, w, loc);
             });
         });
         tourData.setTourComputingThread(computingThread);

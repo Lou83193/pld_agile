@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * State design pattern interface.
@@ -79,17 +80,19 @@ public interface State {
      * Fires when the user presses the "Compute tour" button.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      * @return boolean success
      */
-    default void doComputeTour(Controller c, Window w) {
+    default void doComputeTour(Controller c, Window w, ListOfCommands loc) {
     }
 
     /**
      * Fires when the user presses the "Stop computing" button.
      * @param c the controller
      * @param w the application window
+     * @param loc the list of commands
      */
-    default void doStopComputingTour(Controller c, Window w) {
+    default void doStopComputingTour(Controller c, Window w, ListOfCommands loc) {
     }
 
     /**
@@ -191,13 +194,13 @@ public interface State {
     /**
      * Fires when the user requests to undo a command.
      */
-    default void undo(ListOfCommands listOfCommands) {
+    default void doUndo(Window w, ListOfCommands loc) {
     }
 
     /**
      * Fires when the user requests to redo a command.
      */
-    default void redo(ListOfCommands listOfCommands) {
+    default void doRedo(Window w, ListOfCommands loc) {
     }
 
 }

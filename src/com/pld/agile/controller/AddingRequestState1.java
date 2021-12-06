@@ -67,20 +67,4 @@ public class AddingRequestState1 implements State {
         return false;
     }
 
-    /**
-     * Undoes the last command.
-     */
-    @Override
-    public void undo(ListOfCommands listOfCommands) {
-        listOfCommands.undo();
-    }
-
-    /**
-     * Redoes the last command.
-     */
-    @Override
-    public void redo(ListOfCommands listOfCommands) {
-        listOfCommands.redo();
-    }
-
 }

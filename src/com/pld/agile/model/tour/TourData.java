@@ -220,7 +220,6 @@ public class TourData extends Observable implements Observer {
             int indexDestination = tourStops.get((i + 1) % n).getId();
             Path path = stopsGraph.getPath(indexOrigin, indexDestination);
             tourPaths.add(path);
-            System.out.println(tourStops.get(i).getStopNumber() + "; " + tourStops.get((i + 1) % n).getStopNumber());
         }
 
         updateStopsTimesAndNumbers();

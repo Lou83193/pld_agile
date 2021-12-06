@@ -164,16 +164,20 @@ public class ComputedTourState implements State {
      * Undoes the last command.
      */
     @Override
-    public void undo(ListOfCommands listOfCommands) {
-        listOfCommands.undo();
+    public void doUndo(Window w, ListOfCommands loc) {
+        loc.undo();
+        w.toggleMenuItem(1, 0, loc.canUndo());
+        w.toggleMenuItem(1, 1, loc.canRedo());
     }
 
     /**
      * Redoes the last command.
      */
     @Override
-    public void redo(ListOfCommands listOfCommands) {
-        listOfCommands.redo();
+    public void doRedo(Window w, ListOfCommands loc) {
+        loc.redo();
+        w.toggleMenuItem(1, 0, loc.canUndo());
+        w.toggleMenuItem(1, 1, loc.canRedo());
     }
 
 }
