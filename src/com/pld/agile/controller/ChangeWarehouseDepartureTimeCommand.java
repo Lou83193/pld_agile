@@ -11,6 +11,7 @@ import com.pld.agile.model.tour.TourData;
 import java.time.LocalTime;
 
 public class ChangeWarehouseDepartureTimeCommand implements Command {
+
     /**
      * Tour data of the application.
      */
@@ -47,7 +48,7 @@ public class ChangeWarehouseDepartureTimeCommand implements Command {
     }
 
     /**
-     * Undoes the command.
+     * Changes the departure time from the warehouse back to what it was before and recomputes hours of passage.
      */
     @Override
     public void undoCommand() {

@@ -132,10 +132,7 @@ public class TextualViewStop extends VBox {
                         (event) -> {
                             if (event.getCode() == KeyCode.ENTER) {
                                 if (!departureHourInput.getText().equals(inputValueTracker)) {
-                                    int hour = departureHourInput.hoursProperty().getValue();
-                                    int minute = departureHourInput.minutesProperty().getValue();
-                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                    parent.getComponent().requestFocus();
                                 }
                             }
                         }
@@ -221,8 +218,7 @@ public class TextualViewStop extends VBox {
                         (event) -> {
                             if (event.getCode() == KeyCode.ENTER) {
                                 if (!durationInput.getText().equals(inputValueTracker)) {
-                                    int durationValue = Integer.parseInt(durationInput.getText());
-                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                    parent.getComponent().requestFocus();
                                 }
                             }
                         }
@@ -239,14 +235,6 @@ public class TextualViewStop extends VBox {
                             }
                         }
                 );
-                /*
-                durationInput.addEventFilter(KeyEvent.ANY, (event) -> {
-                    if ((event.getCode() == KeyCode.Z || event.getCode() == KeyCode.Y)
-                            && event.isShortcutDown()) {
-                        event.consume();
-                    }
-                });
-                */
             } else {
                 durationInput.setEditable(false);
                 durationInput.setMouseTransparent(true);

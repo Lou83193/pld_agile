@@ -10,6 +10,7 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 
 public class ChangeStopDurationCommand implements Command {
+
     /**
      * Tour data of the application.
      */
@@ -53,7 +54,7 @@ public class ChangeStopDurationCommand implements Command {
     }
 
     /**
-     * Undoes the command.
+     * Changes the duration of a stop back to what it was before and recomputes hours of passage.
      */
     @Override
     public void undoCommand() {
