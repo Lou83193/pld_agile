@@ -168,24 +168,24 @@ public interface State {
     }
 
     /**
-     * Fires when the user has modified the duration of a stop
+     * Fires when the user has modified the duration of a stop.
      * (after pressing enter or clicking out of the text field)
-     * @param c the controller
-     * @param w the application window
-     * @param stop the concerned stop
-     * @param newDuration the new duration of the stop
+     * @param w the application window.
+     * @param stop the concerned stop.
+     * @param loc the list of commands.
+     * @param newDuration the new duration of the stop.
      */
-    default void doChangeStopDuration(Controller c, Window w, ListOfCommands loc, Stop stop, long newDuration) {
+    default void doChangeStopDuration(Window w, ListOfCommands loc, Stop stop, long newDuration) {
     }
 
     /**
-     * Fires when the user has modified the departure time from the warehouse
+     * Fires when the user has modified the departure time from the warehouse.
      * (after pressing enter or clicking out of the text field)
-     * @param c the controller
-     * @param w the application window
-     * @param time the new departure time
+     * @param w the application window.
+     * @param loc the list of commands.
+     * @param time the new departure time.
      */
-    default void doChangeWarehouseDepartureTime(Controller c, Window w, LocalTime time) {
+    default void doChangeWarehouseDepartureTime(Window w, ListOfCommands loc, LocalTime time) {
     }
 
     /**
