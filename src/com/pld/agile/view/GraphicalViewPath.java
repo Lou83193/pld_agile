@@ -8,14 +8,10 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
-import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
@@ -32,15 +28,15 @@ public class GraphicalViewPath extends Polyline {
     /**
      * The parent GraphicalView instance
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
     /**
      * The primary colour of the path.
      */
-    private Color colour1;
+    private final Color colour1;
     /**
      * The secondary colour of the path (used for highlights)
      */
-    private Color colour2;
+    private final Color colour2;
 
     /**
      * GraphicalViewPath constructor.
@@ -62,18 +58,19 @@ public class GraphicalViewPath extends Polyline {
                 continue;
             }
             if (count == 0) {
-                double[] originPos = graphicalView.projectLatLon(segment.getOrigin());
+                double[] originPos =
+                        graphicalView.projectLatLon(segment.getOrigin());
                 this.getPoints().addAll(originPos[0], originPos[1]);
             }
-            double[] destinationPos = graphicalView.projectLatLon(segment.getDestination());
+            double[] destinationPos =
+                    graphicalView.projectLatLon(segment.getDestination());
             this.getPoints().addAll(destinationPos[0], destinationPos[1]);
             count++;
         }
         if (finished) {
             colour1 = ViewUtilities.COLOURS.get("DARK_ORANGE");
             colour2 = ViewUtilities.COLOURS.get("BLUE");
-        }
-        else {
+        } else {
             colour1 = ViewUtilities.COLOURS.get("PURPLE");
             colour2 = ViewUtilities.COLOURS.get("YELLOW");
         }
@@ -91,11 +88,11 @@ public class GraphicalViewPath extends Polyline {
      */
     public void highlight() {
         this.setStroke(colour2);
-        GraphicalViewTourLayer graphicalViewTourLayer = graphicalView.getGraphicalViewTourLayer();
+        GraphicalViewTourLayer graphicalViewTourLayer =
+                graphicalView.getGraphicalViewTourLayer();
         List<GraphicalViewPath> otherGraphicalViewPaths = new ArrayList<>();
         for (Node node : graphicalViewTourLayer.getChildren()) {
-            if (node instanceof GraphicalViewPath) {
-                GraphicalViewPath graphicalViewPath = (GraphicalViewPath) node;
+            if (node instanceof GraphicalViewPath graphicalViewPath) {
                 if (!graphicalViewPath.equals(this)) {
                     otherGraphicalViewPaths.add(graphicalViewPath);
                 }

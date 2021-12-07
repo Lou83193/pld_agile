@@ -3,18 +3,11 @@ package com.pld.agile.view;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
-import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 
 import java.util.List;
 
@@ -26,7 +19,7 @@ public class GraphicalViewTourLayer extends Pane {
     /**
      * The parent GraphicalView instance.
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
 
     /**
      * GraphicalViewTourLayer constructor.
@@ -50,13 +43,15 @@ public class GraphicalViewTourLayer extends Pane {
                             mapData.getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
-                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
+                    graphicalView.getWindow().getController()
+                            .clickOnGraphicalView(latLonPos);
                 });
 
     }
 
     /**
      * Draws the tour trace, by populating the pane with graphical segments.
+     * @param finished whether the traced tour is an intermediary tour or a final one.
      */
     public void draw(boolean finished) {
 

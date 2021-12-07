@@ -4,10 +4,7 @@ import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.exception.PathException;
 import com.pld.agile.view.Window;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 /**
  * State when the map and a list of requests are loaded, the corresponding

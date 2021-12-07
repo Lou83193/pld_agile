@@ -2,41 +2,22 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
-import com.pld.agile.utils.observer.Observable;
-import com.pld.agile.utils.observer.Observer;
-import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Pair;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 /**
  * Graphical object representing a Stop in the textual view.
@@ -48,7 +29,7 @@ public class TextualViewStop extends VBox {
     /**
      * The parent ScrollPane containing all the textual stops.
      */
-    private ScrollPane scrollPane;
+    private final ScrollPane scrollPane;
     /**
      * Tracker used to keep track of the modifications made
      * to the textual stop's text fields.
@@ -57,7 +38,7 @@ public class TextualViewStop extends VBox {
     /**
      * The graphical stop icon contained within the textual view stop.
      */
-    private GraphicalViewStop labelGraphic;
+    private final GraphicalViewStop labelGraphic;
     /**
      * The highlight level of the textual stop.
      * 2 = highlighted by selection.
@@ -103,13 +84,14 @@ public class TextualViewStop extends VBox {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        labelGraphic = new GraphicalViewStop(stop, null,14, false);
+        labelGraphic = new GraphicalViewStop(stop, null, 14, false);
         // Label
-        String labelTextString = "";
+        String labelTextString;
         switch (type) {
             case PICKUP -> labelTextString = "Pickup Stop";
             case DELIVERY -> labelTextString = "Delivery Stop";
             case WAREHOUSE -> labelTextString = "Warehouse";
+            default -> labelTextString = "";
         }
         Text labelText = new Text(labelTextString);
         labelText.getStyleClass().add("textual-view-stop-panel-label");
@@ -131,7 +113,8 @@ public class TextualViewStop extends VBox {
                 departureHourInput.setOnKeyPressed(
                         (event) -> {
                             if (event.getCode() == KeyCode.ENTER) {
-                                if (!departureHourInput.getText().equals(inputValueTracker)) {
+                                if (!departureHourInput.getText()
+                                        .equals(inputValueTracker)) {
                                     parent.getComponent().requestFocus();
                                 }
                             }
@@ -140,11 +123,16 @@ public class TextualViewStop extends VBox {
                 departureHourInput.focusedProperty().addListener(
                         (observable, oldValue, newValue) -> {
                             if (!newValue) {
-                                if (!departureHourInput.getText().equals(inputValueTracker)) {
-                                    int hour = departureHourInput.hoursProperty().getValue();
-                                    int minute = departureHourInput.minutesProperty().getValue();
-                                    LocalTime newDepartureTime = LocalTime.of(hour, minute);
-                                    parent.getWindow().getController().changeWarehouseDepartureTime(newDepartureTime);
+                                if (!departureHourInput.getText()
+                                        .equals(inputValueTracker)) {
+                                    int hour = departureHourInput
+                                            .hoursProperty().getValue();
+                                    int minute = departureHourInput
+                                            .minutesProperty().getValue();
+                                    LocalTime newDepartureTime =
+                                            LocalTime.of(hour, minute);
+                                    parent.getWindow().getController()
+                                        .changeWarehouseDepartureTime(newDepartureTime);
                                 }
                             } else {
                                 inputValueTracker = departureHourInput.getText();
@@ -162,15 +150,22 @@ public class TextualViewStop extends VBox {
                 arrivalHourInput.getStyleClass().add("textual-view-stop-panel-hour");
                 arrivalHourInput.getStyleClass().add("uneditable-textfield");
                 // Adding them together
-                labelPanel.getChildren().addAll(departureHourInput, hourSeparatorText, arrivalHourInput);
+                labelPanel.getChildren().addAll(
+                        departureHourInput,
+                        hourSeparatorText,
+                        arrivalHourInput
+                );
             } else {
-                LocalTime warehouseDepartureTime = parent.getWindow().getTourData().getDepartureTime();
+                LocalTime warehouseDepartureTime =
+                        parent.getWindow().getTourData().getDepartureTime();
                 String warehouseDepartureTimeString = "00:00";
                 if (warehouseDepartureTime != null) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                    warehouseDepartureTimeString = formatter.format(warehouseDepartureTime);
+                    warehouseDepartureTimeString =
+                            formatter.format(warehouseDepartureTime);
                 }
-                TimeTextField departureHourInput = new TimeTextField(warehouseDepartureTimeString);
+                TimeTextField departureHourInput =
+                        new TimeTextField(warehouseDepartureTimeString);
                 departureHourInput.setFocusTraversable(false);
                 departureHourInput.setEditable(false);
                 departureHourInput.setMouseTransparent(true);
@@ -204,7 +199,7 @@ public class TextualViewStop extends VBox {
         // Duration
         if (type != StopType.WAREHOUSE) {
             Text durationText = new Text("Duration (sec):");
-            TextField durationInput = new TextField((int)duration + "");
+            TextField durationInput = new TextField((int) duration + "");
             durationInput.setFocusTraversable(false);
             if (editable) {
                 durationInput.textProperty().addListener(
@@ -228,8 +223,10 @@ public class TextualViewStop extends VBox {
                         (observable, oldValue, newValue) -> {
                             if (!newValue) {
                                 if (!durationInput.getText().equals(inputValueTracker)) {
-                                    int durationValue = Integer.parseInt(durationInput.getText());
-                                    parent.getWindow().getController().changeStopDuration(stop, durationValue);
+                                    int durationValue =
+                                            Integer.parseInt(durationInput.getText());
+                                    parent.getWindow().getController()
+                                            .changeStopDuration(stop, durationValue);
                                 }
                             } else {
                                 inputValueTracker = durationInput.getText();
@@ -263,7 +260,9 @@ public class TextualViewStop extends VBox {
             upButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderUp(stop)
             );
-            upButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, -1));
+            boolean upEnabled = !parent.getWindow().getTourData()
+                    .stopIsShiftable(stop, -1);
+            upButton.setDisable(upEnabled);
             // Arrow down
             Button downButton = new Button();
             downButton.setGraphic(new ImageView(ViewUtilities.DOWN_ARROW_ICON));
@@ -271,7 +270,9 @@ public class TextualViewStop extends VBox {
             downButton.setOnMouseClicked(
                 e -> parent.getWindow().getController().shiftStopOrderDown(stop)
             );
-            downButton.setDisable(!parent.getWindow().getTourData().stopIsShiftable(stop, +1));
+            boolean dbEnabled = !parent.getWindow().getTourData()
+                    .stopIsShiftable(stop, +1);
+            downButton.setDisable(dbEnabled);
             controls.getChildren().addAll(deleteButton, upButton, downButton);
             panel.setRight(controls);
 
@@ -288,39 +289,12 @@ public class TextualViewStop extends VBox {
             new BorderWidths(3)
         )));
         this.setOnMouseClicked(
-            e -> {
-                Window w = parent.getWindow();
-                w.unhighlightStops();
-                if (stop.getRequest() != null) {
-                    Stop pickup = stop.getRequest().getPickup();
-                    Stop delivery = stop.getRequest().getDelivery();
-                    GraphicalViewStop pickupGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(pickup)[0];
-                    GraphicalViewStop deliveryGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(delivery)[0];
-                    TextualViewStop pickupTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(pickup)[1];
-                    TextualViewStop deliveryTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(delivery)[1];
-                    if (this.equals(pickupTextualView)) {
-                        pickupGraphicalView.setHighlight(2);
-                        pickupTextualView.setHighlight(2);
-                        deliveryGraphicalView.setHighlight(1);
-                        deliveryTextualView.setHighlight(1);
-                    } else {
-                        pickupGraphicalView.setHighlight(1);
-                        pickupTextualView.setHighlight(1);
-                        deliveryGraphicalView.setHighlight(2);
-                        deliveryTextualView.setHighlight(2);
-                    }
-                }
-                else {
-                    GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
-                    TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
-                    stopGraphicalView.setHighlight(2);
-                    stopTextualView.setHighlight(2);
-                }
-            }
+            e -> parent.getWindow().highlightStop(stop, this)
         );
 
         TextualViewStop oldTextualViewStop = null;
-        HashMap<Stop, Node[]> graphicalStopsMap = parent.getWindow().getGraphicalStopsMap();
+        HashMap<Stop, Node[]> graphicalStopsMap =
+                parent.getWindow().getGraphicalStopsMap();
         if (graphicalStopsMap.containsKey(stop)) {
             oldTextualViewStop = (TextualViewStop) graphicalStopsMap.get(stop)[1];
             graphicalStopsMap.get(stop)[1] = this;
@@ -346,7 +320,8 @@ public class TextualViewStop extends VBox {
 
     /**
      * Highlights or un-highlights the graphical object.
-     * @param highlightLevel The level of highlight (2 = primary; 1 = secondary; 0 = none).
+     * @param highlightLevel The level of highlight
+     *                       (2 = primary; 1 = secondary; 0 = none).
      */
     public void setHighlight(int highlightLevel) {
         this.highlightLevel = highlightLevel;

@@ -1,10 +1,7 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
-import com.pld.agile.model.tour.Path;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
@@ -22,7 +19,7 @@ public class GraphicalViewMapLayer extends Pane {
     /**
      * The parent GraphicalView instance.
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
 
     /**
      * GraphicalViewMapLayer constructor.
@@ -30,7 +27,9 @@ public class GraphicalViewMapLayer extends Pane {
      */
     public GraphicalViewMapLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
-        this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setBackground(new Background(
+                new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)
+        ));
 
         MapData mapData = graphicalView.getWindow().getMapData();
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
@@ -46,7 +45,8 @@ public class GraphicalViewMapLayer extends Pane {
                             mapData.getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
-                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
+                    graphicalView.getWindow().getController()
+                            .clickOnGraphicalView(latLonPos);
                 });
 
     }

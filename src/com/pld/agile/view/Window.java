@@ -382,6 +382,43 @@ public class Window extends Application {
     }
 
     /**
+     * Highlights a given stop (along with its pairing pickup / delivery stop)
+     * @param stop The stop to highlight.
+     * @param node The graphical stop that was clicked to highlight the stop.
+     */
+    public void highlightStop(Stop stop, Node node) {
+        unhighlightStops();
+        if (stop.getRequest() != null) {
+            Stop pickup = stop.getRequest().getPickup();
+            Stop delivery = stop.getRequest().getDelivery();
+            if (pickup == null || delivery == null) {
+                return;
+            }
+            GraphicalViewStop graphicalPickup = (GraphicalViewStop) graphicalStopsMap.get(pickup)[0];
+            GraphicalViewStop graphicalDelivery = (GraphicalViewStop) graphicalStopsMap.get(delivery)[0];
+            TextualViewStop textualPickup = (TextualViewStop) graphicalStopsMap.get(pickup)[1];
+            TextualViewStop textualDelivery = (TextualViewStop) graphicalStopsMap.get(delivery)[1];
+            if ((node instanceof GraphicalViewStop gs && gs.equals(graphicalPickup))
+            ||  (node instanceof TextualViewStop ts && ts.equals(textualPickup))) {
+                graphicalPickup.setHighlight(2);
+                textualPickup.setHighlight(2);
+                graphicalDelivery.setHighlight(1);
+                textualDelivery.setHighlight(1);
+            } else {
+                graphicalPickup.setHighlight(1);
+                textualPickup.setHighlight(1);
+                graphicalDelivery.setHighlight(2);
+                textualDelivery.setHighlight(2);
+            }
+        } else {
+            GraphicalViewStop stopGraphicalView = (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
+            TextualViewStop stopTextualView = (TextualViewStop) graphicalStopsMap.get(stop)[1];
+            stopGraphicalView.setHighlight(2);
+            stopTextualView.setHighlight(2);
+        }
+    }
+
+    /**
      * Unhighlights all graphical stops
      */
     public void unhighlightStops() {

@@ -42,6 +42,7 @@ public interface State {
             try {
                 mapLoader.load();
                 w.getTourData().setStopsList(new ArrayList<>());
+                w.getTourData().setTourPaths(new ArrayList<>());
                 w.getTourData().setAssociatedMap(w.getMapData());
                 w.switchToMainPane();
                 w.toggleMenuItem(0, 1, true);
