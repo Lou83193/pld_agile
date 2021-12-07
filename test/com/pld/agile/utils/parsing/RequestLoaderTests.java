@@ -7,14 +7,11 @@ import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.exception.SyntaxException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

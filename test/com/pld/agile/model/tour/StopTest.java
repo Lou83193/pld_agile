@@ -9,11 +9,10 @@ package com.pld.agile.model.tour;
 import com.pld.agile.model.map.Intersection;
 import org.junit.jupiter.api.Test;
 
-import java.util.DuplicateFormatFlagsException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class StopTest {
+public class StopTest {
 
     @Test
     public void testStop (){

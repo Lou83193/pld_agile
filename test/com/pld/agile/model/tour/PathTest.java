@@ -9,9 +9,9 @@ package com.pld.agile.model.tour;
 import com.pld.agile.model.map.Intersection;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PathTest {
+public class PathTest {
 
     @Test
     public void testPath(){

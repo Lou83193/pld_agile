@@ -9,9 +9,9 @@ package com.pld.agile.controller;
 import com.pld.agile.view.Window;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ControllerTest {
+public class ControllerTest {
 
     @Test
     public void testController(){

@@ -6,30 +6,16 @@
 
 package com.pld.agile.model.tour;
 
-import com.pld.agile.controller.Controller;
-import com.pld.agile.controller.LoadedRequestsState;
 import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.utils.exception.PathException;
-import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.utils.parsing.MapLoader;
 import com.pld.agile.utils.parsing.RequestLoader;
-
 import com.pld.agile.utils.tsp.CompleteGraph;
 import com.pld.agile.utils.tsp.Graph;
-import com.pld.agile.utils.tsp.TSP3;
-import com.pld.agile.view.Window;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
