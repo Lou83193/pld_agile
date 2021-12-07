@@ -33,9 +33,12 @@ public class ListOfCommands {
      * @param command Command to add to the list of commands.
      */
     public void add(Command command) {
+        int i = lastCommandIndex + 1;
+        while(i < list.size()) {
+            list.remove(i);
+        }
         lastCommandIndex++;
         list.add(lastCommandIndex, command);
-        list.subList(lastCommandIndex + 1, list.size()).clear();
         command.doCommand();
     }
 
