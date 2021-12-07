@@ -22,6 +22,7 @@ public class MovingStopState implements State {
         TourData tourData = w.getTourData();
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
         loc.add(new MoveStopCommand(c, tourData, stop, intersection));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
 }

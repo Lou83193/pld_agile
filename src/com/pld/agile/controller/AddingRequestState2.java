@@ -32,6 +32,7 @@ public class AddingRequestState2 implements State {
         Intersection intersection = mapData.findClosestIntersection(latLonPos);
         Request newRequest = tourData.constructNewRequest2(intersection);
         loc.add(new AddRequestCommand(c, w, tourData, newRequest));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**

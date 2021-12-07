@@ -76,6 +76,7 @@ public class ComputedTourState implements State {
     public void doDeleteRequest(Controller c, Window w, ListOfCommands loc, Request request) {
         TourData tourData = w.getTourData();
         loc.add(new DeleteRequestCommand(tourData, request));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -89,6 +90,7 @@ public class ComputedTourState implements State {
     public void doShiftStopOrderUp(Controller c, Window w, ListOfCommands loc, Stop stop) {
         TourData tourData = w.getTourData();
         loc.add(new ShiftStopOrderCommand(tourData, stop, -1));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -102,6 +104,7 @@ public class ComputedTourState implements State {
     public void doShiftStopOrderDown(Controller c, Window w, ListOfCommands loc, Stop stop) {
         TourData tourData = w.getTourData();
         loc.add(new ShiftStopOrderCommand(tourData, stop, +1));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -141,6 +144,7 @@ public class ComputedTourState implements State {
     @Override
     public void doChangeStopDuration(Window w, ListOfCommands loc, Stop stop, long newDuration) {
         loc.add(new ChangeStopDurationCommand(w.getTourData(), stop, newDuration));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -151,6 +155,7 @@ public class ComputedTourState implements State {
     @Override
     public void doChangeWarehouseDepartureTime(Window w, ListOfCommands loc, LocalTime time) {
         loc.add(new ChangeWarehouseDepartureTimeCommand(w.getTourData(), time));
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -159,8 +164,7 @@ public class ComputedTourState implements State {
     @Override
     public void doUndo(Window w, ListOfCommands loc) {
         loc.undo();
-        w.toggleMenuItem(1, 0, loc.canUndo());
-        w.toggleMenuItem(1, 1, loc.canRedo());
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
     /**
@@ -169,8 +173,7 @@ public class ComputedTourState implements State {
     @Override
     public void doRedo(Window w, ListOfCommands loc) {
         loc.redo();
-        w.toggleMenuItem(1, 0, loc.canUndo());
-        w.toggleMenuItem(1, 1, loc.canRedo());
+        w.updateUndoRedo(loc.canUndo(), loc.canRedo());
     }
 
 }

@@ -398,6 +398,14 @@ public class Window extends Application {
     }
 
     /**
+     * Enable or disable undo redo buttons
+     */
+    public void updateUndoRedo(boolean canUndo, boolean canRedo) {
+        toggleMenuItem(1, 0, canUndo);
+        toggleMenuItem(1, 1, canRedo);
+    }
+
+    /**
      * Getter for stage.
      * @return stage
      */
