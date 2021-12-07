@@ -272,7 +272,7 @@ public class Window extends Application {
         MenuItem aboutMenu1 = new MenuItem("Help");
         MenuItem aboutMenu2 = new MenuItem("Credits");
         aboutMenu1.setOnAction((e) -> {
-            String path = "/sample_pdf.pdf";
+            String path = "/user_guide.pdf";
             HostServices hostServices = getHostServices();
             hostServices.showDocument(getClass().getResource(path).toString());
         });
