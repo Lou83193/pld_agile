@@ -119,6 +119,7 @@ public class GraphicalView implements Observer {
     public void update(final Observable o, final UpdateType updateType) {
         switch (updateType) {
             case MAP -> {
+                graphicalViewTourLayer.clear();
                 graphicalViewMapLayer.draw();
             }
             case REQUESTS -> {
