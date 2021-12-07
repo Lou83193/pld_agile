@@ -177,7 +177,6 @@ public class GraphicalViewStop extends Pane {
             );
 
             if (editable) {
-                Bounds bounds = this.getBoundsInParent();
                 this.setCursor(Cursor.HAND);
                 this.setOnDragDetected((t) -> {
                     isDragged = true;
@@ -186,6 +185,7 @@ public class GraphicalViewStop extends Pane {
                     t.consume();
                 });
                 this.setOnMouseDragged((t) -> {
+                    Bounds bounds = this.getBoundsInParent();
                     double offsetX = t.getX() - pointerCenterX;
                     double offsetY = t.getY() - pointerCenterY;
                     double viewPortSize = ((ScrollPane) parent.getComponent())
@@ -204,6 +204,7 @@ public class GraphicalViewStop extends Pane {
                 this.setOnMouseReleased((t) -> {
                     if (isDragged) {
                         int offset = 7;
+                        Bounds bounds = this.getBoundsInParent();
                         double x = bounds.getMinX() + offset + pointerCenterX;
                         double y = bounds.getMinY() + offset + pointerCenterY + pointerH;
                         double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(

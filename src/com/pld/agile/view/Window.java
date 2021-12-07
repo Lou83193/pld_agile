@@ -7,7 +7,6 @@ import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.beans.binding.DoubleBinding;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -136,7 +135,7 @@ public class Window extends Application {
         homePane = new BorderPane();
         homePane.setId("home-pane");
         homePane.maxHeightProperty().bind(scene.heightProperty());
-        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1040/720.0));
+        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1040 / 720.0));
 
         // Logo
         ImageView logo = new ImageView(new Image("logo.png"));
@@ -194,7 +193,8 @@ public class Window extends Application {
         mainPane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
-        DoubleBinding sidePanelWidth = mainPane.widthProperty().subtract(graphicalView.getGraphicalViewMapLayer().widthProperty());
+        DoubleBinding sidePanelWidth = mainPane.widthProperty()
+                .subtract(graphicalView.getGraphicalViewMapLayer().widthProperty());
         sidePanel.prefWidthProperty().bind(sidePanelWidth);
         // Textual view
         TextualView textualView = new TextualView(this);
@@ -214,13 +214,15 @@ public class Window extends Application {
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);
 
-        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination undoKeyboardShortcut =
+                new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (undoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(0).fire();
             }
         });
-        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination redoKeyboardShortcut =
+                new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (redoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(1).fire();
@@ -394,10 +396,14 @@ public class Window extends Application {
             if (pickup == null || delivery == null) {
                 return;
             }
-            GraphicalViewStop graphicalPickup = (GraphicalViewStop) graphicalStopsMap.get(pickup)[0];
-            GraphicalViewStop graphicalDelivery = (GraphicalViewStop) graphicalStopsMap.get(delivery)[0];
-            TextualViewStop textualPickup = (TextualViewStop) graphicalStopsMap.get(pickup)[1];
-            TextualViewStop textualDelivery = (TextualViewStop) graphicalStopsMap.get(delivery)[1];
+            GraphicalViewStop graphicalPickup =
+                    (GraphicalViewStop) graphicalStopsMap.get(pickup)[0];
+            GraphicalViewStop graphicalDelivery =
+                    (GraphicalViewStop) graphicalStopsMap.get(delivery)[0];
+            TextualViewStop textualPickup =
+                    (TextualViewStop) graphicalStopsMap.get(pickup)[1];
+            TextualViewStop textualDelivery =
+                    (TextualViewStop) graphicalStopsMap.get(delivery)[1];
             if ((node instanceof GraphicalViewStop gs && gs.equals(graphicalPickup))
             ||  (node instanceof TextualViewStop ts && ts.equals(textualPickup))) {
                 graphicalPickup.setHighlight(2);
@@ -411,8 +417,10 @@ public class Window extends Application {
                 textualDelivery.setHighlight(2);
             }
         } else {
-            GraphicalViewStop stopGraphicalView = (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
-            TextualViewStop stopTextualView = (TextualViewStop) graphicalStopsMap.get(stop)[1];
+            GraphicalViewStop stopGraphicalView =
+                    (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
+            TextualViewStop stopTextualView =
+                    (TextualViewStop) graphicalStopsMap.get(stop)[1];
             stopGraphicalView.setHighlight(2);
             stopTextualView.setHighlight(2);
         }
@@ -436,6 +444,8 @@ public class Window extends Application {
 
     /**
      * Enable or disable undo redo buttons
+     * @param canUndo Whether the application can undo any command
+     * @param canRedo Whether the application can redo any command
      */
     public void updateUndoRedo(boolean canUndo, boolean canRedo) {
         toggleMenuItem(1, 0, canUndo);
