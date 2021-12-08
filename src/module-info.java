@@ -1,6 +1,7 @@
 module com.pld.agile {
     requires javafx.controls;
     requires dom4j;
+    requires java.desktop;
     exports com.pld.agile.controller;
     exports com.pld.agile.model.map;
     exports com.pld.agile.model.tour;

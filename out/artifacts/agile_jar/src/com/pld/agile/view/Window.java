@@ -13,6 +13,11 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,7 +29,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -275,9 +284,25 @@ public class Window extends Application {
         MenuItem aboutMenu2 = new MenuItem("Credits");
         aboutMenu1.setOnAction((e) -> {
             try {
-                String path = "/user_guide.pdf";
-                HostServices hostServices = getHostServices();
-                hostServices.showDocument(getClass().getResource(path).toURI().toString());
+                String path = "user_guide.pdf";
+                InputStream pdfInJar = getClass().getClassLoader().getResourceAsStream(path);
+                try {
+                    File pdf = new File("user_manual.pdf");
+                    FileOutputStream fos = new java.io.FileOutputStream(pdf);
+                    while (pdfInJar.available() > 0) {
+                        fos.write(pdfInJar.read());
+                    }
+                    fos.close();
+                    Desktop.getDesktop().open(pdf);
+                } catch (IOException exx) {
+                    exx.printStackTrace();
+                }
+                /*
+                File jarPath = new File(Window.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+                String filePath = jarPath.getParentFile().getAbsolutePath()  + "/" + path;
+                File pdf = new File(filePath);
+                Desktop.getDesktop().open(pdf);
+                */
             } catch (Exception ex) {
             }
         });
