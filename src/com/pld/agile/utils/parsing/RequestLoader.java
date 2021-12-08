@@ -32,7 +32,7 @@ public class RequestLoader {
     /**
      * Path to the XML file.
      */
-    final private String requestsFilePath;
+    private final String requestsFilePath;
     /**
      * DOM document of the loaded XML file.
      */
@@ -107,7 +107,7 @@ public class RequestLoader {
             }
 
             tour.setStopsList(stopList);
-        } catch(SyntaxException e) {
+        } catch (SyntaxException e) {
             throw e;
         } catch (Exception e) {
             // parsing exception happens when an attribute is missing or invalid

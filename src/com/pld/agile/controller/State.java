@@ -7,7 +7,6 @@ import com.pld.agile.utils.exception.SyntaxException;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
-import javafx.application.HostServices;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * State design pattern interface.
@@ -24,7 +22,7 @@ import java.util.List;
 public interface State {
     
     /**
-     * Fires when the user presses on the "Load map" button.
+     * * Fires when the user presses on the "Load map" button.
      * @param w the application window
      * @param c the controller
      * @return boolean success
@@ -82,7 +80,6 @@ public interface State {
      * @param c the controller
      * @param w the application window
      * @param loc the list of commands
-     * @return boolean success
      */
     default void doComputeTour(Controller c, Window w, ListOfCommands loc) {
     }
@@ -193,13 +190,17 @@ public interface State {
 
     /**
      * Fires when the user requests to undo a command.
+     * @param w
+     * @param loc
      */
     default void doUndo(Window w, ListOfCommands loc) {
     }
 
     /**
      * Fires when the user requests to redo a command.
-     */
+     * @param w
+     * @param loc
+     * */
     default void doRedo(Window w, ListOfCommands loc) {
     }
 

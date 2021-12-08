@@ -247,8 +247,8 @@ public class ViewUtilities {
         Bounds viewPortBound = pane.getViewportBounds();
         Bounds nodeBounds = node.getBoundsInParent();
         Bounds contentBounds = pane.getContent().getLayoutBounds();
-        double viewPortMidPoint = (viewPortBound.getMaxY() + viewPortBound.getMinY())/2;
-        double nodeMidPoint = (nodeBounds.getMaxY() + nodeBounds.getMinY())/2;
+        double viewPortMidPoint = (viewPortBound.getMaxY() + viewPortBound.getMinY()) / 2;
+        double nodeMidPoint = (nodeBounds.getMaxY() + nodeBounds.getMinY()) / 2;
         double currTopY = ViewUtilities.mapValue(pane.getVvalue(), pane.getVmin(), pane.getVmax(), contentBounds.getMinY(), contentBounds.getMaxY() - viewPortBound.getHeight());
         if (nodeBounds.getMinY() >= currTopY && nodeBounds.getMaxY() <= currTopY + viewPortBound.getHeight()) {
             return;

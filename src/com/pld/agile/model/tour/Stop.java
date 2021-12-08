@@ -16,6 +16,9 @@ import java.time.LocalTime;
  */
 public class Stop extends Observable {
 
+    /**
+     * Id counter that is attributed to Stop's id.
+     */
     private static int idCounter = 0;
 
     /**
@@ -141,7 +144,7 @@ public class Stop extends Observable {
      * Setter for attribute type.
      * @param arrivalTime the time of arrival of the stop
      */
-    public void setArrivalTime(LocalTime arrivalTime){ this.arrivalTime=arrivalTime; }
+    public void setArrivalTime(LocalTime arrivalTime) { this.arrivalTime = arrivalTime; }
 
     /**
      * Getter for attribute address.
@@ -153,7 +156,7 @@ public class Stop extends Observable {
      * Setter for attribute type.
      * @param departureTime the time of departure of the stop
      */
-    public void setDepartureTime(LocalTime departureTime){ this.departureTime=departureTime; }
+    public void setDepartureTime(LocalTime departureTime) { this.departureTime = departureTime; }
 
     /**
      * Getter for attribute address.
@@ -165,7 +168,7 @@ public class Stop extends Observable {
      * Setter for attribute type.
      * @param stopNumber the number of visit of the stop
      */
-    public void setStopNumber(int stopNumber){ this.stopNumber=stopNumber; }
+    public void setStopNumber(int stopNumber) { this.stopNumber = stopNumber; }
 
     /**
      * Getter for attribute request.
@@ -181,12 +184,10 @@ public class Stop extends Observable {
      */
     @Override
     public String toString() {
-        return "Stop{" +
-                "id=" + id +
-                ", address=" + address +
-                ", duration=" + duration +
-                ", stopNumber=" + stopNumber +
-                '}';
+        return "Stop{" + "id=" + id
+                + ", address=" + address
+                + ", duration=" + duration
+                + ", stopNumber=" + stopNumber + '}';
     }
 
     /**

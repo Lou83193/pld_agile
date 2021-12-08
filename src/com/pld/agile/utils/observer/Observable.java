@@ -31,7 +31,9 @@ public class Observable {
      * @param o Observer
      */
     public void addObserver(Observer o) {
-        if (!obs.contains(o)) obs.add(o);
+        if (!obs.contains(o)) {
+            obs.add(o);
+        }
     }
 
     /**
@@ -39,7 +41,9 @@ public class Observable {
      * @param o Observer
      */
     public void removeObserver(Observer o) {
-        if (obs.contains(o)) obs.remove(o);
+        if (obs.contains(o)) {
+            obs.remove(o);
+        }
     }
 
     /**

@@ -10,7 +10,9 @@ package com.pld.agile.model.tour;
  * Represents a delivery request.
  */
 public class Request {
-
+    /**
+     * Id counter that is attributed to Request's id.
+     */
     private static int idCounter = 0;
 
     /**
@@ -92,9 +94,6 @@ public class Request {
      */
     @Override
     public String toString() {
-        return "Request{" +
-                "pickup=" + pickup +
-                ", delivery=" + delivery +
-                '}';
+        return "Request{" + "pickup=" + pickup + ", delivery=" + delivery + '}';
     }
 }

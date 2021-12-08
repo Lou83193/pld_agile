@@ -37,7 +37,7 @@ public class ListOfCommands {
      */
     public void add(Command command) {
         int i = lastCommandIndex + 1;
-        while(i < list.size()) {
+        while (i < list.size()) {
             list.remove(i);
         }
         lastCommandIndex++;
