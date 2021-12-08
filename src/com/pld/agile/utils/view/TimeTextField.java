@@ -9,11 +9,8 @@ package com.pld.agile.utils.view;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.event.EventHandler;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 import java.util.regex.Pattern;
 
@@ -43,19 +40,15 @@ public class TimeTextField extends TextField {
         hours.bind(new TimeTextField.TimeUnitBinding(Unit.HOURS));
         minutes.bind(new TimeTextField.TimeUnitBinding(Unit.MINUTES));
     }
-
     public ReadOnlyIntegerProperty hoursProperty() {
         return hours.getReadOnlyProperty();
     }
-
     public int getHours() {
         return hours.get();
     }
-
     public ReadOnlyIntegerProperty minutesProperty() {
         return minutes.getReadOnlyProperty();
     }
-
     public int getMinutes() {
         return minutes.get();
     }
@@ -65,6 +58,7 @@ public class TimeTextField extends TextField {
         // Ignore this. Our text is always 5 characters long, we cannot
         // append anything
     }
+
 
     @Override
     public boolean deleteNextChar() {

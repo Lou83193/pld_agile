@@ -1,7 +1,6 @@
 package com.pld.agile.view;
 
 import com.pld.agile.model.map.MapData;
-import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.ViewUtilities;

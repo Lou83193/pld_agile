@@ -7,7 +7,6 @@
 package com.pld.agile.view;
 
 import com.pld.agile.model.map.Segment;
-import com.pld.agile.model.tour.Path;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;

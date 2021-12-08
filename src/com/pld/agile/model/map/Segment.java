@@ -112,11 +112,6 @@ public class Segment {
 
     @Override
     public String toString() {
-        return "Segment{" +
-                "length=" + length +
-                ", name='" + name + '\'' +
-                ", origin=" + origin +
-                ", destination=" + destination +
-                '}';
+        return "Segment{" + "length=" + length + ", name='" + name + '\'' + ", origin=" + origin + ", destination=" + destination + '}';
     }
 }

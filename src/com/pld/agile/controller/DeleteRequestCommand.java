@@ -8,7 +8,6 @@ package com.pld.agile.controller;
 
 import com.pld.agile.model.tour.Request;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.exception.PathException;
 
 /**
  * Command deleting a request from the tour.
@@ -52,7 +51,7 @@ public class DeleteRequestCommand implements Command {
        tourData.recomputeStopIDs();
         try {
           tourData.addLatestRequest(request.getPickup().getStopNumber(), request.getDelivery().getStopNumber());
-        } catch (Exception e) {}
+        } catch (Exception e) { }
     }
 
 }

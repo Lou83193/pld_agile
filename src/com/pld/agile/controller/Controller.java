@@ -84,7 +84,7 @@ public class Controller {
     /**
      * Constructor of the controller.
      * Initialises the parameters.
-     * @param window application Window
+     * @param window application Window.
      */
     public Controller(Window window) {
         this.window = window;
@@ -94,22 +94,25 @@ public class Controller {
 
     /**
      * Getter for attribute window.
+     * @return attibute window.
      */
     public Window getWindow() { return window; }
 
     /**
      * Getter for attribute currState.
+     * @return attribute currState.
      */
     public State getCurrState() { return currState; }
 
     /**
      * Getter for attribute awaitMapState.
+     * @return attribute initialState.
      */
     public State getInitialState() { return initialState; }
 
     /**
      * Setter for attribute currState.
-     * @param s new State
+     * @param s new State.
      */
     public void setCurrState(State s) {
         currState = s;
@@ -141,24 +144,28 @@ public class Controller {
     }
     /**
      * Calls method clickOnGraphicalView() of the current state.
+     * @param latLonPos click's coordinates.
      */
     public void clickOnGraphicalView(double[] latLonPos) {
         currState.doClickOnGraphicalView(this, window, listOfCommands, latLonPos);
     }
     /**
      * Calls method deleteRequest() of the current state.
+     * @param request the request to delete.
      */
     public void deleteRequest(Request request) {
         currState.doDeleteRequest(this, window, listOfCommands, request);
     }
     /**
      * Calls method shiftStopOrderUp() of the current state.
+     * @param stop the stop to shift order up.
      */
     public void shiftStopOrderUp(Stop stop) {
         currState.doShiftStopOrderUp(this, window, listOfCommands, stop);
     }
     /**
      * Calls method shiftStopOrderDown() of the current state.
+     * @param stop the stop to shift order down.
      */
     public void shiftStopOrderDown(Stop stop) {
         currState.doShiftStopOrderDown(this, window, listOfCommands, stop);
@@ -191,6 +198,8 @@ public class Controller {
     }
     /**
      * Calls method releaseOnGraphicalView() of the current state.
+     * @param stop dragged stop
+     * @param latLonPos coordinates.
      */
     public void dragOffGraphicalStop(Stop stop, double[] latLonPos) {
         currState.doDragOffGraphicalStop(this, window, listOfCommands, stop, latLonPos);

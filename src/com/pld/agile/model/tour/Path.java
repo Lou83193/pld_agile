@@ -34,6 +34,8 @@ public class Path {
 
     /**
      * Path constructor.
+     * @param origin path origin
+     * @param destination path destination
      */
     public Path(Stop origin, Stop destination) {
         this.origin = origin;

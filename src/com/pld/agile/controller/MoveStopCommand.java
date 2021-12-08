@@ -78,7 +78,7 @@ public class MoveStopCommand implements Command {
     public void undoCommand() {
         try {
             tourData.moveStop(stop, oldIntersection);
-        } catch(Exception e) {}
+        } catch (Exception e) { }
     }
 
 }

@@ -67,7 +67,9 @@ public class GraphicalViewStop extends Pane {
      * The text displaying the order number of the graphical stop.
      */
     private Text numText;
-
+    /**
+     * The state of the graphical stop.
+     */
     private boolean isDragged;
 
     /**
@@ -191,8 +193,7 @@ public class GraphicalViewStop extends Pane {
                             deliveryGraphicalView.setHighlight(2);
                             deliveryTextualView.setHighlight(2);
                         }
-                    }
-                    else {
+                    } else {
                         GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
                         TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
                         stopGraphicalView.setHighlight(2);
@@ -214,12 +215,12 @@ public class GraphicalViewStop extends Pane {
                     double offsetX = t.getX() - pointerCenterX;
                     double offsetY = t.getY() - pointerCenterY;
                     double viewPortSize = ((ScrollPane) parent.getComponent()).getHeight();
-                    if (this.getBoundsInParent().getMinX() + offsetX >= -viewPortSize*0.05
-                    &&  this.getBoundsInParent().getMaxX() + offsetX <= +viewPortSize*1.05) {
+                    if (this.getBoundsInParent().getMinX() + offsetX >= -viewPortSize * 0.05
+                    &&  this.getBoundsInParent().getMaxX() + offsetX <= +viewPortSize * 1.05) {
                         this.setTranslateX(this.getTranslateX() + offsetX);
                     }
-                    if (this.getBoundsInParent().getMinY() + offsetY >= -viewPortSize*0.05
-                    &&  this.getBoundsInParent().getMaxY() + offsetY <= +viewPortSize*1.05) {
+                    if (this.getBoundsInParent().getMinY() + offsetY >= -viewPortSize * 0.05
+                    &&  this.getBoundsInParent().getMaxY() + offsetY <= +viewPortSize * 1.05) {
                         this.setTranslateY(this.getTranslateY() + offsetY);
                     }
                     t.consume();

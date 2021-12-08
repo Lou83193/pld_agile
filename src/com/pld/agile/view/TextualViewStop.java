@@ -2,41 +2,22 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.model.tour.StopType;
-import com.pld.agile.utils.observer.Observable;
-import com.pld.agile.utils.observer.Observer;
-import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.TimeTextField;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Pair;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 /**
  * Graphical object representing a Stop in the textual view.
@@ -103,7 +84,7 @@ public class TextualViewStop extends VBox {
 
         HBox labelPanel = new HBox(8);
         // Stop Icon
-        labelGraphic = new GraphicalViewStop(stop, null,14, false);
+        labelGraphic = new GraphicalViewStop(stop, null, 14, false);
         // Label
         String labelTextString = "";
         switch (type) {
@@ -204,7 +185,7 @@ public class TextualViewStop extends VBox {
         // Duration
         if (type != StopType.WAREHOUSE) {
             Text durationText = new Text("Duration (sec):");
-            TextField durationInput = new TextField((int)duration + "");
+            TextField durationInput = new TextField((int) duration + "");
             durationInput.setFocusTraversable(false);
             if (editable) {
                 durationInput.textProperty().addListener(
@@ -309,8 +290,7 @@ public class TextualViewStop extends VBox {
                         deliveryGraphicalView.setHighlight(2);
                         deliveryTextualView.setHighlight(2);
                     }
-                }
-                else {
+                } else {
                     GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
                     TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
                     stopGraphicalView.setHighlight(2);

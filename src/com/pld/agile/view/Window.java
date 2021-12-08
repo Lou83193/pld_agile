@@ -7,7 +7,6 @@ import com.pld.agile.model.tour.TourData;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.beans.binding.DoubleBinding;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -136,7 +135,7 @@ public class Window extends Application {
         homePane = new BorderPane();
         homePane.setId("home-pane");
         homePane.maxHeightProperty().bind(scene.heightProperty());
-        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1040/720.0));
+        homePane.maxWidthProperty().bind(scene.heightProperty().multiply(1040 / 720.0));
 
         // Logo
         ImageView logo = new ImageView(new Image("logo.png"));

@@ -8,14 +8,10 @@ package com.pld.agile.view;
 
 import com.pld.agile.model.map.Segment;
 import com.pld.agile.model.tour.Path;
-import com.pld.agile.utils.tsp.Graph;
 import com.pld.agile.utils.view.ViewUtilities;
-import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
@@ -72,8 +68,7 @@ public class GraphicalViewPath extends Polyline {
         if (finished) {
             colour1 = ViewUtilities.COLOURS.get("DARK_ORANGE");
             colour2 = ViewUtilities.COLOURS.get("BLUE");
-        }
-        else {
+        } else {
             colour1 = ViewUtilities.COLOURS.get("PURPLE");
             colour2 = ViewUtilities.COLOURS.get("YELLOW");
         }

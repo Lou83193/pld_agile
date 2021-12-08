@@ -6,14 +6,11 @@
 
 package com.pld.agile.model.map;
 
-import com.pld.agile.controller.Controller;
 import com.pld.agile.utils.observer.Observable;
 import com.pld.agile.utils.observer.UpdateType;
 import com.pld.agile.utils.view.ViewUtilities;
-import com.pld.agile.view.Window;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

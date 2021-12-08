@@ -15,6 +15,6 @@ public interface Observer {
      * @param observed Observable the caller
      * @param updateType UpdateType the type of update
      */
-    public void update(Observable observed, UpdateType updateType);
+    void update(Observable observed, UpdateType updateType);
 
 }

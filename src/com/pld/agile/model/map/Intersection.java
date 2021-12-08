@@ -13,7 +13,9 @@ import java.util.List;
  * Represents an intersection on the map.
  */
 public class Intersection {
-
+    /**
+     * Id counter that is attributed to Intersection's id.
+     */
     private static int idCounter = 0;
 
     /**
@@ -128,12 +130,7 @@ public class Intersection {
 
     @Override
     public String toString() {
-        return "Intersection{" +
-                "id='" + id + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                //", originOf=" + originOf +
-                '}';
+        return "Intersection{" + "id='" + id + '\'' + ", latitude=" + latitude + ", longitude=" + longitude + '}';
     }
 
     /**

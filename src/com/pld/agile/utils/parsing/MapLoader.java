@@ -73,11 +73,11 @@ public class MapLoader {
 
     /**
      * Adds a segment to the application model : Used to guarantee that there is only one segment of same origin & destination - makes up keep the shortest one in that case.
-     * @param segments
-     * @param s
+     * @param segments liste of segment
+     * @param s segment to add
      */
     private void addSegmentIfNotRedundant(List<Segment> segments, Segment s) {
-        boolean shouldAdd = true;
+        boolean shouldAdd;
         // we don't add segments of same origin & dest, of length 0
         shouldAdd = !((s.getOrigin().equals(s.getDestination())) || (s.getLength() == 0));
         Segment toBeRemoved = null;
@@ -122,7 +122,9 @@ public class MapLoader {
      */
     private boolean isValidCoordinate(String coord) {
         try {
-            if (coord == null) return false;
+            if (coord == null) {
+                return false;
+            }
             Double.parseDouble(coord);
             return true;
         } catch (NumberFormatException e) {
@@ -132,7 +134,6 @@ public class MapLoader {
 
     /**
      * Coordinates the entire parsing process - only method to call to fill the provided map.
-     * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
      */
     public void load() throws IOException, SyntaxException {
         try {

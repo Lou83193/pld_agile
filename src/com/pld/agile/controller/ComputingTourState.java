@@ -1,22 +1,9 @@
 package com.pld.agile.controller;
 
-import com.pld.agile.model.tour.Request;
-import com.pld.agile.model.tour.Stop;
-import com.pld.agile.model.tour.StopType;
 import com.pld.agile.model.tour.TourData;
-import com.pld.agile.utils.exception.SyntaxException;
-import com.pld.agile.utils.parsing.RequestLoader;
 import com.pld.agile.view.ButtonEventType;
 import com.pld.agile.view.ButtonListener;
 import com.pld.agile.view.Window;
-import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.stage.FileChooser;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * State when the map and a list of requests are loaded, and the tour is computing.

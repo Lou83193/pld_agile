@@ -1,10 +1,7 @@
 package com.pld.agile.view;
 
-import com.pld.agile.model.map.Intersection;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.map.Segment;
-import com.pld.agile.model.tour.Path;
-import com.pld.agile.model.tour.TourData;
 import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.geometry.Insets;
