@@ -285,7 +285,6 @@ public class Window extends Application {
         aboutMenu1.setOnAction((e) -> {
             try {
                 String path = "user_guide.pdf";
-                /*
                 InputStream pdfInJar = getClass().getClassLoader().getResourceAsStream(path);
                 try {
                     File pdf = new File("user_manual.pdf");
@@ -298,16 +297,12 @@ public class Window extends Application {
                 } catch (IOException exx) {
                     exx.printStackTrace();
                 }
-                */
                 /*
                 File jarPath = new File(Window.class.getProtectionDomain().getCodeSource().getLocation().getPath());
                 String filePath = jarPath.getParentFile().getAbsolutePath()  + "/" + path;
                 File pdf = new File(filePath);
                 Desktop.getDesktop().open(pdf);
                 */
-                HostServices hostServices = getHostServices();
-                InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-                hostServices.showDocument(getClass().getResource(path).toURI().toString());
             } catch (Exception ex) {
             }
         });
