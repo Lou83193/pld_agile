@@ -9,6 +9,9 @@ package com.pld.agile.controller;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * All commands executed up to this point.
+ */
 public class ListOfCommands {
     /**
      * List that stores all the executed commands up to this point, in order in which they have been executed.

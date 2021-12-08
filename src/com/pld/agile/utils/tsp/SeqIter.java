@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Iterator for candidates
+ */
 public class SeqIter implements Iterator<Integer> {
 	private Integer[] candidates;
 	private int nbCandidates;
@@ -18,8 +21,8 @@ public class SeqIter implements Iterator<Integer> {
 	 * Create an iterator to traverse the set of vertices in <code>unvisited</code> 
 	 * which are successors of <code>currentVertex</code> in <code>g</code>
 	 * Vertices are traversed in the same order as in <code>unvisited</code>
-	 * @param unvisited
-	 * @param currentVertex
+	 * @param unvisited unvisited
+	 * @param currentVertex current vertex
 	 * @param g
 	 */
 	public SeqIter (Collection<Integer> unvisited, int currentVertex, Graph g) {

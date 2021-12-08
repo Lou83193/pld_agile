@@ -54,6 +54,8 @@ public class RequestLoader {
 
     /**
      * Coordinates the entire parsing process - only method to call to fill the provided TourData.
+     * @throws SyntaxException
+     * @throws IOException
      */
     public void load() throws SyntaxException, IOException {
         try {

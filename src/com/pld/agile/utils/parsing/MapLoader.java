@@ -132,7 +132,8 @@ public class MapLoader {
 
     /**
      * Coordinates the entire parsing process - only method to call to fill the provided map.
-     * @return boolean true if map has been successfully filled, false if the provided xml file was invalid
+     * @throws IOException
+     * @throws SyntaxException
      */
     public void load() throws IOException, SyntaxException {
         try {

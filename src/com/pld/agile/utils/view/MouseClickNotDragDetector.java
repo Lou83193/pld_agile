@@ -46,10 +46,20 @@ public class MouseClickNotDragDetector {
         this.pressedDurationTreshold = 200;
     }
 
+    /**
+     * Enable click not drag detecting
+     * @param node
+     * @return
+     */
     public static MouseClickNotDragDetector clickNotDragDetectingOn(Node node) {
         return new MouseClickNotDragDetector(node);
     }
 
+    /**
+     * Enaable duration threshold.
+     * @param durationTreshold
+     * @return
+     */
     public MouseClickNotDragDetector withPressedDurationThreshold(long durationTreshold) {
         this.pressedDurationTreshold = durationTreshold;
         return this;
