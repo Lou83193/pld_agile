@@ -24,7 +24,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -278,7 +277,6 @@ public class Window extends Application {
             try {
                 String path = "/user_guide.pdf";
                 HostServices hostServices = getHostServices();
-                //InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
                 hostServices.showDocument(getClass().getResource(path).toURI().toString());
             } catch (Exception ex) {
             }
