@@ -101,7 +101,7 @@ public class TourData extends Observable implements Observer {
     }
     /**
      * Setter for attribute warehouse.
-     * @param warehouse the warehouse (start & end) Stop
+     * @param warehouse the warehouse (start and end) Stop
      */
     public void setWarehouse(Stop warehouse) {
         this.warehouse = warehouse;

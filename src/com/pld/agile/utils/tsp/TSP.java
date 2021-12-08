@@ -19,7 +19,7 @@ public interface TSP {
 	/**
 	 * @param i
 	 * @return the ith visited vertex in the solution computed by <code>searchSolution</code> 
-	 * (-1 if <code>searcheSolution</code> has not been called yet, or if i < 0 or i >= g.getNbSommets())
+	 * (-1 if <code>searcheSolution</code> has not been called yet, or if i inferior to 0 or i greater or equal g.getNbSommets())
 	 */
 	public Integer getSolution(int i);
 	
