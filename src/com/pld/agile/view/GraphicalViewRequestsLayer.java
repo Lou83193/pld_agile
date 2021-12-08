@@ -15,7 +15,7 @@ public class GraphicalViewRequestsLayer extends Group {
     /**
      * The parent GraphicalView instance.
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
 
     /**
      * GraphicalViewRequestsLayer constructor.

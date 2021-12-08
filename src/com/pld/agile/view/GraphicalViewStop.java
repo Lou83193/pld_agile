@@ -9,6 +9,7 @@ package com.pld.agile.view;
 import com.pld.agile.model.map.MapData;
 import com.pld.agile.model.tour.Stop;
 import com.pld.agile.utils.view.ViewUtilities;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -38,15 +39,15 @@ public class GraphicalViewStop extends Pane {
     /**
      * The center of the shape's X coordinate.
      */
-    private double pointerCenterX;
+    private final double pointerCenterX;
     /**
      * The center of the shape's Y coordinate.
      */
-    private double pointerCenterY;
+    private final double pointerCenterY;
     /**
      * The pointer's height.
      */
-    private double pointerH;
+    private final double pointerH;
     /**
      * The fill colour of the graphical stop.
      */
@@ -58,17 +59,17 @@ public class GraphicalViewStop extends Pane {
     /**
      * The shape of the graphical stop.
      */
-    private Shape stopGraphic;
+    private final Shape stopGraphic;
     /**
      * The shape of the highlight pointer on the graphical stop.
      */
-    private Shape highlightPointerGraphic;
+    private final Shape highlightPointerGraphic;
     /**
      * The text displaying the order number of the graphical stop.
      */
     private Text numText;
     /**
-     * The state of the graphical stop.
+     * Whether the stop is being dragged or not.
      */
     private boolean isDragged;
 
@@ -88,7 +89,10 @@ public class GraphicalViewStop extends Pane {
      * @param graphicSize The size of the pointer.
      * @param editable Whether the stop is draggable or not.
      */
-    public GraphicalViewStop(Stop stop, GraphicalView parent, double graphicSize, boolean editable) {
+    public GraphicalViewStop(Stop stop,
+                             GraphicalView parent,
+                             double graphicSize,
+                             boolean editable) {
 
         isDragged = false;
         fillColour = Color.BLACK;
@@ -169,41 +173,10 @@ public class GraphicalViewStop extends Pane {
         if (parent != null) {
 
             this.setOnMousePressed(
-                (e) -> {
-                    Window w = parent.getWindow();
-                    w.unhighlightStops();
-                    if (stop.getRequest() != null) {
-                        Stop pickup = stop.getRequest().getPickup();
-                        Stop delivery = stop.getRequest().getDelivery();
-                        if (pickup == null || delivery == null) {
-                            return;
-                        }
-                        GraphicalViewStop pickupGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(pickup)[0];
-                        GraphicalViewStop deliveryGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(delivery)[0];
-                        TextualViewStop pickupTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(pickup)[1];
-                        TextualViewStop deliveryTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(delivery)[1];
-                        if (this.equals(pickupGraphicalView)) {
-                            pickupGraphicalView.setHighlight(2);
-                            pickupTextualView.setHighlight(2);
-                            deliveryGraphicalView.setHighlight(1);
-                            deliveryTextualView.setHighlight(1);
-                        } else {
-                            pickupGraphicalView.setHighlight(1);
-                            pickupTextualView.setHighlight(1);
-                            deliveryGraphicalView.setHighlight(2);
-                            deliveryTextualView.setHighlight(2);
-                        }
-                    } else {
-                        GraphicalViewStop stopGraphicalView = (GraphicalViewStop) w.getGraphicalStopsMap().get(stop)[0];
-                        TextualViewStop stopTextualView = (TextualViewStop) w.getGraphicalStopsMap().get(stop)[1];
-                        stopGraphicalView.setHighlight(2);
-                        stopTextualView.setHighlight(2);
-                    }
-                }
+                (e) -> parent.getWindow().highlightStop(stop, this)
             );
 
             if (editable) {
-
                 this.setCursor(Cursor.HAND);
                 this.setOnDragDetected((t) -> {
                     isDragged = true;
@@ -212,15 +185,17 @@ public class GraphicalViewStop extends Pane {
                     t.consume();
                 });
                 this.setOnMouseDragged((t) -> {
+                    Bounds bounds = this.getBoundsInParent();
                     double offsetX = t.getX() - pointerCenterX;
                     double offsetY = t.getY() - pointerCenterY;
-                    double viewPortSize = ((ScrollPane) parent.getComponent()).getHeight();
-                    if (this.getBoundsInParent().getMinX() + offsetX >= -viewPortSize * 0.05
-                    &&  this.getBoundsInParent().getMaxX() + offsetX <= +viewPortSize * 1.05) {
+                    double viewPortSize = ((ScrollPane) parent.getComponent())
+                            .getHeight();
+                    if (bounds.getMinX() + offsetX >= -viewPortSize * 0.05
+                    &&  bounds.getMaxX() + offsetX <= viewPortSize * 1.05) {
                         this.setTranslateX(this.getTranslateX() + offsetX);
                     }
-                    if (this.getBoundsInParent().getMinY() + offsetY >= -viewPortSize * 0.05
-                    &&  this.getBoundsInParent().getMaxY() + offsetY <= +viewPortSize * 1.05) {
+                    if (bounds.getMinY() + offsetY >= -viewPortSize * 0.05
+                    &&  bounds.getMaxY() + offsetY <= viewPortSize * 1.05) {
                         this.setTranslateY(this.getTranslateY() + offsetY);
                     }
                     t.consume();
@@ -229,16 +204,20 @@ public class GraphicalViewStop extends Pane {
                 this.setOnMouseReleased((t) -> {
                     if (isDragged) {
                         int offset = 7;
+                        Bounds bounds = this.getBoundsInParent();
+                        double x = bounds.getMinX() + offset + pointerCenterX;
+                        double y = bounds.getMinY() + offset + pointerCenterY + pointerH;
                         double[] latLonPos = ViewUtilities.projectMercatorLatLonInv(
-                                this.getBoundsInParent().getMinX() + offset + pointerCenterX,
-                                this.getBoundsInParent().getMinY() + offset + pointerCenterY + pointerH,
+                                x,
+                                y,
                                 mapData.getMinLat(),
                                 mapData.getMinLon(),
                                 mapData.getMaxLat(),
                                 mapData.getMaxLon(),
                                 ((ScrollPane) parent.getComponent()).getHeight()
                         );
-                        parent.getWindow().getController().dragOffGraphicalStop(stop, latLonPos);
+                        parent.getWindow().getController()
+                                .dragOffGraphicalStop(stop, latLonPos);
                         isDragged = false;
                         t.consume();
                     }
@@ -247,7 +226,8 @@ public class GraphicalViewStop extends Pane {
             }
 
             GraphicalViewStop oldGraphicalViewStop = null;
-            HashMap<Stop, Node[]> graphicalStopsMap = parent.getWindow().getGraphicalStopsMap();
+            HashMap<Stop, Node[]> graphicalStopsMap =
+                    parent.getWindow().getGraphicalStopsMap();
             if (graphicalStopsMap.containsKey(stop)) {
                 oldGraphicalViewStop = (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
                 graphicalStopsMap.get(stop)[0] = this;
@@ -292,7 +272,11 @@ public class GraphicalViewStop extends Pane {
         this.highlightLevel = highlightLevel;
         if (highlightLevel > 0) {
             DropShadow shadow = new DropShadow();
-            shadow.setColor(ViewUtilities.mixColours(ViewUtilities.COLOURS.get("ORANGE"), Color.WHITE, 0.6));
+            shadow.setColor(ViewUtilities.mixColours(
+                    ViewUtilities.COLOURS.get("ORANGE"),
+                    Color.WHITE,
+                    0.6)
+            );
             shadow.setRadius(5);
             this.setEffect(shadow);
             stopGraphic.setFill(Color.WHITE);

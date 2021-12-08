@@ -12,11 +12,11 @@ public class ButtonListener implements EventHandler<ActionEvent> {
     /**
      * Button press event type.
      */
-    private ButtonEventType buttonType;
+    private final ButtonEventType buttonType;
     /**
      * The application's Controller instance.
      */
-    private Controller controller;
+    private final Controller controller;
 
     /**
      * Constructor for the button listener.

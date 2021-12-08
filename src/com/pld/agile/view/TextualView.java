@@ -19,15 +19,15 @@ public class TextualView implements Observer {
     /**
      * The application's TourData instance.
      */
-    private TourData tourData;
+    private final TourData tourData;
     /**
      * The application's Window instance.
      */
-    private Window window;
+    private final Window window;
     /**
      * Wrapper component encapsulating the textual view.
      */
-    private ScrollPane component;
+    private final ScrollPane component;
 
     /**
      * TextualView constructor.
@@ -81,7 +81,6 @@ public class TextualView implements Observer {
         requestListContainer.getStyleClass().add("white-background");
 
         List<Path> tourPaths = tourData.getTourPaths();
-      
         for (Path path : tourPaths) {
             Stop stop = path.getOrigin();
             VBox requestPanel = new TextualViewStop(stop, this, true);
@@ -91,8 +90,14 @@ public class TextualView implements Observer {
         VBox oldContent = (VBox) component.getContent();
         component.setContent(requestListContainer);
 
-        if (oldContent.getChildren().size() >= requestListContainer.getChildren().size()) {
-            component.setVvalue(ViewUtilities.clamp(oldScrollValue, component.getVmin(), component.getVmax()));
+        int oldContentSize = oldContent.getChildren().size();
+        int newContentSize = requestListContainer.getChildren().size();
+        if (oldContentSize >= newContentSize) {
+            component.setVvalue(ViewUtilities.clamp(
+                    oldScrollValue,
+                    component.getVmin(),
+                    component.getVmax()
+            ));
         } else {
             component.setVvalue(1);
         }

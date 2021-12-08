@@ -19,7 +19,7 @@ public class GraphicalViewMapLayer extends Pane {
     /**
      * The parent GraphicalView instance.
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
 
     /**
      * GraphicalViewMapLayer constructor.
@@ -27,7 +27,9 @@ public class GraphicalViewMapLayer extends Pane {
      */
     public GraphicalViewMapLayer(GraphicalView graphicalView) {
         this.graphicalView = graphicalView;
-        this.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setBackground(new Background(
+                new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)
+        ));
 
         MapData mapData = graphicalView.getWindow().getMapData();
         MouseClickNotDragDetector.clickNotDragDetectingOn(this)
@@ -43,7 +45,8 @@ public class GraphicalViewMapLayer extends Pane {
                             mapData.getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
-                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
+                    graphicalView.getWindow().getController()
+                            .clickOnGraphicalView(latLonPos);
                 });
 
     }

@@ -193,7 +193,8 @@ public class Window extends Application {
         mainPane.setCenter(centerPanel);
 
         sidePanel = new BorderPane();
-        DoubleBinding sidePanelWidth = mainPane.widthProperty().subtract(graphicalView.getGraphicalViewMapLayer().widthProperty());
+        DoubleBinding sidePanelWidth = mainPane.widthProperty()
+                .subtract(graphicalView.getGraphicalViewMapLayer().widthProperty());
         sidePanel.prefWidthProperty().bind(sidePanelWidth);
         // Textual view
         TextualView textualView = new TextualView(this);
@@ -213,13 +214,15 @@ public class Window extends Application {
         sidePanel.setBottom(buttonWrapper);
         mainPane.setRight(sidePanel);
 
-        final KeyCombination undoKeyboardShortcut = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination undoKeyboardShortcut =
+                new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (undoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(0).fire();
             }
         });
-        final KeyCombination redoKeyboardShortcut = new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination redoKeyboardShortcut =
+                new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> {
             if (redoKeyboardShortcut.match(event)) {
                 menuBar.getMenus().get(1).getItems().get(1).fire();
@@ -381,6 +384,49 @@ public class Window extends Application {
     }
 
     /**
+     * Highlights a given stop (along with its pairing pickup / delivery stop)
+     * @param stop The stop to highlight.
+     * @param node The graphical stop that was clicked to highlight the stop.
+     */
+    public void highlightStop(Stop stop, Node node) {
+        unhighlightStops();
+        if (stop.getRequest() != null) {
+            Stop pickup = stop.getRequest().getPickup();
+            Stop delivery = stop.getRequest().getDelivery();
+            if (pickup == null || delivery == null) {
+                return;
+            }
+            GraphicalViewStop graphicalPickup =
+                    (GraphicalViewStop) graphicalStopsMap.get(pickup)[0];
+            GraphicalViewStop graphicalDelivery =
+                    (GraphicalViewStop) graphicalStopsMap.get(delivery)[0];
+            TextualViewStop textualPickup =
+                    (TextualViewStop) graphicalStopsMap.get(pickup)[1];
+            TextualViewStop textualDelivery =
+                    (TextualViewStop) graphicalStopsMap.get(delivery)[1];
+            if ((node instanceof GraphicalViewStop gs && gs.equals(graphicalPickup))
+            ||  (node instanceof TextualViewStop ts && ts.equals(textualPickup))) {
+                graphicalPickup.setHighlight(2);
+                textualPickup.setHighlight(2);
+                graphicalDelivery.setHighlight(1);
+                textualDelivery.setHighlight(1);
+            } else {
+                graphicalPickup.setHighlight(1);
+                textualPickup.setHighlight(1);
+                graphicalDelivery.setHighlight(2);
+                textualDelivery.setHighlight(2);
+            }
+        } else {
+            GraphicalViewStop stopGraphicalView =
+                    (GraphicalViewStop) graphicalStopsMap.get(stop)[0];
+            TextualViewStop stopTextualView =
+                    (TextualViewStop) graphicalStopsMap.get(stop)[1];
+            stopGraphicalView.setHighlight(2);
+            stopTextualView.setHighlight(2);
+        }
+    }
+
+    /**
      * Unhighlights all graphical stops
      */
     public void unhighlightStops() {
@@ -398,6 +444,8 @@ public class Window extends Application {
 
     /**
      * Enable or disable undo redo buttons
+     * @param canUndo Whether the application can undo any command
+     * @param canRedo Whether the application can redo any command
      */
     public void updateUndoRedo(boolean canUndo, boolean canRedo) {
         toggleMenuItem(1, 0, canUndo);

@@ -21,23 +21,23 @@ public class GraphicalView implements Observer {
     /**
      * The application's Window instance.
      */
-    private Window window;
+    private final Window window;
     /**
      * Layer containing the map segments
      */
-    private GraphicalViewMapLayer graphicalViewMapLayer;
+    private final GraphicalViewMapLayer graphicalViewMapLayer;
     /**
      * Layer containing the tour highlights
      */
-    private GraphicalViewTourLayer graphicalViewTourLayer;
+    private final GraphicalViewTourLayer graphicalViewTourLayer;
     /**
      * Layer containing the request stops.
      */
-    private GraphicalViewRequestsLayer graphicalViewRequestsLayer;
+    private final GraphicalViewRequestsLayer graphicalViewRequestsLayer;
     /**
      * Wrapper zoomable component encapsulating both layers.
      */
-    private ZoomableScrollPane component;
+    private final ZoomableScrollPane component;
 
     /**
      * GraphicalView constructor.
@@ -63,8 +63,8 @@ public class GraphicalView implements Observer {
         graphicalViewMapLayer = new GraphicalViewMapLayer(this);
         graphicalViewTourLayer = new GraphicalViewTourLayer(this);
         graphicalViewRequestsLayer = new GraphicalViewRequestsLayer(this);
-
-        DoubleBinding graphicalViewHeight = window.getScene().heightProperty().subtract(50);
+        DoubleBinding graphicalViewHeight = window.getScene()
+                .heightProperty().subtract(50);
         component.prefWidthProperty().bind(graphicalViewHeight);
         component.prefHeightProperty().bind(graphicalViewHeight);
         graphicalViewTourLayer.prefWidthProperty().bind(component.heightProperty());
@@ -130,9 +130,7 @@ public class GraphicalView implements Observer {
                 graphicalViewTourLayer.draw(true);
                 graphicalViewRequestsLayer.draw();
             }
-            case INTERMEDIARY_TOUR -> {
-                graphicalViewTourLayer.draw(false);
-            }
+            case INTERMEDIARY_TOUR -> graphicalViewTourLayer.draw(false);
         }
     }
 

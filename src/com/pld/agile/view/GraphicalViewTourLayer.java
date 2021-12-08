@@ -8,6 +8,7 @@ import com.pld.agile.utils.view.MouseClickNotDragDetector;
 import com.pld.agile.utils.view.ViewUtilities;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
+
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class GraphicalViewTourLayer extends Pane {
     /**
      * The parent GraphicalView instance.
      */
-    private GraphicalView graphicalView;
+    private final GraphicalView graphicalView;
 
     /**
      * GraphicalViewTourLayer constructor.
@@ -42,14 +43,15 @@ public class GraphicalViewTourLayer extends Pane {
                             mapData.getMaxLon(),
                             ((ScrollPane) graphicalView.getComponent()).getHeight()
                     );
-                    graphicalView.getWindow().getController().clickOnGraphicalView(latLonPos);
+                    graphicalView.getWindow().getController()
+                            .clickOnGraphicalView(latLonPos);
                 });
 
     }
 
     /**
      * Draws the tour trace, by populating the pane with graphical segments.
-     * @param finished boolean indicating the view state
+     * @param finished whether the traced tour is an intermediary tour or a final one.
      */
     public void draw(boolean finished) {
 

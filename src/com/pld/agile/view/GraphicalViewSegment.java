@@ -25,7 +25,8 @@ public class GraphicalViewSegment extends Line {
      * @param graphicalView The parent GraphicalView instance.
      * @param segment The associated Segment model object.
      * @param strokeWidth The segment's line thickness.
-     * @param associatedPath The path the segmen's associated to (if any). A non-null path will make the segment invisible
+     * @param associatedPath The path the segmen's associated to (if any).
+     *                       A non-null path will make the segment invisible
      * @param displayer TextField in which to display the segment's street name
      *                  (when hovered).
      */
