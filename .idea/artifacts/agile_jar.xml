@@ -2,21 +2,16 @@
   <artifact name="agile:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/agile_jar</output-path>
     <root id="root">
-      <element id="archive" name="agile.jar">
+      <element id="archive" name="coliffimo.jar">
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
         </element>
         <element id="module-output" name="agile" />
       </element>
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:win:18-ea+7" />
-      <element id="library" level="project" name="Maven: jaxen:jaxen:1.2.0" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:18-ea+7" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:win:18-ea+7" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:18-ea+7" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:18-ea+7" />
-      <element id="library" level="project" name="Maven: org.dom4j:dom4j:2.1.3" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:win:18-ea+7" />
-      <element id="module-source" name="agile" />
+      <element id="directory" name="src">
+        <element id="module-source" name="agile" />
+      </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/lib" />
     </root>
   </artifact>
 </component>
