@@ -11,5 +11,4 @@ module com.pld.agile {
     exports com.pld.agile.utils.view;
     exports com.pld.agile.view;
     exports com.pld.agile.utils.exception;
-
 }
